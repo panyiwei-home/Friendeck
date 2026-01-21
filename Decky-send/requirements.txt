@@ -1,0 +1,2 @@
+# Dependencies for decky-send Steam integration
+vdf>=3.4
