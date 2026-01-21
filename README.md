@@ -42,7 +42,7 @@
 
 ## 安装指南
 
-1. 从 [Releases](https://github.com/SteamDeckHomebrew/decky-plugin-template/releases) 页面下载最新的插件 ZIP 文件。
+1. 从 [Releases](https://github.com/panyiwei-home/Decky-send/releases) 页面下载最新的插件 ZIP 文件。
 2. 在 Steam Deck 上打开快速访问菜单 (QAM)。
 3. 导航至 Decky -> 设置 (齿轮图标)。
 4. 如果尚未启用，请启用“开发者模式”。
