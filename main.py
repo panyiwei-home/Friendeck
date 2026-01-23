@@ -193,7 +193,7 @@ class Plugin:
     # Frontend API Methods (called via callPluginMethod)
     # ==========================================================================
     
-    async def start_server(self, port: int = 8000) -> dict:
+    async def start_server(self, port: int = config.DEFAULT_SERVER_PORT) -> dict:
         """Start HTTP server - delegate to server_manager"""
         return await server_manager.start_server(self, port)
     

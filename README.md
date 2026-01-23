@@ -5,8 +5,6 @@
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Steam%20Deck-orange.svg)
 
-[English](README-English.md)
-
 ## 目录
 
 - [截图预览](#截图预览)
@@ -42,7 +40,7 @@
 
 ## 安装指南
 
-1. 从 [Releases](https://github.com/panyiwei-home/Decky-send/releases) 页面下载最新的插件 ZIP 文件。
+1. 从 [Releases](https://github.com/SteamDeckHomebrew/decky-plugin-template/releases) 页面下载最新的插件 ZIP 文件。
 2. 在 Steam Deck 上打开快速访问菜单 (QAM)。
 3. 导航至 Decky -> 设置 (齿轮图标)。
 4. 如果尚未启用，请启用“开发者模式”。
@@ -77,7 +75,7 @@
 - 尝试关闭并重新开启插件的“文件传输服务”开关。
 
 **服务启动失败？**
-- 可能是端口 (8000) 被占用，尝试重启 Steam Deck。
+- 可能是端口 (59271) 被占用，尝试重启 Steam Deck。
 - 检查是否有其他服务占用了该端口。
 
 **无法复制文本？**

@@ -75,7 +75,7 @@ Your files will be saved by default in the Steam Deck's `~/Downloads` folder.
 - Try turning off and on the plugin's "File Transfer Service" toggle.
 
 **Service failed to start?**
-- Port (8000) might be in use, try restarting Steam Deck.
+- Port (59271) might be in use, try restarting Steam Deck.
 - Check if other services are occupying this port.
 
 **Cannot copy text?**
