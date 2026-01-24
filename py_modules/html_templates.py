@@ -14,6 +14,7 @@ from aiohttp import web
 
 # Import decky for logging and event emission
 import decky
+import utils
 
 
 def get_file_manager_html():
@@ -63,6 +64,12 @@ def get_file_manager_html():
                 cursor: pointer;
                 color: #1b73e8;
             }
+            .breadcrumb,
+            .breadcrumb * {
+                user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+            }
             
             /* Action Buttons */
             .action-buttons {
@@ -79,6 +86,12 @@ def get_file_manager_html():
                 border-radius: 4px;
                 cursor: pointer;
                 font-size: 14px;
+            }
+            .action-buttons,
+            .action-buttons * {
+                user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
             }
             .action-buttons button:hover {
                 background-color: #1557b0;
@@ -114,8 +127,56 @@ def get_file_manager_html():
                 gap: 12px;
                 width: 100%;
             }
+            .file-grid.list-mode {
+                flex-direction: column;
+            }
+            .file-grid.list-mode .file-item {
+                flex: 1 1 auto;
+                max-width: none;
+                width: 100%;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 10px;
+                min-height: 56px;
+            }
+            .file-grid.list-mode .file-icon {
+                font-size: 20px;
+            }
+            .file-grid.list-mode .file-name {
+                text-align: left;
+                flex: 1 1 auto;
+            }
+            .file-grid.list-mode .file-details {
+                margin-left: auto;
+                text-align: right;
+            }
             .file-grid .file-item {
                 min-width: 0;
+            }
+            .file-grid.list-mode {
+                flex-direction: column;
+            }
+            .file-grid.list-mode .file-item {
+                flex: 1 1 auto;
+                max-width: none;
+                width: 100%;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 10px;
+                min-height: 56px;
+            }
+            .file-grid.list-mode .file-icon {
+                font-size: 20px;
+            }
+            .file-grid.list-mode .file-name {
+                text-align: left;
+                flex: 1 1 auto;
+            }
+            .file-grid.list-mode .file-details {
+                margin-left: auto;
+                text-align: right;
             }
             .file-grid .file-name {
                 max-width: 100%;
@@ -123,6 +184,9 @@ def get_file_manager_html():
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+            }
+            .file-item.is-dir .file-details {
+                display: none;
             }
             .file-item {
                 border: 1px solid #333;
@@ -138,6 +202,13 @@ def get_file_manager_html():
                 gap: 5px;
                 flex: 1 1 120px;
                 max-width: 200px;
+                -webkit-touch-callout: none;
+            }
+            .file-item,
+            .file-item * {
+                user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
             }
             .file-item:hover {
                 background-color: rgba(27, 115, 232, 0.2);
@@ -204,6 +275,11 @@ def get_file_manager_html():
                     min-height: 90px;
                     flex: 1 1 96px;
                     max-width: 160px;
+                }
+                .file-grid.list-mode .file-item {
+                    min-height: 52px;
+                    padding: 8px 10px;
+                    gap: 8px;
                 }
             }
             
@@ -275,6 +351,7 @@ def get_file_manager_html():
             <button id="paste-btn" style="display: none;">粘贴</button>
             <button id="new-file-btn">新建文件</button>
             <button id="new-dir-btn">新建文件夹</button>
+            <button id="new-btn" style="display: none;">新建</button>
         </div>
         
         <!-- File List -->
@@ -323,6 +400,7 @@ def get_file_manager_html():
         
         <!-- Context Menu -->
         <div class="context-menu" id="context-menu"></div>
+        <div class="context-menu" id="new-menu"></div>
         
         <script>
             // Wait for DOM to fully load before executing scripts
@@ -344,10 +422,12 @@ def get_file_manager_html():
                 const pasteBtn = document.getElementById('paste-btn');
                 const newFileBtn = document.getElementById('new-file-btn');
                 const newDirBtn = document.getElementById('new-dir-btn');
+                const newBtn = document.getElementById('new-btn');
                 const sdcardBtn = document.getElementById('sdcard-btn');
                 let sdcardPath = '';
 
                 const contextMenu = document.getElementById('context-menu');
+                const newMenu = document.getElementById('new-menu');
                 
                 // Modal Elements
                 const fileEditorModal = document.getElementById('file-editor-modal');
@@ -397,6 +477,27 @@ def get_file_manager_html():
                     });
                     contextMenu.appendChild(menuItem);
                 });
+
+                // New Menu Items (for compact screens)
+                const newMenuItems = [
+                    { text: '新建文件', action: 'new-file' },
+                    { text: '新建文件夹', action: 'new-dir' }
+                ];
+                
+                newMenuItems.forEach(item => {
+                    const menuItem = document.createElement('div');
+                    menuItem.className = 'context-menu-item';
+                    menuItem.textContent = item.text;
+                    menuItem.addEventListener('click', () => {
+                        if (item.action === 'new-file') {
+                            showInputModal('新建文件', '请输入文件名', createFile);
+                        } else {
+                            showInputModal('新建文件夹', '请输入文件夹名', createDirectory);
+                        }
+                        hideNewMenu();
+                    });
+                    newMenu.appendChild(menuItem);
+                });
                 
                 // Context Menu Functions
                 let copiedPath = null; // Store copied file/folder path
@@ -405,13 +506,113 @@ def get_file_manager_html():
                     e.preventDefault();
                     contextMenuPath = path;
                     contextMenu.style.display = 'block';
-                    contextMenu.style.left = e.clientX + 'px';
-                    contextMenu.style.top = e.clientY + 'px';
+                    
+                    const padding = 8;
+                    const menuRect = contextMenu.getBoundingClientRect();
+                    let x = e.clientX;
+                    let y = e.clientY;
+                    const maxX = window.innerWidth - menuRect.width - padding;
+                    const maxY = window.innerHeight - menuRect.height - padding;
+                    if (maxX < padding) {
+                        x = padding;
+                    } else {
+                        x = Math.min(Math.max(x, padding), maxX);
+                    }
+                    if (maxY < padding) {
+                        y = padding;
+                    } else {
+                        y = Math.min(Math.max(y, padding), maxY);
+                    }
+                    
+                    contextMenu.style.left = x + 'px';
+                    contextMenu.style.top = y + 'px';
                 }
                 
                 function hideContextMenu() {
                     contextMenu.style.display = 'none';
                     contextMenuPath = '';
+                }
+
+                function showNewMenu() {
+                    if (!newMenu || !newBtn) return;
+                    newMenu.style.display = 'block';
+                    
+                    const padding = 8;
+                    const rect = newBtn.getBoundingClientRect();
+                    const menuRect = newMenu.getBoundingClientRect();
+                    let x = rect.left;
+                    let y = rect.bottom + 6;
+                    
+                    if (y + menuRect.height > window.innerHeight - padding) {
+                        y = rect.top - menuRect.height - 6;
+                    }
+                    
+                    const maxX = window.innerWidth - menuRect.width - padding;
+                    const maxY = window.innerHeight - menuRect.height - padding;
+                    if (maxX < padding) {
+                        x = padding;
+                    } else {
+                        x = Math.min(Math.max(x, padding), maxX);
+                    }
+                    if (maxY < padding) {
+                        y = padding;
+                    } else {
+                        y = Math.min(Math.max(y, padding), maxY);
+                    }
+                    
+                    newMenu.style.left = x + 'px';
+                    newMenu.style.top = y + 'px';
+                }
+                
+                function hideNewMenu() {
+                    if (!newMenu) return;
+                    newMenu.style.display = 'none';
+                }
+
+                function isCompactScreen() {
+                    const area = window.innerWidth * window.innerHeight;
+                    return area < 420000 || window.innerWidth < 520;
+                }
+
+                function applyFileManagerLayout() {
+                    const compact = isCompactScreen();
+                    if (fileManagerList) {
+                        fileManagerList.classList.toggle('list-mode', compact);
+                        const items = fileManagerList.querySelectorAll('.file-item');
+                        items.forEach(item => {
+                            item.style.flex = compact ? '1 1 auto' : '1 1 120px';
+                            item.style.maxWidth = compact ? 'none' : '200px';
+                            item.style.width = compact ? '100%' : '';
+                            item.style.flexDirection = compact ? 'row' : 'column';
+                            item.style.justifyContent = compact ? 'flex-start' : 'center';
+                            item.style.alignItems = 'center';
+                            item.style.gap = compact ? '10px' : '5px';
+                            item.style.minHeight = compact ? '52px' : '100px';
+                            item.style.padding = compact ? '8px 10px' : '10px';
+                            
+                            const icon = item.querySelector('.file-icon');
+                            if (icon) {
+                                icon.style.fontSize = compact ? '20px' : '24px';
+                            }
+                            
+                            const name = item.querySelector('.file-name');
+                            if (name) {
+                                name.style.textAlign = compact ? 'left' : 'center';
+                                name.style.flex = compact ? '1 1 auto' : '';
+                            }
+                            
+                            const details = item.querySelector('.file-details');
+                                if (details) {
+                                    details.style.textAlign = compact ? 'right' : 'center';
+                                    details.style.marginLeft = compact ? 'auto' : '';
+                                }
+                            });
+                        }
+                    if (newBtn && newFileBtn && newDirBtn) {
+                        newBtn.style.display = compact ? 'inline-block' : 'none';
+                        newFileBtn.style.display = compact ? 'none' : 'inline-block';
+                        newDirBtn.style.display = compact ? 'none' : 'inline-block';
+                    }
                 }
                 
                 async function handleContextMenuAction(action) {
@@ -515,13 +716,34 @@ def get_file_manager_html():
                     }
                 }
                 
-                // Hide context menu when clicking elsewhere
-                document.addEventListener('click', hideContextMenu);
+                if (newBtn) {
+                    newBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        hideContextMenu();
+                        showNewMenu();
+                    });
+                }
+                
+                if (newMenu) {
+                    newMenu.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                    });
+                }
+                
+                // Hide menus when clicking elsewhere
+                document.addEventListener('click', () => {
+                    hideContextMenu();
+                    hideNewMenu();
+                });
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape') {
                         hideContextMenu();
+                        hideNewMenu();
                     }
                 });
+                
+                window.addEventListener('resize', applyFileManagerLayout);
                 
                 // Modal functions
                 function showConfirmModal(message, action) {
@@ -741,6 +963,9 @@ def get_file_manager_html():
                             data.files.forEach(file => {
                                 const fileItem = document.createElement('div');
                                 fileItem.className = 'file-item';
+                                if (file.is_dir) {
+                                    fileItem.classList.add('is-dir');
+                                }
                                 fileItem.dataset.path = file.path;
                                 fileItem.dataset.isDir = file.is_dir;
                                 
@@ -780,6 +1005,7 @@ def get_file_manager_html():
                                 
                                 // File Icon
                                 const icon = document.createElement('div');
+                                icon.className = 'file-icon';
                                 icon.textContent = getFileIcon(file.name, file.is_dir);
                                 icon.style.fontSize = '24px';
                                 
@@ -798,12 +1024,14 @@ def get_file_manager_html():
                                 
                                 // File Details
                                 const fileDetails = document.createElement('div');
+                                fileDetails.className = 'file-details';
                                 fileDetails.style.fontSize = '10px';
                                 fileDetails.style.color = '#888';
                                 fileDetails.style.textAlign = 'center';
                                 
                                 if (file.is_dir) {
-                                    fileDetails.textContent = '文件夹';
+                                    fileDetails.textContent = '';
+                                    fileDetails.style.display = 'none';
                                 } else {
                                     fileDetails.innerHTML = `${formatSize(file.size)}<br>${formatDate(file.mtime)}`;
                                 }
@@ -815,9 +1043,10 @@ def get_file_manager_html():
                                 fileManagerList.appendChild(fileItem);
                             });
                             
-                            currentPath = data.current_path;
-                            updateBreadcrumb(data.current_path);
-                        } else {
+                        currentPath = data.current_path;
+                        updateBreadcrumb(data.current_path);
+                        applyFileManagerLayout();
+                    } else {
                             alert('获取文件列表失败: ' + data.message);
                         }
                     } catch (error) {
@@ -1075,6 +1304,7 @@ def get_file_manager_html():
                 
                 // Initialize paste button visibility
                 updatePasteButtonVisibility();
+                applyFileManagerLayout();
                 
                 // Initial render
                 updateSdcardButton();
@@ -1118,18 +1348,45 @@ async def handle_index(request):
             * {
                 box-sizing: border-box;
             }
+            html {
+                height: 100%;
+                background-color: var(--bg);
+                background-image:
+                    radial-gradient(900px 500px at 20% -10%, rgba(77, 182, 172, 0.16), transparent 60%),
+                    radial-gradient(800px 400px at 120% 20%, rgba(94, 156, 255, 0.12), transparent 60%),
+                    linear-gradient(180deg, #0f1216 0%, #10161b 100%);
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
+            }
+            html, body {
+                height: 100%;
+                overflow: hidden;
+            }
             body {
                 font-family: "IBM Plex Sans", "Noto Sans", "Ubuntu", "Segoe UI", sans-serif;
                 max-width: 600px;
                 margin: 0 auto;
                 padding: 24px;
                 text-align: center;
-                background-color: var(--bg);
-                background-image:
-                    radial-gradient(900px 500px at 20% -10%, rgba(77, 182, 172, 0.16), transparent 60%),
-                    radial-gradient(800px 400px at 120% 20%, rgba(94, 156, 255, 0.12), transparent 60%),
-                    linear-gradient(180deg, #0f1216 0%, #10161b 100%);
+                background: transparent;
                 color: var(--text);
+                min-height: 100vh;
+            }
+            body::after {
+                content: "";
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 30vh;
+                background: linear-gradient(180deg, rgba(15, 18, 22, 0) 0%, rgba(15, 18, 22, 0.7) 100%);
+                pointer-events: none;
+                z-index: 0;
+            }
+            body > * {
+                position: relative;
+                z-index: 1;
             }
             h1 {
                 color: var(--text);
@@ -1140,6 +1397,9 @@ async def handle_index(request):
             p {
                 color: var(--muted);
                 margin-top: 0;
+            }
+            .subtitle {
+                margin-bottom: 0;
             }
             
             /* Tab styles */
@@ -1156,6 +1416,12 @@ async def handle_index(request):
                 border: 1px solid var(--border);
                 border-radius: 999px;
                 box-shadow: var(--shadow);
+            }
+            .tab-buttons,
+            .tab-buttons * {
+                user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
             }
             .tab-button {
                 background: transparent;
@@ -1260,6 +1526,9 @@ async def handle_index(request):
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
+            .file-item.is-dir .file-details {
+                display: none;
+            }
             .file-item {
                 background-color: var(--panel);
                 border: 1px solid var(--border);
@@ -1269,6 +1538,13 @@ async def handle_index(request):
                 display: flex;
                 flex-direction: column;
                 gap: 8px;
+                -webkit-touch-callout: none;
+            }
+            .file-item,
+            .file-item * {
+                user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
             }
             .file-item-header {
                 display: flex;
@@ -1334,6 +1610,12 @@ async def handle_index(request):
                 border: 1px solid var(--border);
                 border-radius: 12px;
             }
+            .breadcrumb-bar,
+            .breadcrumb-bar * {
+                user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+            }
             .breadcrumb {
                 color: var(--muted);
             }
@@ -1354,6 +1636,12 @@ async def handle_index(request):
             }
             .action-buttons button:hover {
                 border-color: rgba(77, 182, 172, 0.5);
+            }
+            .action-buttons,
+            .action-buttons * {
+                user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
             }
             .file-list-container {
                 border: 1px solid var(--border);
@@ -1381,6 +1669,9 @@ async def handle_index(request):
                     max-width: 100%;
                     padding: 16px;
                 }
+                .subtitle {
+                    display: none;
+                }
                 .tab-buttons {
                     flex-wrap: wrap;
                     border-radius: 18px;
@@ -1407,12 +1698,17 @@ async def handle_index(request):
                 #file-manager .breadcrumb-bar {
                     padding: 6px 8px;
                 }
+                #file-manager .file-grid.list-mode .file-item {
+                    min-height: 52px;
+                    padding: 8px 10px;
+                    gap: 8px;
+                }
             }
         </style>
     </head>
     <body>
         <h1>decky-send</h1>
-        <p>将文件或文本上传到 Steam Deck</p>
+        <p class="subtitle">将文件或文本上传到 Steam Deck</p>
         
         <!-- Tab Container -->
         <div class="tab-container">
@@ -1433,7 +1729,7 @@ async def handle_index(request):
                 <div class="file-list" id="file-list"></div>
                 
                 <div style="margin: 10px 0;">
-                    <button id="upload-btn">开始上传文件</button>
+                    <button id="upload-btn">发送文件</button>
                 </div>
             </div>
             
@@ -1448,7 +1744,7 @@ async def handle_index(request):
                 </div>
                 
                 <div style="margin: 10px 0;">
-                    <button id="send-text-btn" style="width: 100%; margin: 0;">
+                    <button id="send-text-btn" style="margin: 0;">
                         发送文本
                     </button>
                 </div>
@@ -1479,6 +1775,9 @@ async def handle_index(request):
                 </button>
                 <button id="new-dir-btn" style="margin: 0;">
                     新建文件夹
+                </button>
+                <button id="new-btn" style="margin: 0; display: none;">
+                    新建
                 </button>
                 <button id="paste-btn" style="margin: 0; display: none;">
                     粘贴
@@ -1572,6 +1871,7 @@ async def handle_index(request):
                             if (typeof renderFileList === 'function') {
                                 resizeFileManagerPanel();
                                 updateSdcardButton();
+                                applyFileManagerLayout();
                                 renderFileList(currentPath);
                             }
                         }
@@ -1904,6 +2204,7 @@ async def handle_index(request):
             const pasteBtn = document.getElementById('paste-btn');
             const newFileBtn = document.getElementById('new-file-btn');
             const newDirBtn = document.getElementById('new-dir-btn');
+            const newBtn = document.getElementById('new-btn');
             const deleteBtn = document.getElementById('delete-btn');
             const sdcardBtn = document.getElementById('sdcard-btn');
             let sdcardPath = '';
@@ -1949,6 +2250,20 @@ async def handle_index(request):
                 min-width: 150px;
             `;
             document.body.appendChild(contextMenu);
+
+            const newMenu = document.createElement('div');
+            newMenu.style.cssText = `
+                position: fixed;
+                background-color: var(--bg-elev);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 5px 0;
+                box-shadow: var(--shadow);
+                z-index: 10000;
+                display: none;
+                min-width: 150px;
+            `;
+            document.body.appendChild(newMenu);
             
             // Context Menu Items
             const contextMenuItems = [
@@ -1982,6 +2297,39 @@ async def handle_index(request):
                 });
                 contextMenu.appendChild(menuItem);
             });
+
+            // New Menu Items (for compact screens)
+            const newMenuItems = [
+                { text: '新建文件', action: 'new-file' },
+                { text: '新建文件夹', action: 'new-dir' }
+            ];
+            
+            newMenuItems.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.textContent = item.text;
+                menuItem.style.cssText = `
+                    padding: 8px 12px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    color: var(--text);
+                    transition: background-color 0.2s;
+                `;
+                menuItem.addEventListener('mouseenter', () => {
+                    menuItem.style.backgroundColor = 'rgba(77, 182, 172, 0.2)';
+                });
+                menuItem.addEventListener('mouseleave', () => {
+                    menuItem.style.backgroundColor = 'transparent';
+                });
+                menuItem.addEventListener('click', () => {
+                    if (item.action === 'new-file') {
+                        showInputModal('新建文件', '请输入文件名', createFile);
+                    } else {
+                        showInputModal('新建文件夹', '请输入文件夹名', createDirectory);
+                    }
+                    hideNewMenu();
+                });
+                newMenu.appendChild(menuItem);
+            });
             
             // Context Menu Functions
             let copiedPath = null; // Store copied file/folder path
@@ -1990,13 +2338,113 @@ async def handle_index(request):
                 e.preventDefault();
                 contextMenuPath = path;
                 contextMenu.style.display = 'block';
-                contextMenu.style.left = e.clientX + 'px';
-                contextMenu.style.top = e.clientY + 'px';
+                
+                const padding = 8;
+                const menuRect = contextMenu.getBoundingClientRect();
+                let x = e.clientX;
+                let y = e.clientY;
+                const maxX = window.innerWidth - menuRect.width - padding;
+                const maxY = window.innerHeight - menuRect.height - padding;
+                if (maxX < padding) {
+                    x = padding;
+                } else {
+                    x = Math.min(Math.max(x, padding), maxX);
+                }
+                if (maxY < padding) {
+                    y = padding;
+                } else {
+                    y = Math.min(Math.max(y, padding), maxY);
+                }
+                
+                contextMenu.style.left = x + 'px';
+                contextMenu.style.top = y + 'px';
             }
             
             function hideContextMenu() {
                 contextMenu.style.display = 'none';
                 contextMenuPath = '';
+            }
+
+            function showNewMenu() {
+                if (!newMenu || !newBtn) return;
+                newMenu.style.display = 'block';
+                
+                const padding = 8;
+                const rect = newBtn.getBoundingClientRect();
+                const menuRect = newMenu.getBoundingClientRect();
+                let x = rect.left;
+                let y = rect.bottom + 6;
+                
+                if (y + menuRect.height > window.innerHeight - padding) {
+                    y = rect.top - menuRect.height - 6;
+                }
+                
+                const maxX = window.innerWidth - menuRect.width - padding;
+                const maxY = window.innerHeight - menuRect.height - padding;
+                if (maxX < padding) {
+                    x = padding;
+                } else {
+                    x = Math.min(Math.max(x, padding), maxX);
+                }
+                if (maxY < padding) {
+                    y = padding;
+                } else {
+                    y = Math.min(Math.max(y, padding), maxY);
+                }
+                
+                newMenu.style.left = x + 'px';
+                newMenu.style.top = y + 'px';
+            }
+            
+            function hideNewMenu() {
+                if (!newMenu) return;
+                newMenu.style.display = 'none';
+            }
+
+            function isCompactScreen() {
+                const area = window.innerWidth * window.innerHeight;
+                return area < 420000 || window.innerWidth < 520;
+            }
+
+            function applyFileManagerLayout() {
+                const compact = isCompactScreen();
+                if (fileManagerList) {
+                    fileManagerList.classList.toggle('list-mode', compact);
+                    const items = fileManagerList.querySelectorAll('.file-item');
+                    items.forEach(item => {
+                        item.style.flex = compact ? '1 1 auto' : '1 1 120px';
+                        item.style.maxWidth = compact ? 'none' : '200px';
+                        item.style.width = compact ? '100%' : '';
+                        item.style.flexDirection = compact ? 'row' : 'column';
+                        item.style.justifyContent = compact ? 'flex-start' : 'center';
+                        item.style.alignItems = 'center';
+                        item.style.gap = compact ? '10px' : '5px';
+                        item.style.minHeight = compact ? '52px' : '100px';
+                        item.style.padding = compact ? '8px 10px' : '10px';
+                        
+                        const icon = item.querySelector('.file-icon');
+                        if (icon) {
+                            icon.style.fontSize = compact ? '20px' : '24px';
+                        }
+                        
+                        const name = item.querySelector('.file-name');
+                        if (name) {
+                            name.style.textAlign = compact ? 'left' : 'center';
+                            name.style.flex = compact ? '1 1 auto' : '';
+                        }
+                        
+                        const details = item.querySelector('.file-details');
+                        if (details) {
+                            details.style.textAlign = compact ? 'right' : 'center';
+                            details.style.marginLeft = compact ? 'auto' : '';
+                        }
+                    });
+                }
+                if (newBtn && newFileBtn && newDirBtn) {
+                    newBtn.style.display = compact ? 'inline-block' : 'none';
+                    newFileBtn.style.display = compact ? 'none' : 'inline-block';
+                    newDirBtn.style.display = compact ? 'none' : 'inline-block';
+                }
             }
             
             async function handleContextMenuAction(action) {
@@ -2100,13 +2548,34 @@ async def handle_index(request):
                 }
             }
             
-            // Hide context menu when clicking elsewhere
-            document.addEventListener('click', hideContextMenu);
+            if (newBtn) {
+                newBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    hideContextMenu();
+                    showNewMenu();
+                });
+            }
+            
+            if (newMenu) {
+                newMenu.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Hide menus when clicking elsewhere
+            document.addEventListener('click', () => {
+                hideContextMenu();
+                hideNewMenu();
+            });
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     hideContextMenu();
+                    hideNewMenu();
                 }
             });
+            
+            window.addEventListener('resize', applyFileManagerLayout);
             
             function showConfirmModal(message, action) {
                 confirmMessage.textContent = message;
@@ -2346,6 +2815,9 @@ async def handle_index(request):
                             fileItem.className = 'file-item';
                             fileItem.dataset.path = file.path;
                             fileItem.dataset.isDir = file.is_dir;
+                            if (file.is_dir) {
+                                fileItem.classList.add('is-dir');
+                            }
                             
                             fileItem.style.border = '1px solid var(--border)';
                             fileItem.style.borderRadius = '10px';
@@ -2417,6 +2889,7 @@ async def handle_index(request):
                             
                             // File Icon
                             const icon = document.createElement('div');
+                            icon.className = 'file-icon';
                             icon.textContent = getFileIcon(file.name, file.is_dir);
                             icon.style.fontSize = '24px';
                             
@@ -2436,12 +2909,14 @@ async def handle_index(request):
                             
                             // File Details
                             const fileDetails = document.createElement('div');
+                            fileDetails.className = 'file-details';
                             fileDetails.style.fontSize = '10px';
                             fileDetails.style.color = 'var(--muted)';
                             fileDetails.style.textAlign = 'center';
                             
                             if (file.is_dir) {
-                                fileDetails.textContent = '文件夹';
+                                fileDetails.textContent = '';
+                                fileDetails.style.display = 'none';
                             } else {
                                 fileDetails.innerHTML = `${formatSize(file.size)}<br>${formatDate(file.mtime)}`;
                             }
@@ -2470,6 +2945,7 @@ async def handle_index(request):
                         
                         currentPath = data.current_path;
                         updateBreadcrumb(data.current_path);
+                        applyFileManagerLayout();
                     } else {
                         alert('获取文件列表失败: ' + data.message);
                     }
@@ -2879,17 +3355,19 @@ async def handle_upload(request, plugin):
             # NOTE: Wrap in list for frontend destructuring
             await decky.emit("transfer_complete", [filename])
             
-            # Send system notification for out-of-plugin UI notifications
+            # Send notifications (Decky UI + system) so it works even when UI is closed
+            notification_title = "文件传输完成"
+            notification_msg = f"文件 '{filename}' 已成功上传到 Steam Deck"
             try:
-                # Create notification for file upload completion
-                notification_msg = f"文件 '{filename}' 已成功上传到 Steam Deck"
                 await decky.emit("_show_notification", {
-                    "title": "文件传输完成",
+                    "title": notification_title,
                     "body": notification_msg,
                     "duration": 5
                 })
             except Exception as notify_error:
-                decky.logger.error(f"Failed to send system notification for file upload: {notify_error}")
+                decky.logger.error(f"Failed to emit Decky notification for file upload: {notify_error}")
+            utils.send_system_notification(notification_title, notification_msg, 5)
+            utils.queue_notification(notification_title, notification_msg)
             
             return web.json_response({"filename": filename, "status": "success"})
         
@@ -2927,16 +3405,19 @@ async def handle_text_upload(request, plugin):
         # NOTE: Wrap in list for frontend destructuring
         await decky.emit("text_received", [text])
         
-        # Send system notification for out-of-plugin UI notifications
+        # Send notifications (Decky UI + system) so it works even when UI is closed
+        notification_title = "文本传输完成"
+        notification_msg = "新的文本内容已接收并保存"
         try:
-            # Create notification for text upload completion
             await decky.emit("_show_notification", {
-                "title": "文本传输完成",
-                "body": "新的文本内容已接收并保存",
+                "title": notification_title,
+                "body": notification_msg,
                 "duration": 5
             })
         except Exception as notify_error:
-            decky.logger.error(f"Failed to send system notification for text upload: {notify_error}")
+            decky.logger.error(f"Failed to emit Decky notification for text upload: {notify_error}")
+        utils.send_system_notification(notification_title, notification_msg, 5)
+        utils.queue_notification(notification_title, notification_msg)
         
         return web.json_response({"status": "success", "message": "Text received successfully"})
 

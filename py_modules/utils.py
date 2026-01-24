@@ -8,6 +8,11 @@
 import socket
 import time
 import asyncio
+import os
+import shutil
+import subprocess
+import json
+from typing import List, Dict, Any
 # NOTE: Direct import - Decky adds py_modules/ to sys.path
 import config
 
@@ -127,7 +132,7 @@ def is_service_healthy(port, endpoint='/', timeout=2.0):
         return False
     except Exception as e:
         config.logger.debug(f"Service health check error: port {port}, error: {e}")
-        return False
+    return False
 
 
 async def wait_for_service_healthy(port, endpoint='/', timeout=None, check_interval=0.5):
@@ -155,3 +160,102 @@ async def wait_for_service_healthy(port, endpoint='/', timeout=None, check_inter
     
     config.logger.warning(f"Service on port {port} not healthy after {timeout}s timeout")
     return False
+
+
+# =============================================================================
+# Notification Utilities
+# =============================================================================
+
+def send_system_notification(title: str, body: str, duration: float = 5.0) -> bool:
+    """Send a system notification without relying on the plugin UI.
+    
+    Returns True if a notification command was launched, False otherwise.
+    """
+    try:
+        notify_bin = shutil.which("notify-send") or "/usr/bin/notify-send"
+        if not os.path.exists(notify_bin):
+            config.logger.debug("notify-send not found")
+            return False
+        
+        env = os.environ.copy()
+        uid = os.getuid()
+        runtime_dir = env.get("XDG_RUNTIME_DIR") or f"/run/user/{uid}"
+        env.setdefault("XDG_RUNTIME_DIR", runtime_dir)
+        env.setdefault("DBUS_SESSION_BUS_ADDRESS", f"unix:path={runtime_dir}/bus")
+        env.setdefault("DISPLAY", ":0")
+        env.setdefault("WAYLAND_DISPLAY", "wayland-0")
+        
+        timeout_ms = str(int(max(duration, 0) * 1000))
+        cmd = [
+            notify_bin,
+            "--app-name", "Decky-send",
+            "--expire-time", timeout_ms,
+            title,
+            body,
+        ]
+        
+        subprocess.Popen(
+            cmd,
+            env=env,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True
+        )
+        return True
+    except Exception as e:
+        config.logger.debug(f"System notification failed: {e}")
+        return False
+
+
+# =============================================================================
+# Toast Queue Utilities
+# =============================================================================
+
+def queue_notification(title: str, body: str, urgency: str = "normal") -> bool:
+    """Queue a toast notification for frontend polling.
+
+    Returns True if queued successfully, False otherwise.
+    """
+    try:
+        os.makedirs(config.DECKY_SEND_DIR, exist_ok=True)
+        entry = {
+            "title": title,
+            "body": body,
+            "urgency": urgency,
+            "timestamp": time.time()
+        }
+        notifications: List[Dict[str, Any]] = []
+        if os.path.exists(config.NOTIFICATION_QUEUE_PATH):
+            try:
+                with open(config.NOTIFICATION_QUEUE_PATH, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, list):
+                        notifications = data
+            except Exception as e:
+                config.logger.debug(f"Failed to read notification queue: {e}")
+                notifications = []
+        notifications.append(entry)
+        with open(config.NOTIFICATION_QUEUE_PATH, "w", encoding="utf-8") as f:
+            json.dump(notifications, f, ensure_ascii=False)
+        return True
+    except Exception as e:
+        config.logger.debug(f"Queue notification failed: {e}")
+        return False
+
+
+def pop_notifications() -> List[Dict[str, Any]]:
+    """Read and clear queued toast notifications."""
+    try:
+        if not os.path.exists(config.NOTIFICATION_QUEUE_PATH):
+            return []
+        with open(config.NOTIFICATION_QUEUE_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, list) or not data:
+            return []
+        # Clear the queue after reading
+        with open(config.NOTIFICATION_QUEUE_PATH, "w", encoding="utf-8") as f:
+            json.dump([], f)
+        return data
+    except Exception as e:
+        config.logger.debug(f"Pop notification failed: {e}")
+        return []

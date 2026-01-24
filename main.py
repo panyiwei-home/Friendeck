@@ -220,6 +220,14 @@ class Plugin:
     async def clear_text_content(self) -> dict:
         """Clear text content - delegate to file_operations"""
         return await file_operations.clear_text_content(self)
+
+    async def get_pending_notifications(self) -> dict:
+        """Get and clear queued toast notifications"""
+        try:
+            notifications = utils.pop_notifications()
+            return {"status": "success", "notifications": notifications}
+        except Exception as e:
+            return {"status": "error", "message": str(e), "notifications": []}
     
     async def get_file_manager_path(self) -> dict:
         """Get the path to the local file manager HTML file

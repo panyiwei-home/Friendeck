@@ -57,6 +57,9 @@ TEXT_FILE_PATH = os.path.join(DECKY_SEND_DIR, "Decky-sendtxt.txt")
 # Switch file path (for service control)
 SWITCH_FILE_PATH = os.path.join(DECKY_SEND_DIR, "decky-sendswitch.txt")
 
+# Toast queue file path (for background notifications)
+NOTIFICATION_QUEUE_PATH = os.path.join(DECKY_SEND_DIR, "notification_queue.json")
+
 # =============================================================================
 # Server Configuration
 # =============================================================================

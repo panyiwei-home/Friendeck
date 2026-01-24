@@ -28,6 +28,7 @@ const stopServer = callable<[], { status: string; message: string }>("stop_serve
 const getServerStatus = callable<[], { running: boolean; port: number; host: string; ip_address?: string }>("get_server_status");
 const getIpAddressFromBackend = callable<[], { status: string; ip_address?: string; message?: string }>("get_ip_address");
 const getTextContent = callable<[], { status: string; content: string }>("get_text_content");
+const getPendingNotifications = callable<[], { status: string; notifications?: { title: string; body?: string; urgency?: string; timestamp?: number }[] }>("get_pending_notifications");
 
 
 // =============================================================================
@@ -44,6 +45,34 @@ let serverUrlGlobal = '';
 let serverIpGlobal = '';
 let serverPortGlobal = DEFAULT_PORT;
 let pluginReady = false;  // Set to true after initial status fetch
+
+// Background toast polling so notifications appear even when UI is closed
+let toastPoller: ReturnType<typeof setInterval> | null = null;
+
+function startToastPolling() {
+  if (toastPoller) return;
+  toastPoller = setInterval(async () => {
+    try {
+      const response = await getPendingNotifications();
+      if (response.status === "success" && response.notifications && response.notifications.length > 0) {
+        response.notifications.forEach((toast) => {
+          toaster.toast({
+            title: toast.title,
+            body: toast.body
+          });
+        });
+      }
+    } catch (error) {
+      console.error("Toast polling failed:", error);
+    }
+  }, 2500);
+}
+
+function stopToastPolling() {
+  if (!toastPoller) return;
+  clearInterval(toastPoller);
+  toastPoller = null;
+}
 
 // Define types for server and transfer status
 interface ServerStatus {
@@ -420,10 +449,6 @@ function Content() {
     });
     
     const transferCompleteListener = addEventListener<[filename: string]>("transfer_complete", ([filename]) => {
-      toaster.toast({
-        title: "Transfer Complete",
-        body: `${filename} has been successfully transferred.`
-      });
       // Reset transfer status after a delay
       setTimeout(() => {
         setTransferStatus({
@@ -445,11 +470,6 @@ function Content() {
     
     // Listen for text received event
     const textReceivedListener = addEventListener<[text: string]>("text_received", ([text]) => {
-      toaster.toast({
-        title: "文本传输完成",
-        body: "已接收到新的文本内容"
-      });
-      
       // Update text status
       const textState = {
         received: true,
@@ -660,6 +680,7 @@ function Content() {
 
 export default definePlugin(() => {
   console.log("decky-send plugin initializing");
+  startToastPolling();
 
   // Pre-fetch server status before component renders (like ToMoon pattern)
   // This prevents the "flash" effect where toggle shows OFF then switches to ON
@@ -705,6 +726,7 @@ export default definePlugin(() => {
     // The function triggered when your plugin unloads
     onDismount() {
       console.log("Unloading decky-send plugin");
+      stopToastPolling();
     }
   };
 });

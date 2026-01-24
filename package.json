@@ -1,7 +1,7 @@
 {
   "name": "decky-send",
-  "version": "0.2.0",
-  "description": "A template to quickly create decky plugins from scratch, based on TypeScript and webpack",
+  "version": "0.2.5",
+  "description": "通过局域网在设备间传输文件到 Steam Deck",
   "type": "module",
   "scripts": {
     "build": "rollup -c",
