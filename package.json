@@ -1,6 +1,6 @@
 {
-  "name": "decky-plugin-template",
-  "version": "0.1.0",
+  "name": "decky-send",
+  "version": "0.2.0",
   "description": "A template to quickly create decky plugins from scratch, based on TypeScript and webpack",
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SteamDeckHomebrew/decky-plugin-template.git"
+    "url": "git+https://github.com/panyiwei-home/Decky-send.git"
   },
   "keywords": [
     "decky",
@@ -19,12 +19,12 @@
     "steam-deck",
     "deck"
   ],
-  "author": "3103919585@qq.com",
-  "license": "BSD-3-Clause",
+  "author": "Panyiwei",
+  "license": "GPL-3.0-only",
   "bugs": {
-    "url": "https://github.com/SteamDeckHomebrew/decky-plugin-template/issues"
+    "url": "https://github.com/panyiwei-home/Decky-send/issues"
   },
-  "homepage": "https://github.com/SteamDeckHomebrew/decky-plugin-template#readme",
+  "homepage": "https://github.com/panyiwei-home/Decky-send#readme",
   "devDependencies": {
     "@decky/rollup": "^1.0.2",
     "@decky/ui": "^4.11.0",
