@@ -1,6 +1,6 @@
 {
   "name": "decky-send",
-  "version": "0.2.5",
+  "version": "0.3.2",
   "description": "通过局域网在设备间传输文件到 Steam Deck",
   "type": "module",
   "scripts": {

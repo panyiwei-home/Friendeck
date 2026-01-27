@@ -450,6 +450,135 @@ async def download_file(request):
         return web.json_response({"status": "error", "message": str(e)}, status=500)
 
 
+def _strip_archive_ext(filename: str) -> str:
+    lower = filename.lower()
+    for ext in (
+        ".tar.gz",
+        ".tar.bz2",
+        ".tar.xz",
+        ".tgz",
+        ".tbz",
+        ".tbz2",
+        ".txz",
+        ".tar",
+        ".zip",
+        ".7z",
+        ".rar",
+        ".exe",
+    ):
+        if lower.endswith(ext):
+            return filename[: -len(ext)]
+    return os.path.splitext(filename)[0]
+
+
+def _is_script(path: str) -> bool:
+    try:
+        with open(path, "rb") as f:
+            return f.read(2) == b"#!"
+    except Exception:
+        return False
+
+
+def _find_executable(candidates):
+    for name in candidates:
+        path = shutil.which(name)
+        if not path:
+            continue
+        if _is_script(path):
+            continue
+        return path
+    return None
+
+
+def _find_7z():
+    return _find_executable(["7zz", "7zr", "7z"])
+
+
+def _find_unrar():
+    return _find_executable(["unrar"])
+
+
+def _run_cmd(cmd):
+    minimal_env = {
+        'PATH': '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        'HOME': os.environ.get('HOME', ''),
+        'USER': os.environ.get('USER', ''),
+        'LANG': os.environ.get('LANG', 'en_US.UTF-8'),
+        'LC_ALL': os.environ.get('LC_ALL', 'en_US.UTF-8'),
+    }
+    result = subprocess.run(cmd, capture_output=True, text=True, env=minimal_env)
+    if result.returncode != 0:
+        stderr = (result.stderr or "").strip()
+        stdout = (result.stdout or "").strip()
+        msg = stderr or stdout or "解压失败"
+        raise RuntimeError(msg)
+
+
+async def unpack_archive(request):
+    """Unpack an archive file into a folder in the same directory
+
+    POST /api/files/unpack
+    Body: {"path": "/some/archive.zip"}
+    """
+    try:
+        data = await request.json()
+        path = data.get('path')
+
+        if not path:
+            return web.json_response({"status": "error", "message": "Path is required"}, status=400)
+
+        path = os.path.abspath(path)
+
+        if not os.path.exists(path):
+            return web.json_response({"status": "error", "message": "File not found"}, status=404)
+
+        if os.path.isdir(path):
+            return web.json_response({"status": "error", "message": "Path is a directory"}, status=400)
+
+        parent_dir = os.path.dirname(path)
+        base_name = os.path.basename(path)
+        dest_base = _strip_archive_ext(base_name).strip() or "unpacked"
+        dest_dir = os.path.join(parent_dir, dest_base)
+
+        if os.path.exists(dest_dir):
+            suffix = 1
+            while True:
+                candidate = os.path.join(parent_dir, f"{dest_base} ({suffix})")
+                if not os.path.exists(candidate):
+                    dest_dir = candidate
+                    break
+                suffix += 1
+
+        os.makedirs(dest_dir, exist_ok=True)
+
+        try:
+            shutil.unpack_archive(path, dest_dir)
+        except shutil.ReadError:
+            lower = path.lower()
+            if lower.endswith(".7z") or lower.endswith(".rar") or lower.endswith(".exe"):
+                seven_zip = _find_7z()
+                if seven_zip:
+                    _run_cmd([seven_zip, "x", "-y", f"-o{dest_dir}", path])
+                else:
+                    unrar = _find_unrar()
+                    if unrar and lower.endswith(".rar"):
+                        _run_cmd([unrar, "x", "-o+", path, dest_dir])
+                    else:
+                        tool_name = "7zz/7zr/7z" + (" 或 unrar" if lower.endswith(".rar") else "")
+                        return web.json_response({"status": "error", "message": f"系统未安装解压工具：{tool_name}"}, status=400)
+            else:
+                return web.json_response({"status": "error", "message": "不支持的压缩格式"}, status=400)
+
+        return web.json_response({
+            "status": "success",
+            "message": "解压完成",
+            "path": dest_dir
+        })
+    except Exception as e:
+        config.logger.error(f"Failed to unpack archive: {e}")
+        return web.json_response({"status": "error", "message": str(e)}, status=500)
+
+
 async def get_sdcard_info(request):
     """Get SD card mount information
     

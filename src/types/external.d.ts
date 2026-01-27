@@ -8,6 +8,11 @@ declare module "react" {
   export function useEffect(effect: React.EffectCallback, deps?: React.DependencyList): void;
   export function useRef<T>(initialValue: T): React.MutableRefObject<T>;
   export function useRef<T>(initialValue: T | null): React.RefObject<T>;
+  export function useCallback<T extends (...args: any[]) => any>(
+    callback: T,
+    deps?: React.DependencyList
+  ): T;
+  export function memo<T>(component: T): T;
   
   export namespace React {
     type Dispatch<A> = (value: A) => void;
@@ -43,6 +48,25 @@ declare module "@decky/api" {
   export function definePlugin(pluginDefinition: any): any;
   export function addEventListener<T>(event: string, callback: (...args: T[]) => void): any;
   export function removeEventListener(event: string, listener: any): void;
+  export const openFilePicker: (
+    select: FileSelectionType,
+    startPath: string,
+    includeFiles?: boolean,
+    includeFolders?: boolean,
+    filter?: RegExp | ((file: File) => boolean),
+    extensions?: string[],
+    showHiddenFiles?: boolean,
+    allowAllFiles?: boolean,
+    max?: number
+  ) => Promise<{ path: string; realpath: string }>;
+  export enum FileSelectionType {
+    FILE = 0,
+    FOLDER = 1
+  }
+  export const routerHook: {
+    addRoute(path: string, component: any): void;
+    removeRoute(path: string): void;
+  };
 
   export const toaster: {
     toast(toastOptions: { title: string; body?: string }): void;
@@ -55,8 +79,12 @@ declare module "@decky/ui" {
   export const PanelSectionRow: any;
   export const ButtonItem: any;
   export const ToggleField: any;
+  export const TextField: any;
+  export const Tabs: any;
+  export const gamepadTabbedPageClasses: any;
   export const ProgressBar: any;
   export const Navigation: any;
+  export const Router: any;
 }
 
 // JSX 运行时类型

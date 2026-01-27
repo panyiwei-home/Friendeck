@@ -18,7 +18,9 @@ if (api._version != API_VERSION) {
 const callable = api.callable;
 const addEventListener = api.addEventListener;
 const removeEventListener = api.removeEventListener;
+const routerHook = api.routerHook;
 const toaster = api.toaster;
+const openFilePicker = api.openFilePicker;
 const definePlugin = (fn) => {
     return (...args) => {
         return fn(...args);
@@ -1223,6 +1225,13 @@ const getServerStatus = callable("get_server_status");
 callable("get_ip_address");
 const getTextContent = callable("get_text_content");
 const getPendingNotifications = callable("get_pending_notifications");
+const getDownloadDir = callable("get_download_dir");
+const setDownloadDir = callable("set_download_dir");
+const getAutoCopyText = callable("get_auto_copy_text");
+const setAutoCopyText = callable("set_auto_copy_text");
+const getPromptUploadPath = callable("get_prompt_upload_path");
+const setPromptUploadPath = callable("set_prompt_upload_path");
+const setServerPort = callable("set_server_port");
 // =============================================================================
 // Global State Cache (similar to ToMoon pattern)
 // =============================================================================
@@ -1230,11 +1239,39 @@ const getPendingNotifications = callable("get_pending_notifications");
 // renders, it can immediately show the correct state without flashing.
 // The state is pre-fetched in definePlugin() before the component mounts.
 const DEFAULT_PORT = 59271;
+const FILE_SELECTION_FOLDER = 1;
 let serverRunningGlobal = false;
 let serverUrlGlobal = '';
 let serverIpGlobal = '';
 let serverPortGlobal = DEFAULT_PORT;
 let pluginReady = false; // Set to true after initial status fetch
+const SETTINGS_ROUTE = "/decky-send-settings";
+const UI_SETTINGS_KEY = "decky_send_ui_settings";
+const DEFAULT_UI_SETTINGS = {
+    showQRCode: true,
+    showUrlText: true,
+    showTransferHistory: true,
+};
+const loadUiSettings = () => {
+    try {
+        const raw = localStorage.getItem(UI_SETTINGS_KEY);
+        if (!raw)
+            return { ...DEFAULT_UI_SETTINGS };
+        const parsed = JSON.parse(raw);
+        return {
+            showQRCode: typeof parsed.showQRCode === "boolean" ? parsed.showQRCode : DEFAULT_UI_SETTINGS.showQRCode,
+            showUrlText: typeof parsed.showUrlText === "boolean" ? parsed.showUrlText : DEFAULT_UI_SETTINGS.showUrlText,
+            showTransferHistory: typeof parsed.showTransferHistory === "boolean" ? parsed.showTransferHistory : DEFAULT_UI_SETTINGS.showTransferHistory,
+        };
+    }
+    catch {
+        return { ...DEFAULT_UI_SETTINGS };
+    }
+};
+const saveUiSettings = (settings) => {
+    localStorage.setItem(UI_SETTINGS_KEY, JSON.stringify(settings));
+    window.dispatchEvent(new Event("decky-send-settings-updated"));
+};
 // Background toast polling so notifications appear even when UI is closed
 let toastPoller = null;
 function startToastPolling() {
@@ -1294,9 +1331,61 @@ function Content() {
         received: false,
         content: ''
     });
+    const [autoCopyEnabled, setAutoCopyEnabledState] = SP_REACT.useState(false);
+    const autoCopyEnabledRef = SP_REACT.useRef(autoCopyEnabled);
+    SP_REACT.useEffect(() => {
+        autoCopyEnabledRef.current = autoCopyEnabled;
+    }, [autoCopyEnabled]);
+    const [uiSettings, setUiSettings] = SP_REACT.useState(() => loadUiSettings());
+    SP_REACT.useEffect(() => {
+        const handler = () => setUiSettings(loadUiSettings());
+        window.addEventListener("decky-send-settings-updated", handler);
+        return () => window.removeEventListener("decky-send-settings-updated", handler);
+    }, []);
+    SP_REACT.useEffect(() => {
+        let active = true;
+        const loadAutoCopy = async () => {
+            try {
+                const response = await getAutoCopyText();
+                if (active && response.status === "success") {
+                    setAutoCopyEnabledState(Boolean(response.enabled));
+                }
+            }
+            catch (error) {
+                console.error("Failed to load auto copy setting:", error);
+            }
+        };
+        loadAutoCopy();
+        const handler = () => loadAutoCopy();
+        window.addEventListener("decky-send-auto-copy-updated", handler);
+        return () => {
+            active = false;
+            window.removeEventListener("decky-send-auto-copy-updated", handler);
+        };
+    }, []);
     // State for copy button
     const [isCopying, setIsCopying] = SP_REACT.useState(false);
     const [copySuccess, setCopySuccess] = SP_REACT.useState(false);
+    const normalizeText = (value) => {
+        if (typeof value === "string")
+            return value;
+        if (value && typeof value === "object") {
+            const candidate = value.text
+                ?? value.content
+                ?? value.value;
+            if (typeof candidate === "string")
+                return candidate;
+        }
+        if (typeof value === "number" || typeof value === "boolean") {
+            return String(value);
+        }
+        try {
+            return JSON.stringify(value ?? "");
+        }
+        catch {
+            return "";
+        }
+    };
     // Reset copy success state after 2 seconds
     SP_REACT.useEffect(() => {
         if (copySuccess) {
@@ -1308,42 +1397,52 @@ function Content() {
         return undefined;
     }, [copySuccess]);
     // Copy text to clipboard with fallback methods
-    const copyToClipboard = async () => {
-        if (isCopying || copySuccess)
+    const copyToClipboard = async (overrideText, force = false) => {
+        if (isCopying || (!force && copySuccess))
             return;
-        const text = textStatus.content;
+        const resolvedText = typeof overrideText === "undefined"
+            ? textStatus.content
+            : normalizeText(overrideText);
+        const text = typeof resolvedText === "string" ? resolvedText : String(resolvedText ?? "");
+        if (!text)
+            return;
         setIsCopying(true);
-        // Create an input element for copying (more reliable than textarea in some environments)
-        const tempInput = document.createElement('input');
-        tempInput.value = text;
-        tempInput.style.position = 'absolute';
-        tempInput.style.left = '-9999px';
-        document.body.appendChild(tempInput);
         try {
-            tempInput.focus();
-            tempInput.select();
-            let success = false;
-            // Try execCommand first (more reliable in Decky environment)
+            // Create an input element for copying (more reliable than textarea in some environments)
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            tempInput.style.position = 'absolute';
+            tempInput.style.left = '-9999px';
+            document.body.appendChild(tempInput);
             try {
-                if (document.execCommand('copy')) {
-                    success = true;
-                }
-            }
-            catch (e) {
-                // If execCommand fails, try modern clipboard API
+                tempInput.focus();
+                tempInput.select();
+                let success = false;
+                // Try execCommand first (more reliable in Decky environment)
                 try {
-                    await navigator.clipboard.writeText(text);
-                    success = true;
+                    if (document.execCommand('copy')) {
+                        success = true;
+                    }
                 }
-                catch (clipboardError) {
-                    console.error('Both copy methods failed:', e, clipboardError);
+                catch (e) {
+                    // If execCommand fails, try modern clipboard API
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        success = true;
+                    }
+                    catch (clipboardError) {
+                        console.error('Both copy methods failed:', e, clipboardError);
+                    }
+                }
+                if (success) {
+                    setCopySuccess(true);
+                }
+                else {
+                    throw new Error('Both copy methods failed');
                 }
             }
-            if (success) {
-                setCopySuccess(true);
-            }
-            else {
-                throw new Error('Both copy methods failed');
+            finally {
+                document.body.removeChild(tempInput);
             }
         }
         catch (err) {
@@ -1354,10 +1453,40 @@ function Content() {
             });
         }
         finally {
-            // Always clean up
-            document.body.removeChild(tempInput);
             setIsCopying(false);
         }
+    };
+    const copyViaSteamClient = async (text) => {
+        try {
+            const steamClient = window.SteamClient;
+            if (!steamClient)
+                return false;
+            const candidates = [
+                steamClient.System?.SetClipboardText,
+                steamClient.System?.CopyToClipboard,
+                steamClient.System?.SetClipboard,
+                steamClient.Utils?.SetClipboardText,
+                steamClient.Utils?.CopyToClipboard,
+                steamClient.Browser?.SetClipboardText,
+                steamClient.FriendsUI?.SetClipboardText,
+            ].filter(Boolean);
+            for (const fn of candidates) {
+                try {
+                    const result = fn.call(steamClient.System || steamClient.Utils || steamClient, text);
+                    if (result && typeof result.then === "function") {
+                        await result;
+                    }
+                    return true;
+                }
+                catch (error) {
+                    console.error("SteamClient clipboard method failed:", error);
+                }
+            }
+        }
+        catch (error) {
+            console.error("SteamClient clipboard error:", error);
+        }
+        return false;
     };
     // Format file size to human readable format
     const formatFileSize = (bytes) => {
@@ -1389,7 +1518,8 @@ function Content() {
             if (enabled) {
                 // Start server
                 console.log('Starting server...');
-                const response = await startServer(DEFAULT_PORT);
+                const targetPort = serverStatus.port || serverPortGlobal || DEFAULT_PORT;
+                const response = await startServer(targetPort);
                 if (response.status === 'success' || response.message === '服务器已在运行') {
                     // Update global cache
                     serverRunningGlobal = true;
@@ -1558,12 +1688,17 @@ function Content() {
         };
         // Sync status on mount (in case it changed since plugin init)
         syncServerStatus();
+        const handlePortUpdate = () => {
+            syncServerStatus();
+        };
+        window.addEventListener("decky-send-port-updated", handlePortUpdate);
         // Set up interval to periodically sync server status (every 5 seconds)
         const statusInterval = setInterval(() => {
             checkServerStatus();
         }, 5000);
         return () => {
             clearInterval(statusInterval);
+            window.removeEventListener("decky-send-port-updated", handlePortUpdate);
         };
     }, []); // Empty dependency array - only run on mount
     // Listen for transfer status updates from backend
@@ -1599,12 +1734,43 @@ function Content() {
         });
         // Listen for text received event
         const textReceivedListener = addEventListener("text_received", ([text]) => {
-            // Update text status
-            const textState = {
-                received: true,
-                content: text
-            };
-            setTextStatus(textState);
+            const normalizedText = normalizeText(text);
+            if (normalizedText) {
+                setTextStatus({
+                    received: true,
+                    content: normalizedText
+                });
+                if (autoCopyEnabledRef.current) {
+                    void (async () => {
+                        const steamSuccess = await copyViaSteamClient(normalizedText);
+                        if (!steamSuccess) {
+                            await copyToClipboard(normalizedText, true);
+                        }
+                    })();
+                }
+                return;
+            }
+            void (async () => {
+                try {
+                    const textResponse = await getTextContent();
+                    if (textResponse.status === "success") {
+                        const content = textResponse.content || "";
+                        setTextStatus({
+                            received: content.trim() !== "",
+                            content
+                        });
+                        if (autoCopyEnabledRef.current && content) {
+                            const steamSuccess = await copyViaSteamClient(content);
+                            if (!steamSuccess) {
+                                await copyToClipboard(content, true);
+                            }
+                        }
+                    }
+                }
+                catch (error) {
+                    console.error("Failed to load text content after event:", error);
+                }
+            })();
         });
         return () => {
             removeEventListener("transfer_status", transferListener);
@@ -1612,14 +1778,20 @@ function Content() {
             removeEventListener("text_received", textReceivedListener);
         };
     }, []);
-    return (SP_JSX.jsxs(SP_JSX.Fragment, { children: [SP_JSX.jsx(DFL.PanelSection, { children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u6587\u4EF6\u4F20\u8F93\u670D\u52A1", description: serverStatus.loading ? '正在切换...' : (serverStatus.running ? '服务运行中' : '服务已停止'), checked: serverStatus.running, disabled: serverStatus.loading, onChange: handleServiceToggle }) }) }), serverStatus.running && serverStatus.url && (SP_JSX.jsx(DFL.PanelSection, { title: "\u8BBF\u95EE\u65B9\u5F0F", children: SP_JSX.jsxs("div", { style: {
+    return (SP_JSX.jsxs("div", { style: {
+            paddingTop: 16,
+            paddingBottom: 24,
+            minHeight: "100%",
+            boxSizing: "border-box",
+            backgroundColor: "var(--gpBackground-color, #1b1b1b)"
+        }, children: [SP_JSX.jsx(DFL.PanelSection, { children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u6587\u4EF6\u4F20\u8F93\u670D\u52A1", description: serverStatus.loading ? '正在切换...' : (serverStatus.running ? '服务运行中' : '服务已停止'), checked: serverStatus.running, disabled: serverStatus.loading, onChange: handleServiceToggle }) }) }), serverStatus.running && serverStatus.url && (uiSettings.showQRCode || uiSettings.showUrlText) && (SP_JSX.jsx(DFL.PanelSection, { title: "\u8BBF\u95EE\u65B9\u5F0F", children: SP_JSX.jsxs("div", { style: {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         padding: '10px 20px 10px 20px',
                         gap: '15px',
                         marginBottom: '-10px'
-                    }, children: [SP_JSX.jsx("div", { style: {
+                    }, children: [uiSettings.showQRCode && (SP_JSX.jsx("div", { style: {
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -1635,7 +1807,7 @@ function Content() {
                                 if (['Enter', 'Space'].includes(e.key)) {
                                     e.preventDefault();
                                 }
-                            }, children: SP_JSX.jsx(QRCodeCanvas, { value: serverStatus.url, size: 100, level: "M", includeMargin: false, "aria-hidden": "true" }) }), SP_JSX.jsx("div", { style: {
+                            }, children: SP_JSX.jsx(QRCodeCanvas, { value: serverStatus.url, size: 100, level: "M", includeMargin: false, "aria-hidden": "true" }) })), uiSettings.showUrlText && (SP_JSX.jsx("div", { style: {
                                 textAlign: 'center',
                                 maxWidth: '100%',
                                 wordBreak: 'break-all'
@@ -1653,7 +1825,7 @@ function Content() {
                                     if (['Enter', 'Space'].includes(e.key)) {
                                         e.preventDefault();
                                     }
-                                }, children: serverStatus.url }) })] }) })), serverStatus.running && (SP_JSX.jsx(DFL.PanelSection, { title: "\u4F20\u8F93\u8BB0\u5F55", children: (transferStatus.running || (transferStatus.filename !== '' && transferStatus.size > 0)) ? (
+                                }, children: serverStatus.url }) }))] }) })), serverStatus.running && uiSettings.showTransferHistory && (SP_JSX.jsx(DFL.PanelSection, { title: "\u4F20\u8F93\u8BB0\u5F55", children: (transferStatus.running || (transferStatus.filename !== '' && transferStatus.size > 0)) ? (
                 // File transfer in progress or recent transfer
                 SP_JSX.jsxs("div", { style: { padding: '10px 0' }, children: [SP_JSX.jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }, children: [SP_JSX.jsx("span", { style: { fontSize: '14px', fontWeight: 'bold' }, children: transferStatus.filename }), SP_JSX.jsx("span", { style: { fontSize: '13px', color: '#666' }, children: formatFileSize(transferStatus.size) })] }), SP_JSX.jsx(DFL.ProgressBar, { nProgress: calculateProgress() }), SP_JSX.jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }, children: [SP_JSX.jsxs("span", { style: { fontSize: '13px', color: '#666' }, children: ["\u5DF2\u4F20\u8F93: ", formatFileSize(transferStatus.transferred)] }), SP_JSX.jsxs("span", { style: { fontSize: '13px', fontWeight: 'bold', color: '#1b73e8' }, children: [calculateProgress(), "%"] })] }), SP_JSX.jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#666' }, children: [SP_JSX.jsxs("span", { children: ["\u901F\u5EA6: ", formatFileSize(transferStatus.speed), "/s"] }), SP_JSX.jsxs("span", { children: ["\u5269\u4F59: ", formatTime(transferStatus.eta)] })] })] })) : textStatus.received ? (
                 // Text received
@@ -1669,7 +1841,7 @@ function Content() {
                                     fontSize: '14px',
                                     whiteSpace: 'pre-wrap',
                                     wordBreak: 'break-word'
-                                }, children: textStatus.content }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: copyToClipboard, disabled: isCopying || copySuccess, children: SP_JSX.jsx("div", { style: {
+                                }, children: textStatus.content }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: () => copyToClipboard(), disabled: isCopying || copySuccess, children: SP_JSX.jsx("div", { style: {
                                         color: copySuccess ? "#4CAF50" : "inherit",
                                         fontWeight: copySuccess ? "bold" : "normal"
                                     }, children: copySuccess ? "复制成功" : isCopying ? "复制中..." : "复制到剪贴板" }) }) })] })) : (
@@ -1679,11 +1851,270 @@ function Content() {
                         padding: '20px',
                         color: '#666',
                         fontSize: '14px'
-                    }, children: "\u5F53\u524D\u65E0\u4F20\u8F93\u4EFB\u52A1" })) }))] }));
+                    }, children: "\u5F53\u524D\u65E0\u4F20\u8F93\u4EFB\u52A1" })) })), SP_JSX.jsx(DFL.PanelSection, { title: "\u8BBE\u7F6E", children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: () => {
+                            DFL.Router.CloseSideMenus?.();
+                            DFL.Router.Navigate(SETTINGS_ROUTE);
+                        }, children: "\u8BBE\u7F6E" }) }) })] }));
 }
+const SettingsPage = () => {
+    const [settings, setSettings] = SP_REACT.useState(() => loadUiSettings());
+    const [downloadDir, setDownloadDirState] = SP_REACT.useState("");
+    const [autoCopyEnabled, setAutoCopyEnabled] = SP_REACT.useState(false);
+    const [promptUploadPathEnabled, setPromptUploadPathEnabled] = SP_REACT.useState(false);
+    const [portInput, setPortInput] = SP_REACT.useState("");
+    const [portSaving, setPortSaving] = SP_REACT.useState(false);
+    const [activeTab, setActiveTab] = SP_REACT.useState("ui");
+    const containerRef = SP_REACT.useRef(null);
+    SP_REACT.useEffect(() => {
+        const classMap = DFL.gamepadTabbedPageClasses;
+        if (!classMap)
+            return;
+        const styleId = "decky-send-tabs-no-jitter";
+        if (document.getElementById(styleId))
+            return;
+        const style = document.createElement("style");
+        style.id = styleId;
+        const rules = [];
+        if (classMap.TabsRowScroll) {
+            rules.push(`.${classMap.TabsRowScroll}{scroll-behavior:auto !important;}`);
+        }
+        if (classMap.TabRowTabs) {
+            rules.push(`.${classMap.TabRowTabs}{transition:none !important;}`);
+            rules.push(`.${classMap.TabRowTabs}{scroll-snap-type:none !important;}`);
+        }
+        if (classMap.Tab) {
+            rules.push(`.${classMap.Tab}{transition:none !important;}`);
+        }
+        style.textContent = rules.join("\n");
+        document.head.appendChild(style);
+    }, []);
+    SP_REACT.useEffect(() => {
+        const classMap = DFL.gamepadTabbedPageClasses;
+        if (!classMap)
+            return;
+        const rowClass = classMap.TabsRowScroll || classMap.TabRowTabs;
+        if (!rowClass)
+            return;
+        const handle = window.requestAnimationFrame(() => {
+            const row = document.querySelector(`.${rowClass}`);
+            if (row) {
+                row.style.scrollBehavior = "auto";
+                row.scrollLeft = 0;
+            }
+        });
+        return () => window.cancelAnimationFrame(handle);
+    }, [activeTab]);
+    const focusTabRow = (tabId) => {
+        const classMap = DFL.gamepadTabbedPageClasses;
+        if (!classMap || !containerRef.current)
+            return;
+        const tabClass = classMap.Tab;
+        if (!tabClass)
+            return;
+        let target = null;
+        if (tabId) {
+            const tabTitle = tabDefs.find((tab) => tab.id === tabId)?.title;
+            if (tabTitle) {
+                const tabs = containerRef.current.querySelectorAll(`.${tabClass}`);
+                for (const tab of Array.from(tabs)) {
+                    const el = tab;
+                    if (el.textContent?.trim() === tabTitle) {
+                        target = el;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!target) {
+            const activeClass = classMap.Active || classMap.Selected;
+            const selector = activeClass ? `.${tabClass}.${activeClass}` : `.${tabClass}`;
+            target = containerRef.current.querySelector(selector);
+        }
+        target?.focus?.();
+    };
+    const updateSetting = (key, value) => {
+        const next = { ...settings, [key]: value };
+        setSettings(next);
+        saveUiSettings(next);
+    };
+    SP_REACT.useEffect(() => {
+        let active = true;
+        (async () => {
+            try {
+                const status = await getServerStatus();
+                if (active && status) {
+                    const initialPort = String(status.port || DEFAULT_PORT);
+                    setPortInput(initialPort);
+                }
+                const response = await getDownloadDir();
+                if (active && response.status === "success") {
+                    setDownloadDirState(response.path || "");
+                }
+                const autoCopyResponse = await getAutoCopyText();
+                if (active && autoCopyResponse.status === "success") {
+                    setAutoCopyEnabled(Boolean(autoCopyResponse.enabled));
+                }
+                const promptPathResponse = await getPromptUploadPath();
+                if (active && promptPathResponse.status === "success") {
+                    setPromptUploadPathEnabled(Boolean(promptPathResponse.enabled));
+                }
+            }
+            catch (error) {
+                console.error("Failed to load download directory:", error);
+            }
+        })();
+        return () => {
+            active = false;
+        };
+    }, []);
+    const handleAutoCopyToggle = async (value) => {
+        try {
+            const response = await setAutoCopyText(value);
+            if (response.status === "success") {
+                setAutoCopyEnabled(Boolean(response.enabled));
+                window.dispatchEvent(new Event("decky-send-auto-copy-updated"));
+                return;
+            }
+            toaster.toast({
+                title: "设置失败",
+                body: response.message || "无法更新自动复制设置"
+            });
+        }
+        catch (error) {
+            console.error("Failed to set auto copy:", error);
+            toaster.toast({
+                title: "设置失败",
+                body: "无法更新自动复制设置"
+            });
+        }
+    };
+    const handlePromptUploadPathToggle = async (value) => {
+        try {
+            const response = await setPromptUploadPath(value);
+            if (response.status === "success") {
+                setPromptUploadPathEnabled(Boolean(response.enabled));
+                return;
+            }
+            toaster.toast({
+                title: "设置失败",
+                body: response.message || "无法更新上传路径设置"
+            });
+        }
+        catch (error) {
+            console.error("Failed to set prompt upload path:", error);
+            toaster.toast({
+                title: "设置失败",
+                body: "无法更新上传路径设置"
+            });
+        }
+    };
+    const handlePickDownloadDir = async () => {
+        try {
+            const startPath = downloadDir || "/home/deck";
+            const result = await openFilePicker(FILE_SELECTION_FOLDER, startPath, false, true);
+            const selectedPath = result?.realpath || result?.path;
+            if (!selectedPath) {
+                return;
+            }
+            const saveResult = await setDownloadDir(selectedPath);
+            if (saveResult.status === "success") {
+                const nextPath = saveResult.path || selectedPath;
+                setDownloadDirState(nextPath);
+                toaster.toast({
+                    title: "下载目录已更新",
+                    body: nextPath
+                });
+            }
+            else {
+                toaster.toast({
+                    title: "设置失败",
+                    body: saveResult.message || "无法更新下载目录"
+                });
+            }
+        }
+        catch (error) {
+            console.error("Failed to pick download directory:", error);
+            toaster.toast({
+                title: "设置失败",
+                body: "无法打开文件选择器"
+            });
+        }
+    };
+    const handlePortSave = async () => {
+        if (portSaving)
+            return;
+        const parsed = Number(portInput);
+        if (!Number.isInteger(parsed) || parsed < 1 || parsed > 65535) {
+            toaster.toast({
+                title: "端口无效",
+                body: "请输入 1-65535 之间的整数端口"
+            });
+            return;
+        }
+        setPortSaving(true);
+        try {
+            const response = await setServerPort(parsed);
+            if (response.status === "success") {
+                const nextPort = String(response.port ?? parsed);
+                setPortInput(nextPort);
+                window.dispatchEvent(new Event("decky-send-port-updated"));
+                toaster.toast({
+                    title: "端口已更新",
+                    body: `当前端口: ${nextPort}`
+                });
+            }
+            else {
+                toaster.toast({
+                    title: "设置失败",
+                    body: response.message || "无法更新端口"
+                });
+            }
+        }
+        catch (error) {
+            console.error("Failed to set port:", error);
+            toaster.toast({
+                title: "设置失败",
+                body: "无法更新端口"
+            });
+        }
+        finally {
+            setPortSaving(false);
+        }
+    };
+    const tabDefs = [
+        {
+            id: "ui",
+            title: "界面设置",
+            content: (SP_JSX.jsxs(DFL.PanelSection, { children: [SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u663E\u793A\u4E8C\u7EF4\u7801", description: "\u5728\u4E3B\u9875\u5C55\u793A\u4E8C\u7EF4\u7801", checked: settings.showQRCode, onChange: (value) => updateSetting("showQRCode", value) }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u663E\u793A\u8BBF\u95EE\u5730\u5740", description: "\u5728\u4E3B\u9875\u5C55\u793A\u8BBF\u95EE\u94FE\u63A5", checked: settings.showUrlText, onChange: (value) => updateSetting("showUrlText", value) }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u663E\u793A\u4F20\u8F93\u8BB0\u5F55", description: "\u5728\u4E3B\u9875\u5C55\u793A\u4F20\u8F93\u72B6\u6001", checked: settings.showTransferHistory, onChange: (value) => updateSetting("showTransferHistory", value) }) })] }))
+        },
+        {
+            id: "transfer",
+            title: "传输设置",
+            content: (SP_JSX.jsxs(SP_JSX.Fragment, { children: [SP_JSX.jsx(DFL.PanelSection, { title: "\u6587\u672C\u4F20\u8F93", children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u81EA\u52A8\u590D\u5236\u6587\u672C", description: "\u6536\u5230\u6587\u672C\u540E\u81EA\u52A8\u590D\u5236\u5230\u526A\u8D34\u677F", checked: autoCopyEnabled, onChange: handleAutoCopyToggle }) }) }), SP_JSX.jsxs(DFL.PanelSection, { title: "\u6587\u4EF6\u4F20\u8F93", children: [SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u4E0A\u4F20\u524D\u9009\u62E9\u8DEF\u5F84", description: "\u6BCF\u6B21\u4E0A\u4F20\u524D\u624B\u52A8\u9009\u62E9\u4FDD\u5B58\u76EE\u5F55", checked: promptUploadPathEnabled, onChange: handlePromptUploadPathToggle }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsxs("div", { style: { fontSize: "12px", color: "#9aa0a6", lineHeight: 1.4 }, children: ["\u5F53\u524D\u4E0B\u8F7D\u76EE\u5F55\uFF1A", downloadDir || "未设置"] }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: handlePickDownloadDir, children: "\u9009\u62E9\u4E0B\u8F7D\u76EE\u5F55" }) })] })] }))
+        },
+        {
+            id: "port",
+            title: "端口设置",
+            content: (SP_JSX.jsxs(DFL.PanelSection, { children: [SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.TextField, { label: "\u7AEF\u53E3\u53F7", type: "number", min: 1, max: 65535, inputMode: "numeric", value: portInput, onChange: (event) => setPortInput(event.currentTarget.value) }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: handlePortSave, disabled: portSaving, children: portSaving ? "保存中..." : "保存端口" }) })] }))
+        }
+    ];
+    return (SP_JSX.jsx("div", { ref: containerRef, style: {
+            paddingTop: 48,
+            paddingBottom: 24,
+            minHeight: "100%",
+            boxSizing: "border-box",
+            backgroundColor: "var(--gpBackground-color, #1b1b1b)",
+            overflowX: "hidden"
+        }, children: SP_JSX.jsx(DFL.Tabs, { tabs: tabDefs, activeTab: activeTab, onShowTab: (tabId) => {
+                focusTabRow();
+                setActiveTab(tabId);
+                window.requestAnimationFrame(() => focusTabRow(tabId));
+            }, autoFocusContents: false }) }));
+};
 var index = definePlugin(() => {
     console.log("decky-send plugin initializing");
     startToastPolling();
+    routerHook.addRoute(SETTINGS_ROUTE, SettingsPage);
     // Pre-fetch server status before component renders (like ToMoon pattern)
     // This prevents the "flash" effect where toggle shows OFF then switches to ON
     // IMPORTANT: Use immediately-invoked async function to pre-fetch, then set pluginReady
@@ -1720,15 +2151,17 @@ var index = definePlugin(() => {
     })();
     return {
         // The name shown in various decky menus
-        name: "", // Removed plugin name as requested
+        name: "Decky-send",
         // The content of your plugin's menu
         content: SP_JSX.jsx(Content, {}),
+        alwaysRender: true,
         // The icon displayed in the plugin list
         icon: SP_JSX.jsx(FaUpload, {}),
         // The function triggered when your plugin unloads
         onDismount() {
             console.log("Unloading decky-send plugin");
             stopToastPolling();
+            routerHook.removeRoute(SETTINGS_ROUTE);
         }
     };
 });

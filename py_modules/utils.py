@@ -12,6 +12,7 @@ import os
 import shutil
 import subprocess
 import json
+import glob
 from typing import List, Dict, Any
 # NOTE: Direct import - Decky adds py_modules/ to sys.path
 import config
@@ -20,13 +21,81 @@ import config
 # Network Utilities
 # =============================================================================
 
+def _is_vpn_interface(name: str) -> bool:
+    if not name:
+        return True
+    lowered = name.lower()
+    vpn_prefixes = (
+        "tun",
+        "tap",
+        "wg",
+        "ppp",
+        "pptp",
+        "utun",
+        "tailscale",
+        "ts",
+        "docker",
+        "br-",
+        "virbr",
+        "vmnet",
+        "vboxnet",
+        "lo",
+    )
+    return lowered.startswith(vpn_prefixes)
+
+
+def _get_ip_from_ip_cmd() -> str | None:
+    ip_bin = shutil.which("ip") or "/sbin/ip" or "/usr/sbin/ip"
+    if not os.path.exists(ip_bin):
+        return None
+    try:
+        result = subprocess.run(
+            [ip_bin, "-4", "-o", "addr", "show"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        lines = result.stdout.splitlines()
+    except Exception as e:
+        config.logger.debug(f"Failed to read ip addr output: {e}")
+        return None
+
+    candidates: list[tuple[int, str]] = []
+    for line in lines:
+        parts = line.split()
+        if len(parts) < 4:
+            continue
+        iface = parts[1]
+        ip_with_mask = parts[3]
+        ip = ip_with_mask.split("/")[0]
+
+        if ip.startswith("127.") or ip.startswith("169.254."):
+            continue
+        if _is_vpn_interface(iface):
+            continue
+
+        priority = 1
+        if iface.startswith(("wl", "wlan", "wlp", "wifi", "eth", "en", "eno", "ens", "enp")):
+            priority = 0
+        candidates.append((priority, ip))
+
+    if not candidates:
+        return None
+    candidates.sort(key=lambda item: item[0])
+    return candidates[0][1]
+
+
 def get_ip_address():
-    """Get the local IP address of the device
+    """Get the local LAN IP address of the device (prefers non-VPN interfaces).
     
     Returns:
         str: Local IP address, or "127.0.0.1" if detection fails
     """
     try:
+        ip_address = _get_ip_from_ip_cmd()
+        if ip_address:
+            return ip_address
+
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         ip_address = s.getsockname()[0]
@@ -204,6 +273,86 @@ def send_system_notification(title: str, body: str, duration: float = 5.0) -> bo
         return True
     except Exception as e:
         config.logger.debug(f"System notification failed: {e}")
+        return False
+
+
+# =============================================================================
+# Clipboard Utilities
+# =============================================================================
+
+def set_clipboard_text(text: str) -> bool:
+    """Set system clipboard text using available clipboard utilities."""
+    try:
+        if text is None:
+            return False
+        if not isinstance(text, str):
+            text = str(text)
+        if text == "":
+            return False
+
+        env = os.environ.copy()
+        uid = os.getuid()
+        runtime_dir = env.get("XDG_RUNTIME_DIR") or f"/run/user/{uid}"
+        env.setdefault("XDG_RUNTIME_DIR", runtime_dir)
+        env.setdefault("DBUS_SESSION_BUS_ADDRESS", f"unix:path={runtime_dir}/bus")
+        env.setdefault("DISPLAY", ":0")
+        # Pick an existing wayland socket if possible
+        if "WAYLAND_DISPLAY" not in env:
+            try:
+                wayland_sockets = sorted(glob.glob(os.path.join(runtime_dir, "wayland-*")))
+                if wayland_sockets:
+                    env["WAYLAND_DISPLAY"] = os.path.basename(wayland_sockets[0])
+                else:
+                    env["WAYLAND_DISPLAY"] = "wayland-0"
+            except Exception:
+                env["WAYLAND_DISPLAY"] = "wayland-0"
+
+        commands = [
+            ["/usr/bin/wl-copy"],
+            ["/usr/local/bin/wl-copy"],
+            ["/usr/bin/xclip", "-selection", "clipboard"],
+            ["/usr/bin/xsel", "--clipboard", "--input"],
+            ["wl-copy"],
+            ["xclip", "-selection", "clipboard"],
+            ["xsel", "--clipboard", "--input"],
+        ]
+
+        for cmd in commands:
+            bin_path = cmd[0] if os.path.isabs(cmd[0]) else shutil.which(cmd[0])
+            if not bin_path or not os.path.exists(bin_path):
+                continue
+            try:
+                subprocess.run(
+                    [bin_path] + cmd[1:],
+                    input=text.encode("utf-8"),
+                    env=env,
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+                return True
+            except Exception as e:
+                config.logger.debug(f"Clipboard command failed ({cmd[0]}): {e}")
+
+        # KDE Plasma / SteamOS (Game Mode) clipboard via Klipper
+        qdbus_path = shutil.which("qdbus") or "/usr/bin/qdbus"
+        if os.path.exists(qdbus_path):
+            try:
+                subprocess.run(
+                    [qdbus_path, "org.kde.klipper", "/klipper", "setClipboardContents", text],
+                    env=env,
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+                return True
+            except Exception as e:
+                config.logger.debug(f"Clipboard command failed (qdbus): {e}")
+
+        config.logger.debug("No clipboard utility available for auto copy")
+        return False
+    except Exception as e:
+        config.logger.debug(f"Clipboard set failed: {e}")
         return False
 
 
