@@ -4042,11 +4042,20 @@ const getDownloadDir = callable("get_download_dir");
 const setDownloadDir = callable("set_download_dir");
 const getAutoCopyText = callable("get_auto_copy_text");
 const setAutoCopyText = callable("set_auto_copy_text");
+<<<<<<< HEAD
 const getPromptUploadPath = callable("get_prompt_upload_path");
 const setPromptUploadPath = callable("set_prompt_upload_path");
 const setServerPort = callable("set_server_port");
 const getLanguagePreference = callable("get_language_preference");
 const setLanguagePreference = callable("set_language_preference");
+=======
+<<<<<<< HEAD
+const getPromptUploadPath = callable("get_prompt_upload_path");
+const setPromptUploadPath = callable("set_prompt_upload_path");
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+const setServerPort = callable("set_server_port");
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
 // =============================================================================
 // Global State Cache (similar to ToMoon pattern)
 // =============================================================================
@@ -4067,6 +4076,7 @@ const DEFAULT_UI_SETTINGS = {
     showUrlText: true,
     showTransferHistory: true,
 };
+<<<<<<< HEAD
 const i18nReady = loadTranslations();
 const applyLanguagePreference = async (language) => {
     try {
@@ -4077,6 +4087,8 @@ const applyLanguagePreference = async (language) => {
         console.error("Failed to apply language preference:", error);
     }
 };
+=======
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
 const loadUiSettings = () => {
     try {
         const raw = localStorage.getItem(UI_SETTINGS_KEY);
@@ -4608,8 +4620,14 @@ function Content() {
             paddingTop: 16,
             paddingBottom: 24,
             minHeight: "100%",
+<<<<<<< HEAD
             boxSizing: "border-box"
         }, children: [SP_JSX.jsx(DFL.PanelSection, { children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: t("service.label"), description: serverStatus.loading ? t("service.status.switching") : (serverStatus.running ? t("service.status.running") : t("service.status.stopped")), checked: serverStatus.running, disabled: serverStatus.loading, onChange: handleServiceToggle }) }) }), serverStatus.running && serverStatus.url && (uiSettings.showQRCode || uiSettings.showUrlText) && (SP_JSX.jsx(DFL.PanelSection, { title: t("access.title"), children: SP_JSX.jsxs("div", { style: {
+=======
+            boxSizing: "border-box",
+            backgroundColor: "var(--gpBackground-color, #1b1b1b)"
+        }, children: [SP_JSX.jsx(DFL.PanelSection, { children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u6587\u4EF6\u4F20\u8F93\u670D\u52A1", description: serverStatus.loading ? '正在切换...' : (serverStatus.running ? '服务运行中' : '服务已停止'), checked: serverStatus.running, disabled: serverStatus.loading, onChange: handleServiceToggle }) }) }), serverStatus.running && serverStatus.url && (uiSettings.showQRCode || uiSettings.showUrlText) && (SP_JSX.jsx(DFL.PanelSection, { title: "\u8BBF\u95EE\u65B9\u5F0F", children: SP_JSX.jsxs("div", { style: {
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -4650,7 +4668,11 @@ function Content() {
                                     if (['Enter', 'Space'].includes(e.key)) {
                                         e.preventDefault();
                                     }
+<<<<<<< HEAD
                                 }, children: serverStatus.url }) }))] }) })), serverStatus.running && uiSettings.showTransferHistory && (SP_JSX.jsx(DFL.PanelSection, { title: t("transfer.title"), children: (transferStatus.running || (transferStatus.filename !== '' && transferStatus.size > 0)) ? (
+=======
+                                }, children: serverStatus.url }) }))] }) })), serverStatus.running && uiSettings.showTransferHistory && (SP_JSX.jsx(DFL.PanelSection, { title: "\u4F20\u8F93\u8BB0\u5F55", children: (transferStatus.running || (transferStatus.filename !== '' && transferStatus.size > 0)) ? (
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                 // File transfer in progress or recent transfer
                 SP_JSX.jsxs("div", { style: { padding: '10px 0' }, children: [SP_JSX.jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }, children: [SP_JSX.jsx("span", { style: { fontSize: '14px', fontWeight: 'bold' }, children: transferStatus.filename }), SP_JSX.jsx("span", { style: { fontSize: '13px', color: '#666' }, children: formatFileSize(transferStatus.size) })] }), SP_JSX.jsx(DFL.ProgressBar, { nProgress: calculateProgress() }), SP_JSX.jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }, children: [SP_JSX.jsx("span", { style: { fontSize: '13px', color: '#666' }, children: t("transfer.sent", { size: formatFileSize(transferStatus.transferred) }) }), SP_JSX.jsxs("span", { style: { fontSize: '13px', fontWeight: 'bold', color: '#1b73e8' }, children: [calculateProgress(), "%"] })] }), SP_JSX.jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#666' }, children: [SP_JSX.jsx("span", { children: t("transfer.speed", { speed: formatFileSize(transferStatus.speed) }) }), SP_JSX.jsx("span", { children: t("transfer.remaining", { time: formatTime(transferStatus.eta) }) })] })] })) : textStatus.received ? (
                 // Text received
@@ -4676,6 +4698,7 @@ function Content() {
                         padding: '20px',
                         color: '#666',
                         fontSize: '14px'
+<<<<<<< HEAD
                     }, children: t("transfer.none") })) })), SP_JSX.jsx(DFL.PanelSection, { title: t("common.settings"), children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: () => {
                             DFL.Router.CloseSideMenus?.();
                             DFL.Router.Navigate(SETTINGS_ROUTE);
@@ -4692,6 +4715,23 @@ const SettingsPage = () => {
     const [selectedLanguage, setSelectedLanguage] = SP_REACT.useState("auto");
     const [languageLoading, setLanguageLoading] = SP_REACT.useState(true);
     const [languageSaving, setLanguageSaving] = SP_REACT.useState(false);
+=======
+                    }, children: "\u5F53\u524D\u65E0\u4F20\u8F93\u4EFB\u52A1" })) })), SP_JSX.jsx(DFL.PanelSection, { title: "\u8BBE\u7F6E", children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: () => {
+                            DFL.Router.CloseSideMenus?.();
+                            DFL.Router.Navigate(SETTINGS_ROUTE);
+                        }, children: "\u8BBE\u7F6E" }) }) })] }));
+}
+const SettingsPage = () => {
+    const [settings, setSettings] = SP_REACT.useState(() => loadUiSettings());
+    const [downloadDir, setDownloadDirState] = SP_REACT.useState("");
+    const [autoCopyEnabled, setAutoCopyEnabled] = SP_REACT.useState(false);
+<<<<<<< HEAD
+    const [promptUploadPathEnabled, setPromptUploadPathEnabled] = SP_REACT.useState(false);
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+    const [portInput, setPortInput] = SP_REACT.useState("");
+    const [portSaving, setPortSaving] = SP_REACT.useState(false);
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
     const [activeTab, setActiveTab] = SP_REACT.useState("ui");
     const containerRef = SP_REACT.useRef(null);
     SP_REACT.useEffect(() => {
@@ -4783,23 +4823,35 @@ const SettingsPage = () => {
                 if (active && autoCopyResponse.status === "success") {
                     setAutoCopyEnabled(Boolean(autoCopyResponse.enabled));
                 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                 const promptPathResponse = await getPromptUploadPath();
                 if (active && promptPathResponse.status === "success") {
                     setPromptUploadPathEnabled(Boolean(promptPathResponse.enabled));
                 }
+<<<<<<< HEAD
                 const languageResponse = await getLanguagePreference();
                 if (active && languageResponse.status === "success") {
                     const lang = languageResponse.language || "auto";
                     setSelectedLanguage(lang);
                     await applyLanguagePreference(lang);
                 }
+=======
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             }
             catch (error) {
                 console.error("Failed to load download directory:", error);
             }
+<<<<<<< HEAD
             if (active) {
                 setLanguageLoading(false);
             }
+=======
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
         })();
         return () => {
             active = false;
@@ -4814,18 +4866,32 @@ const SettingsPage = () => {
                 return;
             }
             toaster.toast({
+<<<<<<< HEAD
                 title: t("toasts.settingsFailedTitle"),
                 body: response.message || t("toasts.autoCopyFailedBody")
+=======
+                title: "设置失败",
+                body: response.message || "无法更新自动复制设置"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             });
         }
         catch (error) {
             console.error("Failed to set auto copy:", error);
             toaster.toast({
+<<<<<<< HEAD
                 title: t("toasts.settingsFailedTitle"),
                 body: t("toasts.autoCopyFailedBody")
             });
         }
     };
+=======
+                title: "设置失败",
+                body: "无法更新自动复制设置"
+            });
+        }
+    };
+<<<<<<< HEAD
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
     const handlePromptUploadPathToggle = async (value) => {
         try {
             const response = await setPromptUploadPath(value);
@@ -4834,18 +4900,33 @@ const SettingsPage = () => {
                 return;
             }
             toaster.toast({
+<<<<<<< HEAD
                 title: t("toasts.settingsFailedTitle"),
                 body: response.message || t("toasts.promptPathFailedBody")
+=======
+                title: "设置失败",
+                body: response.message || "无法更新上传路径设置"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             });
         }
         catch (error) {
             console.error("Failed to set prompt upload path:", error);
             toaster.toast({
+<<<<<<< HEAD
                 title: t("toasts.settingsFailedTitle"),
                 body: t("toasts.promptPathFailedBody")
             });
         }
     };
+=======
+                title: "设置失败",
+                body: "无法更新上传路径设置"
+            });
+        }
+    };
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
     const handlePickDownloadDir = async () => {
         try {
             const startPath = downloadDir || "/home/deck";
@@ -4859,22 +4940,36 @@ const SettingsPage = () => {
                 const nextPath = saveResult.path || selectedPath;
                 setDownloadDirState(nextPath);
                 toaster.toast({
+<<<<<<< HEAD
                     title: t("toasts.downloadDirUpdatedTitle"),
+=======
+                    title: "下载目录已更新",
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                     body: nextPath
                 });
             }
             else {
                 toaster.toast({
+<<<<<<< HEAD
                     title: t("toasts.settingsFailedTitle"),
                     body: saveResult.message || t("toasts.downloadDirFailedBody")
+=======
+                    title: "设置失败",
+                    body: saveResult.message || "无法更新下载目录"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                 });
             }
         }
         catch (error) {
             console.error("Failed to pick download directory:", error);
             toaster.toast({
+<<<<<<< HEAD
                 title: t("toasts.settingsFailedTitle"),
                 body: t("toasts.filePickerFailedBody")
+=======
+                title: "设置失败",
+                body: "无法打开文件选择器"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             });
         }
     };
@@ -4884,8 +4979,13 @@ const SettingsPage = () => {
         const parsed = Number(portInput);
         if (!Number.isInteger(parsed) || parsed < 1 || parsed > 65535) {
             toaster.toast({
+<<<<<<< HEAD
                 title: t("toasts.portInvalidTitle"),
                 body: t("toasts.portInvalidBody")
+=======
+                title: "端口无效",
+                body: "请输入 1-65535 之间的整数端口"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             });
             return;
         }
@@ -4897,28 +4997,44 @@ const SettingsPage = () => {
                 setPortInput(nextPort);
                 window.dispatchEvent(new Event("decky-send-port-updated"));
                 toaster.toast({
+<<<<<<< HEAD
                     title: t("toasts.portUpdatedTitle"),
                     body: t("toasts.portUpdatedBody", { port: nextPort })
+=======
+                    title: "端口已更新",
+                    body: `当前端口: ${nextPort}`
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                 });
             }
             else {
                 toaster.toast({
+<<<<<<< HEAD
                     title: t("toasts.settingsFailedTitle"),
                     body: response.message || t("toasts.portUpdateFailedBody")
+=======
+                    title: "设置失败",
+                    body: response.message || "无法更新端口"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                 });
             }
         }
         catch (error) {
             console.error("Failed to set port:", error);
             toaster.toast({
+<<<<<<< HEAD
                 title: t("toasts.settingsFailedTitle"),
                 body: t("toasts.portUpdateFailedBody")
+=======
+                title: "设置失败",
+                body: "无法更新端口"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             });
         }
         finally {
             setPortSaving(false);
         }
     };
+<<<<<<< HEAD
     const handleLanguageChange = async (option) => {
         const nextLanguage = option?.data ?? "auto";
         const previous = selectedLanguage;
@@ -4972,6 +5088,27 @@ const SettingsPage = () => {
             id: "port",
             title: t("portSettings.title"),
             content: (SP_JSX.jsxs(DFL.PanelSection, { children: [SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.TextField, { label: t("portSettings.portLabel"), type: "number", min: 1, max: 65535, inputMode: "numeric", value: portInput, onChange: (event) => setPortInput(event.currentTarget.value) }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: handlePortSave, disabled: portSaving, children: portSaving ? t("common.saving") : t("common.savePort") }) })] }))
+=======
+    const tabDefs = [
+        {
+            id: "ui",
+            title: "界面设置",
+            content: (SP_JSX.jsxs(DFL.PanelSection, { children: [SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u663E\u793A\u4E8C\u7EF4\u7801", description: "\u5728\u4E3B\u9875\u5C55\u793A\u4E8C\u7EF4\u7801", checked: settings.showQRCode, onChange: (value) => updateSetting("showQRCode", value) }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u663E\u793A\u8BBF\u95EE\u5730\u5740", description: "\u5728\u4E3B\u9875\u5C55\u793A\u8BBF\u95EE\u94FE\u63A5", checked: settings.showUrlText, onChange: (value) => updateSetting("showUrlText", value) }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u663E\u793A\u4F20\u8F93\u8BB0\u5F55", description: "\u5728\u4E3B\u9875\u5C55\u793A\u4F20\u8F93\u72B6\u6001", checked: settings.showTransferHistory, onChange: (value) => updateSetting("showTransferHistory", value) }) })] }))
+        },
+        {
+            id: "transfer",
+            title: "传输设置",
+<<<<<<< HEAD
+            content: (SP_JSX.jsxs(SP_JSX.Fragment, { children: [SP_JSX.jsx(DFL.PanelSection, { title: "\u6587\u672C\u4F20\u8F93", children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u81EA\u52A8\u590D\u5236\u6587\u672C", description: "\u6536\u5230\u6587\u672C\u540E\u81EA\u52A8\u590D\u5236\u5230\u526A\u8D34\u677F", checked: autoCopyEnabled, onChange: handleAutoCopyToggle }) }) }), SP_JSX.jsxs(DFL.PanelSection, { title: "\u6587\u4EF6\u4F20\u8F93", children: [SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u4E0A\u4F20\u524D\u9009\u62E9\u8DEF\u5F84", description: "\u6BCF\u6B21\u4E0A\u4F20\u524D\u624B\u52A8\u9009\u62E9\u4FDD\u5B58\u76EE\u5F55", checked: promptUploadPathEnabled, onChange: handlePromptUploadPathToggle }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsxs("div", { style: { fontSize: "12px", color: "#9aa0a6", lineHeight: 1.4 }, children: ["\u5F53\u524D\u4E0B\u8F7D\u76EE\u5F55\uFF1A", downloadDir || "未设置"] }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: handlePickDownloadDir, children: "\u9009\u62E9\u4E0B\u8F7D\u76EE\u5F55" }) })] })] }))
+=======
+            content: (SP_JSX.jsxs(SP_JSX.Fragment, { children: [SP_JSX.jsx(DFL.PanelSection, { title: "\u6587\u672C\u4F20\u8F93", children: SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ToggleField, { label: "\u81EA\u52A8\u590D\u5236\u6587\u672C", description: "\u6536\u5230\u6587\u672C\u540E\u81EA\u52A8\u590D\u5236\u5230\u526A\u8D34\u677F", checked: autoCopyEnabled, onChange: handleAutoCopyToggle }) }) }), SP_JSX.jsxs(DFL.PanelSection, { title: "\u6587\u4EF6\u4F20\u8F93", children: [SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsxs("div", { style: { fontSize: "12px", color: "#9aa0a6", lineHeight: 1.4 }, children: ["\u5F53\u524D\u4E0B\u8F7D\u76EE\u5F55\uFF1A", downloadDir || "未设置"] }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: handlePickDownloadDir, children: "\u9009\u62E9\u4E0B\u8F7D\u76EE\u5F55" }) })] })] }))
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+        },
+        {
+            id: "port",
+            title: "端口设置",
+            content: (SP_JSX.jsxs(DFL.PanelSection, { children: [SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.TextField, { label: "\u7AEF\u53E3\u53F7", type: "number", min: 1, max: 65535, inputMode: "numeric", value: portInput, onChange: (event) => setPortInput(event.currentTarget.value) }) }), SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: handlePortSave, disabled: portSaving, children: portSaving ? "保存中..." : "保存端口" }) })] }))
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
         }
     ];
     return (SP_JSX.jsx("div", { ref: containerRef, style: {
@@ -4979,6 +5116,10 @@ const SettingsPage = () => {
             paddingBottom: 24,
             minHeight: "100%",
             boxSizing: "border-box",
+<<<<<<< HEAD
+=======
+            backgroundColor: "var(--gpBackground-color, #1b1b1b)",
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             overflowX: "hidden"
         }, children: SP_JSX.jsx(DFL.Tabs, { tabs: tabDefs, activeTab: activeTab, onShowTab: (tabId) => {
                 focusTabRow();

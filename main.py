@@ -74,8 +74,15 @@ class Plugin:
     text_file_path = config.TEXT_FILE_PATH
     switch_file_path = config.SWITCH_FILE_PATH
     auto_copy_text_enabled = False
+<<<<<<< HEAD
     prompt_upload_path_enabled = False
     language_preference = "auto"
+=======
+<<<<<<< HEAD
+    prompt_upload_path_enabled = False
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
     
     # ==========================================================================
     # Settings Keys (from config)
@@ -86,8 +93,15 @@ class Plugin:
     SETTING_PORT = config.SETTING_PORT
     SETTING_DOWNLOAD_DIR = config.SETTING_DOWNLOAD_DIR
     SETTING_AUTO_COPY_TEXT = config.SETTING_AUTO_COPY_TEXT
+<<<<<<< HEAD
     SETTING_PROMPT_UPLOAD_PATH = config.SETTING_PROMPT_UPLOAD_PATH
     SETTING_LANGUAGE = config.SETTING_LANGUAGE
+=======
+<<<<<<< HEAD
+    SETTING_PROMPT_UPLOAD_PATH = config.SETTING_PROMPT_UPLOAD_PATH
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
     
     # ==========================================================================
     # Lifecycle Methods
@@ -250,6 +264,10 @@ class Plugin:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
     async def get_prompt_upload_path(self) -> dict:
         """Get upload path prompt setting"""
         try:
@@ -266,6 +284,7 @@ class Plugin:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
+<<<<<<< HEAD
     async def get_language_preference(self) -> dict:
         """Get saved UI language preference"""
         try:
@@ -284,6 +303,10 @@ class Plugin:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
+=======
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
     async def set_server_port(self, port: int) -> dict:
         """Set server port and optionally restart server if running"""
         try:

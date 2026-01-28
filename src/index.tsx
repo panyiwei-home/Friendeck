@@ -4,9 +4,12 @@ import {
   ButtonItem,
   PanelSectionRow,
   ToggleField,
+<<<<<<< HEAD
   Dropdown,
   Field,
   SingleDropdownOption,
+=======
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
   Navigation,
   Router,
   TextField,
@@ -44,11 +47,20 @@ const getDownloadDir = callable<[], { status: string; path?: string; message?: s
 const setDownloadDir = callable<[path: string], { status: string; path?: string; message?: string }>("set_download_dir");
 const getAutoCopyText = callable<[], { status: string; enabled?: boolean; message?: string }>("get_auto_copy_text");
 const setAutoCopyText = callable<[enabled: boolean], { status: string; enabled?: boolean; message?: string }>("set_auto_copy_text");
+<<<<<<< HEAD
 const getPromptUploadPath = callable<[], { status: string; enabled?: boolean; message?: string }>("get_prompt_upload_path");
 const setPromptUploadPath = callable<[enabled: boolean], { status: string; enabled?: boolean; message?: string }>("set_prompt_upload_path");
 const setServerPort = callable<[port: number], { status: string; port?: number; message?: string }>("set_server_port");
 const getLanguagePreference = callable<[], { status: string; language?: string; message?: string }>("get_language_preference");
 const setLanguagePreference = callable<[language: string], { status: string; language?: string; message?: string }>("set_language_preference");
+=======
+<<<<<<< HEAD
+const getPromptUploadPath = callable<[], { status: string; enabled?: boolean; message?: string }>("get_prompt_upload_path");
+const setPromptUploadPath = callable<[enabled: boolean], { status: string; enabled?: boolean; message?: string }>("set_prompt_upload_path");
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+const setServerPort = callable<[port: number], { status: string; port?: number; message?: string }>("set_server_port");
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
 
 
 // =============================================================================
@@ -75,6 +87,7 @@ const DEFAULT_UI_SETTINGS = {
   showTransferHistory: true,
 };
 
+<<<<<<< HEAD
 const i18nReady = loadTranslations();
 
 const applyLanguagePreference = async (language?: string) => {
@@ -86,6 +99,8 @@ const applyLanguagePreference = async (language?: string) => {
   }
 };
 
+=======
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
 type SettingsTab = { id: string; title: string; content: any };
 
 type UiSettings = {
@@ -689,7 +704,12 @@ function Content() {
         paddingTop: 16,
         paddingBottom: 24,
         minHeight: "100%",
+<<<<<<< HEAD
         boxSizing: "border-box"
+=======
+        boxSizing: "border-box",
+        backgroundColor: "var(--gpBackground-color, #1b1b1b)"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       }}
     >
       {/* Title Bar */}
@@ -708,7 +728,11 @@ function Content() {
       
       {/* QR Code Section */}
       {serverStatus.running && serverStatus.url && (uiSettings.showQRCode || uiSettings.showUrlText) && (
+<<<<<<< HEAD
         <PanelSection title={t("access.title")}>
+=======
+        <PanelSection title="访问方式">
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column', 
@@ -733,7 +757,11 @@ function Content() {
               }} 
               tabIndex={0} 
               role="img" 
+<<<<<<< HEAD
               aria-label={t("access.qrAria", { url: serverStatus.url })} 
+=======
+              aria-label={`QR码: ${serverStatus.url}`} 
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
               onFocus={(e: React.FocusEvent<HTMLElement>) => e.currentTarget.style.outline = '3px solid #1b73e8'}
               onBlur={(e: React.FocusEvent<HTMLElement>) => e.currentTarget.style.outline = 'none'}
               onClick={(e: React.MouseEvent<HTMLElement>) => e.preventDefault()}
@@ -772,7 +800,11 @@ function Content() {
                 }} 
                 tabIndex={0} 
                 role="text"
+<<<<<<< HEAD
                 aria-label={t("access.urlAria")} 
+=======
+                aria-label="服务器URL地址" 
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                 onFocus={(e: React.FocusEvent<HTMLElement>) => e.currentTarget.style.outline = '3px solid #1b73e8'}
                 onBlur={(e: React.FocusEvent<HTMLElement>) => e.currentTarget.style.outline = 'none'}
                 onClick={(e: React.MouseEvent<HTMLElement>) => e.preventDefault()}
@@ -794,7 +826,11 @@ function Content() {
       
       {/* Transfer Status - Only show when server is running */}
       {serverStatus.running && uiSettings.showTransferHistory && (
+<<<<<<< HEAD
         <PanelSection title={t("transfer.title")}>
+=======
+        <PanelSection title="传输记录">
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
           {/* Show file transfer if it's running or the latest transfer is file */}
           {(transferStatus.running || (transferStatus.filename !== '' && transferStatus.size > 0)) ? (
             // File transfer in progress or recent transfer
@@ -882,7 +918,11 @@ function Content() {
       </PanelSection>
       )}
 
+<<<<<<< HEAD
       <PanelSection title={t("common.settings")}>
+=======
+      <PanelSection title="设置">
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
         <PanelSectionRow>
           <ButtonItem
             layout="below"
@@ -891,7 +931,11 @@ function Content() {
               Router.Navigate(SETTINGS_ROUTE);
             }}
           >
+<<<<<<< HEAD
             {t("common.settings")}
+=======
+            设置
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
           </ButtonItem>
         </PanelSectionRow>
       </PanelSection>
@@ -902,6 +946,7 @@ function Content() {
 };
 
 const SettingsPage = () => {
+<<<<<<< HEAD
   const { t } = useTranslation();
   const [settings, setSettings] = useState<UiSettings>(() => loadUiSettings());
   const [downloadDir, setDownloadDirState] = useState<string>("");
@@ -912,6 +957,17 @@ const SettingsPage = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("auto");
   const [languageLoading, setLanguageLoading] = useState(true);
   const [languageSaving, setLanguageSaving] = useState(false);
+=======
+  const [settings, setSettings] = useState<UiSettings>(() => loadUiSettings());
+  const [downloadDir, setDownloadDirState] = useState<string>("");
+  const [autoCopyEnabled, setAutoCopyEnabled] = useState(false);
+<<<<<<< HEAD
+  const [promptUploadPathEnabled, setPromptUploadPathEnabled] = useState(false);
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+  const [portInput, setPortInput] = useState<string>("");
+  const [portSaving, setPortSaving] = useState(false);
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
   const [activeTab, setActiveTab] = useState<string>("ui");
   const containerRef = useRef<any>(null);
 
@@ -1005,10 +1061,15 @@ const SettingsPage = () => {
         if (active && autoCopyResponse.status === "success") {
           setAutoCopyEnabled(Boolean(autoCopyResponse.enabled));
         }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
         const promptPathResponse = await getPromptUploadPath();
         if (active && promptPathResponse.status === "success") {
           setPromptUploadPathEnabled(Boolean(promptPathResponse.enabled));
         }
+<<<<<<< HEAD
         const languageResponse = await getLanguagePreference();
         if (active && languageResponse.status === "success") {
           const lang = languageResponse.language || "auto";
@@ -1021,6 +1082,13 @@ const SettingsPage = () => {
       if (active) {
         setLanguageLoading(false);
       }
+=======
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+      } catch (error) {
+        console.error("Failed to load download directory:", error);
+      }
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
     })();
     return () => {
       active = false;
@@ -1036,18 +1104,32 @@ const SettingsPage = () => {
         return;
       }
       toaster.toast({
+<<<<<<< HEAD
         title: t("toasts.settingsFailedTitle"),
         body: response.message || t("toasts.autoCopyFailedBody")
+=======
+        title: "设置失败",
+        body: response.message || "无法更新自动复制设置"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       });
     } catch (error) {
       console.error("Failed to set auto copy:", error);
       toaster.toast({
+<<<<<<< HEAD
         title: t("toasts.settingsFailedTitle"),
         body: t("toasts.autoCopyFailedBody")
+=======
+        title: "设置失败",
+        body: "无法更新自动复制设置"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       });
     }
   };
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
   const handlePromptUploadPathToggle = async (value: boolean) => {
     try {
       const response = await setPromptUploadPath(value);
@@ -1056,18 +1138,33 @@ const SettingsPage = () => {
         return;
       }
       toaster.toast({
+<<<<<<< HEAD
         title: t("toasts.settingsFailedTitle"),
         body: response.message || t("toasts.promptPathFailedBody")
+=======
+        title: "设置失败",
+        body: response.message || "无法更新上传路径设置"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       });
     } catch (error) {
       console.error("Failed to set prompt upload path:", error);
       toaster.toast({
+<<<<<<< HEAD
         title: t("toasts.settingsFailedTitle"),
         body: t("toasts.promptPathFailedBody")
+=======
+        title: "设置失败",
+        body: "无法更新上传路径设置"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       });
     }
   };
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
   const handlePickDownloadDir = async () => {
     try {
       const startPath = downloadDir || "/home/deck";
@@ -1086,20 +1183,34 @@ const SettingsPage = () => {
         const nextPath = saveResult.path || selectedPath;
         setDownloadDirState(nextPath);
         toaster.toast({
+<<<<<<< HEAD
           title: t("toasts.downloadDirUpdatedTitle"),
+=======
+          title: "下载目录已更新",
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
           body: nextPath
         });
       } else {
         toaster.toast({
+<<<<<<< HEAD
           title: t("toasts.settingsFailedTitle"),
           body: saveResult.message || t("toasts.downloadDirFailedBody")
+=======
+          title: "设置失败",
+          body: saveResult.message || "无法更新下载目录"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
         });
       }
     } catch (error) {
       console.error("Failed to pick download directory:", error);
       toaster.toast({
+<<<<<<< HEAD
         title: t("toasts.settingsFailedTitle"),
         body: t("toasts.filePickerFailedBody")
+=======
+        title: "设置失败",
+        body: "无法打开文件选择器"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       });
     }
   };
@@ -1109,8 +1220,13 @@ const SettingsPage = () => {
     const parsed = Number(portInput);
     if (!Number.isInteger(parsed) || parsed < 1 || parsed > 65535) {
       toaster.toast({
+<<<<<<< HEAD
         title: t("toasts.portInvalidTitle"),
         body: t("toasts.portInvalidBody")
+=======
+        title: "端口无效",
+        body: "请输入 1-65535 之间的整数端口"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       });
       return;
     }
@@ -1122,6 +1238,7 @@ const SettingsPage = () => {
         setPortInput(nextPort);
         window.dispatchEvent(new Event("decky-send-port-updated"));
         toaster.toast({
+<<<<<<< HEAD
           title: t("toasts.portUpdatedTitle"),
           body: t("toasts.portUpdatedBody", { port: nextPort })
         });
@@ -1129,19 +1246,34 @@ const SettingsPage = () => {
         toaster.toast({
           title: t("toasts.settingsFailedTitle"),
           body: response.message || t("toasts.portUpdateFailedBody")
+=======
+          title: "端口已更新",
+          body: `当前端口: ${nextPort}`
+        });
+      } else {
+        toaster.toast({
+          title: "设置失败",
+          body: response.message || "无法更新端口"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
         });
       }
     } catch (error) {
       console.error("Failed to set port:", error);
       toaster.toast({
+<<<<<<< HEAD
         title: t("toasts.settingsFailedTitle"),
         body: t("toasts.portUpdateFailedBody")
+=======
+        title: "设置失败",
+        body: "无法更新端口"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       });
     } finally {
       setPortSaving(false);
     }
   };
 
+<<<<<<< HEAD
   const handleLanguageChange = async (option: SingleDropdownOption) => {
     const nextLanguage = option?.data ?? "auto";
     const previous = selectedLanguage;
@@ -1183,32 +1315,54 @@ const SettingsPage = () => {
     {
       id: "ui",
       title: t("ui.title"),
+=======
+  const tabDefs: SettingsTab[] = [
+    {
+      id: "ui",
+      title: "界面设置",
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       content: (
         <PanelSection>
           <PanelSectionRow>
             <ToggleField
+<<<<<<< HEAD
               label={t("ui.showQr.label")}
               description={t("ui.showQr.description")}
+=======
+              label="显示二维码"
+              description="在主页展示二维码"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
               checked={settings.showQRCode}
               onChange={(value: boolean) => updateSetting("showQRCode", value)}
             />
           </PanelSectionRow>
           <PanelSectionRow>
             <ToggleField
+<<<<<<< HEAD
               label={t("ui.showUrl.label")}
               description={t("ui.showUrl.description")}
+=======
+              label="显示访问地址"
+              description="在主页展示访问链接"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
               checked={settings.showUrlText}
               onChange={(value: boolean) => updateSetting("showUrlText", value)}
             />
           </PanelSectionRow>
           <PanelSectionRow>
             <ToggleField
+<<<<<<< HEAD
               label={t("ui.showTransfer.label")}
               description={t("ui.showTransfer.description")}
+=======
+              label="显示传输记录"
+              description="在主页展示传输状态"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
               checked={settings.showTransferHistory}
               onChange={(value: boolean) => updateSetting("showTransferHistory", value)}
             />
           </PanelSectionRow>
+<<<<<<< HEAD
           <PanelSectionRow>
             <Field label={t("ui.language.label")} description={t("ui.language.description")}>
               <Dropdown
@@ -1219,11 +1373,14 @@ const SettingsPage = () => {
               />
             </Field>
           </PanelSectionRow>
+=======
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
         </PanelSection>
       )
     },
     {
       id: "transfer",
+<<<<<<< HEAD
       title: t("transferSettings.title"),
       content: (
         <>
@@ -1232,23 +1389,49 @@ const SettingsPage = () => {
               <ToggleField
                 label={t("transferSettings.text.autoCopyLabel")}
                 description={t("transferSettings.text.autoCopyDesc")}
+=======
+      title: "传输设置",
+      content: (
+        <>
+          <PanelSection title="文本传输">
+            <PanelSectionRow>
+              <ToggleField
+                label="自动复制文本"
+                description="收到文本后自动复制到剪贴板"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                 checked={autoCopyEnabled}
                 onChange={handleAutoCopyToggle}
               />
             </PanelSectionRow>
           </PanelSection>
+<<<<<<< HEAD
           <PanelSection title={t("transferSettings.file.title")}>
             <PanelSectionRow>
               <ToggleField
                 label={t("transferSettings.file.promptPathLabel")}
                 description={t("transferSettings.file.promptPathDesc")}
+=======
+          <PanelSection title="文件传输">
+            <PanelSectionRow>
+<<<<<<< HEAD
+              <ToggleField
+                label="上传前选择路径"
+                description="每次上传前手动选择保存目录"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                 checked={promptUploadPathEnabled}
                 onChange={handlePromptUploadPathToggle}
               />
             </PanelSectionRow>
             <PanelSectionRow>
+<<<<<<< HEAD
               <div style={{ fontSize: "12px", color: "#9aa0a6", lineHeight: 1.4 }}>
                 {t("transferSettings.file.currentDir", { path: downloadDir || t("transferSettings.file.unset") })}
+=======
+=======
+>>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+              <div style={{ fontSize: "12px", color: "#9aa0a6", lineHeight: 1.4 }}>
+                当前下载目录：{downloadDir || "未设置"}
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
               </div>
             </PanelSectionRow>
             <PanelSectionRow>
@@ -1256,7 +1439,11 @@ const SettingsPage = () => {
                 layout="below"
                 onClick={handlePickDownloadDir}
               >
+<<<<<<< HEAD
                 {t("transferSettings.file.chooseDir")}
+=======
+                选择下载目录
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
               </ButtonItem>
             </PanelSectionRow>
           </PanelSection>
@@ -1265,12 +1452,20 @@ const SettingsPage = () => {
     },
     {
       id: "port",
+<<<<<<< HEAD
       title: t("portSettings.title"),
+=======
+      title: "端口设置",
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
       content: (
         <PanelSection>
           <PanelSectionRow>
             <TextField
+<<<<<<< HEAD
               label={t("portSettings.portLabel")}
+=======
+              label="端口号"
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
               type="number"
               min={1}
               max={65535}
@@ -1285,7 +1480,11 @@ const SettingsPage = () => {
               onClick={handlePortSave}
               disabled={portSaving}
             >
+<<<<<<< HEAD
               {portSaving ? t("common.saving") : t("common.savePort")}
+=======
+              {portSaving ? "保存中..." : "保存端口"}
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             </ButtonItem>
           </PanelSectionRow>
         </PanelSection>
@@ -1301,6 +1500,10 @@ const SettingsPage = () => {
         paddingBottom: 24,
         minHeight: "100%",
         boxSizing: "border-box",
+<<<<<<< HEAD
+=======
+        backgroundColor: "var(--gpBackground-color, #1b1b1b)",
+>>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
         overflowX: "hidden"
       }}
     >
