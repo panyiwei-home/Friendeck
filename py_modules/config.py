@@ -77,6 +77,9 @@ DEFAULT_SERVER_PORT = 59271
 # Server startup timeout (seconds) - time to wait for port to become available
 SERVER_STARTUP_TIMEOUT = 10.0
 
+# File manager startup timeout (seconds)
+FILE_MANAGER_STARTUP_TIMEOUT = 10.0
+
 # Thread shutdown timeout (seconds)
 THREAD_SHUTDOWN_TIMEOUT = 5.0
 
@@ -100,3 +103,7 @@ SETTINGS_KEY = "server_settings"
 # Individual setting keys
 SETTING_RUNNING = "running"
 SETTING_PORT = "port"
+SETTING_DOWNLOAD_DIR = "download_dir"
+SETTING_AUTO_COPY_TEXT = "auto_copy_text"
+SETTING_PROMPT_UPLOAD_PATH = "prompt_upload_path"
+SETTING_LANGUAGE = "language"
