@@ -168,7 +168,7 @@ def get_file_manager_html():
                 background-color: #d93025;
             }
             
-<<<<<<< HEAD
+
             /* File List */
             .file-list-container {
                 border: 1px solid #333;
@@ -287,7 +287,7 @@ def get_file_manager_html():
                 -webkit-user-select: none;
                 -ms-user-select: none;
             }
-=======
+
             /* File List */
             .file-list-container {
                 border: 1px solid #333;
@@ -406,7 +406,7 @@ def get_file_manager_html():
                 -webkit-user-select: none;
                 -ms-user-select: none;
             }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             .file-item:hover {
                 background-color: rgba(27, 115, 232, 0.2);
                 border-color: #1b73e8;
@@ -443,7 +443,7 @@ def get_file_manager_html():
                 margin: 0;
                 color: #1b73e8;
             }
-<<<<<<< HEAD
+
             .modal-header button {
                 background: none;
                 border: none;
@@ -500,7 +500,7 @@ def get_file_manager_html():
                     gap: 8px;
                 }
             }
-=======
+
             .modal-header button {
                 background: none;
                 border: none;
@@ -557,7 +557,7 @@ def get_file_manager_html():
                     gap: 8px;
                 }
             }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             
             /* Textarea */
             textarea {
@@ -610,7 +610,7 @@ def get_file_manager_html():
         </style>
     </head>
     <body style="margin: 0; padding: 10px; overflow: hidden; height: 100vh; display: flex; flex-direction: column;">
-<<<<<<< HEAD
+
         <!-- Breadcrumb Navigation -->
         <div style="display: flex; align-items: center; gap: 8px;">
             <div class="breadcrumb" id="breadcrumb" style="flex: 1; overflow-x: auto; white-space: nowrap;">
@@ -630,7 +630,7 @@ def get_file_manager_html():
             <button id="new-dir-btn" data-i18n="actions.newFolder">新建文件夹</button>
             <button id="new-btn" data-i18n="actions.new" style="display: none;">新建</button>
         </div>
-=======
+
         <!-- Breadcrumb Navigation -->
         <div style="display: flex; align-items: center; gap: 8px;">
             <div class="breadcrumb" id="breadcrumb" style="flex: 1; overflow-x: auto; white-space: nowrap;">
@@ -650,7 +650,7 @@ def get_file_manager_html():
             <button id="new-dir-btn" data-i18n="actions.newFolder">新建文件夹</button>
             <button id="new-btn" data-i18n="actions.new" style="display: none;">新建</button>
         </div>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
         
         <!-- File List -->
         <div class="file-list-container" style="flex: 1 1 auto; overflow: auto; max-height: none; min-height: 0; display: flex;">
@@ -660,7 +660,7 @@ def get_file_manager_html():
         <!-- File Editor Modal -->
         <div id="file-editor-modal" class="modal">
             <div class="modal-content">
-<<<<<<< HEAD
+
                 <div class="modal-header">
                     <h3 id="editor-title" data-i18n="modal.editorTitle">文件编辑器</h3>
                     <button id="close-editor">×</button>
@@ -670,7 +670,7 @@ def get_file_manager_html():
                     <button id="save-file-btn" data-i18n="actions.save">保存</button>
                     <button id="cancel-edit-btn" data-i18n="actions.cancel">取消</button>
                 </div>
-=======
+
                 <div class="modal-header">
                     <h3 id="editor-title" data-i18n="modal.editorTitle">文件编辑器</h3>
                     <button id="close-editor">×</button>
@@ -680,14 +680,14 @@ def get_file_manager_html():
                     <button id="save-file-btn" data-i18n="actions.save">保存</button>
                     <button id="cancel-edit-btn" data-i18n="actions.cancel">取消</button>
                 </div>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             </div>
         </div>
         
         <!-- Confirmation Modal -->
         <div id="confirm-modal" class="modal">
             <div class="modal-content">
-<<<<<<< HEAD
+
                 <h3 data-i18n="modal.confirmTitle" style="margin: 0 0 15px 0;">确认操作</h3>
                 <p id="confirm-message"></p>
                 <div style="display: flex; gap: 10px; justify-content: flex-end;">
@@ -738,7 +738,7 @@ def get_file_manager_html():
                 <div id="fileop-progress-text" class="unpack-progress-text">0%</div>
             </div>
         </div>
-=======
+
                 <h3 data-i18n="modal.confirmTitle" style="margin: 0 0 15px 0;">确认操作</h3>
                 <p id="confirm-message"></p>
                 <div style="display: flex; gap: 10px; justify-content: flex-end;">
@@ -754,13 +754,13 @@ def get_file_manager_html():
                 <h3 id="input-title"></h3>
                 <input type="text" id="input-field">
                 <div style="display: flex; gap: 10px; justify-content: flex-end;">
-<<<<<<< HEAD
+
                     <button id="input-ok" data-i18n="modal.inputOk">确认</button>
                     <button id="input-cancel" data-i18n="modal.inputCancel">取消</button>
-=======
+
                     <button id="input-ok">确认</button>
                     <button id="input-cancel">取消</button>
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                 </div>
             </div>
         </div>
@@ -769,11 +769,11 @@ def get_file_manager_html():
         <div id="unpack-modal" class="modal">
             <div class="modal-content" style="max-width: 420px;">
                 <div class="modal-header">
-<<<<<<< HEAD
+
                     <h3 data-i18n="modal.unpackTitle">正在解压</h3>
-=======
+
                     <h3>正在解压</h3>
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                     <button id="unpack-close" style="visibility: hidden;">×</button>
                 </div>
                 <div id="unpack-filename" style="font-size: 13px; color: #bdbdbd;"></div>
@@ -783,7 +783,7 @@ def get_file_manager_html():
                 <div id="unpack-progress-text" class="unpack-progress-text">0%</div>
             </div>
         </div>
-<<<<<<< HEAD
+
 
         <!-- File Operation Progress Modal -->
         <div id="fileop-modal" class="modal">
@@ -799,15 +799,15 @@ def get_file_manager_html():
                 <div id="fileop-progress-text" class="unpack-progress-text">0%</div>
             </div>
         </div>
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
+
+
         
         <!-- Context Menu -->
         <div class="context-menu" id="context-menu"></div>
         <div class="context-menu" id="new-menu"></div>
         
-<<<<<<< HEAD
+
         <script>
             const PAGE_TITLE_KEY = 'title.fileManager';
             const I18N = {
@@ -1114,7 +1114,7 @@ def get_file_manager_html():
             document.addEventListener('DOMContentLoaded', async () => {
                 await initLanguage();
                 // Modal handlers
-=======
+
         <script>
             const PAGE_TITLE_KEY = 'title.fileManager';
             const I18N = {
@@ -1421,7 +1421,7 @@ def get_file_manager_html():
             document.addEventListener('DOMContentLoaded', async () => {
                 await initLanguage();
                 // Modal handlers
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 let currentConfirmAction = null;
                 let currentInputAction = null;
                 
@@ -1433,7 +1433,7 @@ def get_file_manager_html():
                 // DOM Elements
                 const breadcrumb = document.getElementById('breadcrumb');
                 const fileManagerList = document.getElementById('file-manager-list');
-<<<<<<< HEAD
+
                 const backBtn = document.getElementById('back-btn');
                 const refreshBtn = document.getElementById('refresh-btn');
                 const pasteBtn = document.getElementById('paste-btn');
@@ -1451,7 +1451,7 @@ def get_file_manager_html():
                 let suppressNextClick = false;
                 
                 // Modal Elements
-=======
+
                 const backBtn = document.getElementById('back-btn');
                 const refreshBtn = document.getElementById('refresh-btn');
                 const pasteBtn = document.getElementById('paste-btn');
@@ -1469,7 +1469,7 @@ def get_file_manager_html():
                 let suppressNextClick = false;
                 
                 // Modal Elements
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 const fileEditorModal = document.getElementById('file-editor-modal');
                 const editorTitle = document.getElementById('editor-title');
                 const fileContent = document.getElementById('file-content');
@@ -1482,7 +1482,7 @@ def get_file_manager_html():
                 const confirmYes = document.getElementById('confirm-yes');
                 const confirmNo = document.getElementById('confirm-no');
                 
-<<<<<<< HEAD
+
                 const inputModal = document.getElementById('input-modal');
                 const inputTitle = document.getElementById('input-title');
                 const inputField = document.getElementById('input-field');
@@ -1724,7 +1724,7 @@ def get_file_manager_html():
                     contextMenu.style.left = x + 'px';
                     contextMenu.style.top = y + 'px';
                 }
-=======
+
                 const inputModal = document.getElementById('input-modal');
                 const inputTitle = document.getElementById('input-title');
                 const inputField = document.getElementById('input-field');
@@ -1738,7 +1738,7 @@ def get_file_manager_html():
                 let unpackTimer = null;
                 let unpackProgressValue = 0;
 
-<<<<<<< HEAD
+
                 const fileOpModal = document.getElementById('fileop-modal');
                 const fileOpTitle = document.getElementById('fileop-title');
                 const fileOpFilename = document.getElementById('fileop-filename');
@@ -1747,8 +1747,8 @@ def get_file_manager_html():
                 let fileOpTimer = null;
                 let fileOpProgressValue = 0;
 
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
                 if (sdcardBtn) {
                     sdcardBtn.addEventListener('click', () => {
                         if (sdcardPath) {
@@ -1761,7 +1761,7 @@ def get_file_manager_html():
                 let pinMenuItem = null;
                 let unpackMenuItem = null;
                 const contextMenuItems = [
-<<<<<<< HEAD
+
                     { text: t('menu.open'), action: 'open' },
                     { text: t('menu.download'), action: 'download' },
                     { text: t('menu.addToSteam'), action: 'add-to-steam' },
@@ -1771,7 +1771,7 @@ def get_file_manager_html():
                     { text: t('menu.cut'), action: 'cut' },
                     { text: t('menu.delete'), action: 'delete' },
                     { text: t('menu.rename'), action: 'rename' }
-=======
+
                     { text: '打开', action: 'open' },
                     { text: '下载到本地', action: 'download' },
                     { text: '添加到steam', action: 'add-to-steam' },
@@ -1780,7 +1780,7 @@ def get_file_manager_html():
                     { text: '复制', action: 'copy' },
                     { text: '删除', action: 'delete' },
                     { text: '重命名', action: 'rename' }
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                 ]
                 
                 // Create context menu items
@@ -1821,13 +1821,13 @@ def get_file_manager_html():
                     });
                     newMenu.appendChild(menuItem);
                 });
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
+
+
+
+
 
                 const PINNED_STORAGE_KEY = 'decky_send_pinned_items';
 
@@ -1876,25 +1876,25 @@ def get_file_manager_html():
                 function updatePinMenuLabel() {
                     if (!pinMenuItem) return;
                     const set = getPinnedSet(currentPath);
-<<<<<<< HEAD
+
                     pinMenuItem.textContent = set.has(contextMenuPath) ? t('menu.unpin') : t('menu.pin');
-=======
+
                     pinMenuItem.textContent = set.has(contextMenuPath) ? '取消置顶' : '置顶';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                 }
 
                 function isArchiveFile(name) {
                     if (!name) return false;
                     const lower = name.toLowerCase();
-<<<<<<< HEAD
+
                     const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar', '.exe'];
-=======
-<<<<<<< HEAD
+
+
                     const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar', '.exe'];
-=======
+
                     const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar'];
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
                     return exts.some(ext => lower.endsWith(ext));
                 }
 
@@ -1907,20 +1907,20 @@ def get_file_manager_html():
                     unpackMenuItem.style.display = canUnpack ? 'block' : 'none';
                 }
                 
-<<<<<<< HEAD
+
                 // Context Menu Functions
                 let copiedPath = null; // Store copied/cut file/folder path
                 let clipboardMode = 'copy';
-=======
-<<<<<<< HEAD
-=======
-=======
+
+
+
+
                 
->>>>>>> 59ce7365bd91331c34ba7d6af0b0cd651ee0c00f
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+
+
                 // Context Menu Functions
                 let copiedPath = null; // Store copied file/folder path
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
 
                 function bindLongPressContextMenu(element, path, beforeShow) {
                     if (!isIOS) {
@@ -2010,7 +2010,7 @@ def get_file_manager_html():
                     contextMenu.style.left = x + 'px';
                     contextMenu.style.top = y + 'px';
                 }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 
                 function hideContextMenu() {
                     contextMenu.style.display = 'none';
@@ -2170,7 +2170,7 @@ def get_file_manager_html():
                                 }
                             }
                             break;
-<<<<<<< HEAD
+
                         case 'copy':
                             if (contextMenuPath) {
                                 await copyPath(contextMenuPath);
@@ -2184,7 +2184,7 @@ def get_file_manager_html():
                         case 'paste':
                             await pastePath(currentPath);
                             break;
-=======
+
                         case 'copy':
                             if (contextMenuPath) {
                                 await copyPath(contextMenuPath);
@@ -2198,16 +2198,16 @@ def get_file_manager_html():
                         case 'paste':
                             await pastePath(currentPath);
                             break;
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                         case 'delete':
                             if (contextMenuPath) {
                                 // Save the path before showing confirm modal (which hides context menu)
                                 const pathToDelete = contextMenuPath;
-<<<<<<< HEAD
+
                                 showConfirmModal(t('modal.deleteConfirm'), async () => {
-=======
+
                                 showConfirmModal(t('modal.deleteConfirm'), async () => {
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                                     await deletePath(pathToDelete);
                                 });
                             }
@@ -2215,7 +2215,7 @@ def get_file_manager_html():
                         case 'rename':
                             if (contextMenuPath) {
                                 // Implement rename functionality
-<<<<<<< HEAD
+
                                 const oldName = contextMenuPath.split('/').pop() || '';
                                 showInputModal(t('modal.renameTitle'), t('modal.renamePlaceholder'), (newName) => {
                                     // Implement rename API call here
@@ -2259,7 +2259,7 @@ def get_file_manager_html():
                 });
                 
                 window.addEventListener('resize', applyFileManagerLayout);
-=======
+
                                 const oldName = contextMenuPath.split('/').pop() || '';
                                 showInputModal(t('modal.renameTitle'), t('modal.renamePlaceholder'), (newName) => {
                                     // Implement rename API call here
@@ -2303,7 +2303,7 @@ def get_file_manager_html():
                 });
                 
                 window.addEventListener('resize', applyFileManagerLayout);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 
                 // Modal functions
                 function showConfirmModal(message, action) {
@@ -2317,7 +2317,7 @@ def get_file_manager_html():
                     currentConfirmAction = null;
                 }
                 
-<<<<<<< HEAD
+
                 function showInputModal(title, placeholder, action, defaultValue = '') {
                     inputTitle.textContent = title;
                     inputField.placeholder = placeholder;
@@ -2431,7 +2431,7 @@ def get_file_manager_html():
                         fileOpModal.style.display = 'none';
                     }, 500);
                 }
-=======
+
                 function showInputModal(title, placeholder, action, defaultValue = '') {
                     inputTitle.textContent = title;
                     inputField.placeholder = placeholder;
@@ -2456,11 +2456,11 @@ def get_file_manager_html():
                 function showUnpackProgress(filename) {
                     if (!unpackModal) return;
                     if (unpackFilename) {
-<<<<<<< HEAD
+
                         unpackFilename.textContent = filename ? t('modal.unpackingWithName', { name: filename }) : t('modal.unpacking');
-=======
+
                         unpackFilename.textContent = filename ? `正在解压：${filename}` : '正在解压...';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                     }
                     unpackProgressValue = 0;
                     if (unpackProgressFill) {
@@ -2495,17 +2495,17 @@ def get_file_manager_html():
                         unpackProgressFill.style.width = '100%';
                     }
                     if (unpackProgressText) {
-<<<<<<< HEAD
+
                         unpackProgressText.textContent = success ? t('status.done') : t('status.failed');
-=======
+
                         unpackProgressText.textContent = success ? '完成' : '失败';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                     }
                     setTimeout(() => {
                         unpackModal.style.display = 'none';
                     }, 500);
                 }
-<<<<<<< HEAD
+
 
                 function showFileOpProgress(title, filename) {
                     if (!fileOpModal) return;
@@ -2554,9 +2554,9 @@ def get_file_manager_html():
                         fileOpModal.style.display = 'none';
                     }, 500);
                 }
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
+
+
                 
                 function showFileEditor(title, content, filePath) {
                     editorTitle.textContent = title;
@@ -2594,7 +2594,7 @@ def get_file_manager_html():
                 inputCancel.addEventListener('click', hideInputModal);
                 
                 // Close modals when clicking outside
-<<<<<<< HEAD
+
             window.addEventListener('click', (e) => {
                 if (e.target.classList.contains('modal')) {
                     hideConfirmModal();
@@ -2610,7 +2610,7 @@ def get_file_manager_html():
                     }
                 }
             });
-=======
+
             window.addEventListener('click', (e) => {
                 if (e.target.classList.contains('modal')) {
                     hideConfirmModal();
@@ -2626,7 +2626,7 @@ def get_file_manager_html():
                     }
                 }
             });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 
                 // Update breadcrumb
                 function updateBreadcrumb(path) {
@@ -2770,7 +2770,7 @@ def get_file_manager_html():
                         });
                         
                         const data = await response.json();
-<<<<<<< HEAD
+
                         if (data.status === 'success') {
                             fileManagerList.innerHTML = '';
 
@@ -2825,7 +2825,7 @@ def get_file_manager_html():
                                     }
                                     // 切换文件选中状态
                                     if (fileItem.classList.contains('selected')) {
-=======
+
                         if (data.status === 'success') {
                             fileManagerList.innerHTML = '';
 
@@ -2880,7 +2880,7 @@ def get_file_manager_html():
                                     }
                                     // 切换文件选中状态
                                     if (fileItem.classList.contains('selected')) {
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                                         // 取消选中
                                         fileItem.classList.remove('selected');
                                         const index = selectedFileManagerFiles.indexOf(file.path);
@@ -2907,7 +2907,7 @@ def get_file_manager_html():
                                     }
                                 });
                                 
-<<<<<<< HEAD
+
                                 fileItem.addEventListener('contextmenu', (e) => {
                                     e.preventDefault();
                                     showContextMenu(e, file.path);
@@ -2920,7 +2920,7 @@ def get_file_manager_html():
                                 icon.className = 'file-icon';
                                 icon.textContent = getFileIcon(file.name, file.is_dir);
                                 icon.style.fontSize = '24px';
-=======
+
                                 fileItem.addEventListener('contextmenu', (e) => {
                                     e.preventDefault();
                                     showContextMenu(e, file.path);
@@ -2933,7 +2933,7 @@ def get_file_manager_html():
                                 icon.className = 'file-icon';
                                 icon.textContent = getFileIcon(file.name, file.is_dir);
                                 icon.style.fontSize = '24px';
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                                 
                                 // File Name
                                 const fileName = document.createElement('div');
@@ -2999,11 +2999,11 @@ def get_file_manager_html():
                         
                         const data = await response.json();
                         if (data.status === 'success') {
-<<<<<<< HEAD
+
                             showFileEditor(t('modal.editorTitleWithName', { name: filePath.split('/').pop() || '' }), data.content, filePath);
-=======
+
                             showFileEditor(t('modal.editorTitleWithName', { name: filePath.split('/').pop() || '' }), data.content, filePath);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                         } else {
                             alert('打开文件失败: ' + data.message);
                         }
@@ -3127,7 +3127,7 @@ def get_file_manager_html():
                 }
                 
                 // Copy file or directory path
-<<<<<<< HEAD
+
                 async function copyPath(path) {
                     try {
                         if (!path) {
@@ -3168,7 +3168,7 @@ def get_file_manager_html():
                     try {
                         if (!copiedPath) {
                             alert('粘贴失败: 没有要粘贴的内容');
-=======
+
                 async function copyPath(path) {
                     try {
                         if (!path) {
@@ -3209,7 +3209,7 @@ def get_file_manager_html():
                     try {
                         if (!copiedPath) {
                             alert('粘贴失败: 没有要粘贴的内容');
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                             return;
                         }
                         
@@ -3218,7 +3218,7 @@ def get_file_manager_html():
                             return;
                         }
                         
-<<<<<<< HEAD
+
                         // Get filename from copied path
                         const filename = copiedPath.split('/').pop();
                         const targetPath = destPath + '/' + filename;
@@ -3253,7 +3253,7 @@ def get_file_manager_html():
                         alert('粘贴出错: ' + error.message);
                     }
                 }
-=======
+
                         // Get filename from copied path
                         const filename = copiedPath.split('/').pop();
                         const targetPath = destPath + '/' + filename;
@@ -3288,7 +3288,7 @@ def get_file_manager_html():
                         alert('粘贴出错: ' + error.message);
                     }
                 }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 
                 // Update paste button visibility
                 function updatePasteButtonVisibility() {
@@ -3318,19 +3318,19 @@ def get_file_manager_html():
                 });
                 
                 newFileBtn.addEventListener('click', () => {
-<<<<<<< HEAD
+
                     showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
                 });
                 
                 newDirBtn.addEventListener('click', () => {
                     showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
-=======
+
                     showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
                 });
                 
                 newDirBtn.addEventListener('click', () => {
                     showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 });
                 
                 deleteBtn.addEventListener('click', () => {
@@ -3373,7 +3373,7 @@ async def handle_index(request):
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>decky-send 文件上传</title>
-<<<<<<< HEAD
+
         <style>
             :root {
                 --bg: #0f1216;
@@ -3825,7 +3825,7 @@ async def handle_index(request):
     <body>
         <h1>decky-send</h1>
         <p class="subtitle" data-i18n="subtitle">将文件或文本上传到 Steam Deck</p>
-=======
+
         <style>
             :root {
                 --bg: #0f1216;
@@ -4277,28 +4277,28 @@ async def handle_index(request):
     <body>
         <h1>decky-send</h1>
         <p class="subtitle" data-i18n="subtitle">将文件或文本上传到 Steam Deck</p>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
         
         <!-- Tab Container -->
         <div class="tab-container">
             <!-- Tab Buttons -->
-<<<<<<< HEAD
+
             <div class="tab-buttons">
                 <button class="tab-button active" data-tab="file" data-i18n="tabs.file">文件上传</button>
                 <button class="tab-button" data-tab="text" data-i18n="tabs.text">文本传输</button>
                 <button class="tab-button" data-tab="file-manager" data-i18n="tabs.fileManager">文件管理</button>
             </div>
-=======
+
             <div class="tab-buttons">
                 <button class="tab-button active" data-tab="file" data-i18n="tabs.file">文件上传</button>
                 <button class="tab-button" data-tab="text" data-i18n="tabs.text">文本传输</button>
                 <button class="tab-button" data-tab="file-manager" data-i18n="tabs.fileManager">文件管理</button>
             </div>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             
             <!-- File Upload Tab -->
             <div id="file" class="tab-panel active">
-<<<<<<< HEAD
+
                 <div class="upload-area" id="upload-area">
                     <p data-i18n="upload.hint">点击或拖拽文件/文件夹到此处</p>
                     <input type="file" id="file-input" multiple accept="*/*">
@@ -4310,15 +4310,15 @@ async def handle_index(request):
                     <button id="upload-btn" data-i18n="upload.sendFile">发送文件</button>
                 </div>
             </div>
-=======
+
                 <div class="upload-area" id="upload-area">
-<<<<<<< HEAD
+
                     <p data-i18n="upload.hint">点击或拖拽文件/文件夹到此处</p>
                     <input type="file" id="file-input" multiple accept="*/*">
-=======
+
                     <p>点击或拖拽文件到此处</p>
                     <input type="file" id="file-input" multiple accept="*/*">
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 </div>
                 
                 <div class="file-list" id="file-list"></div>
@@ -4327,12 +4327,12 @@ async def handle_index(request):
                     <button id="upload-btn" data-i18n="upload.sendFile">发送文件</button>
                 </div>
             </div>
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
             
             <!-- Text Transfer Tab -->
             <div id="text" class="tab-panel">
                 <div style="margin: 15px 0;">
-<<<<<<< HEAD
+
                     <textarea 
                         id="text-input" 
                         placeholder="在此输入要传输的文本..." 
@@ -4384,7 +4384,7 @@ async def handle_index(request):
                     复制
                 </button>
             </div>
-=======
+
                     <textarea 
                         id="text-input" 
                         placeholder="在此输入要传输的文本..." 
@@ -4406,11 +4406,11 @@ async def handle_index(request):
                 <div id="file-manager-wrap" style="margin: 15px 0; display: flex; flex-direction: column; height: 100%; min-height: 0;">
                     <!-- Breadcrumb Navigation -->
                     <div class="breadcrumb-bar" style="margin: 10px 0; padding: 8px 12px; display: flex; align-items: center; gap: 8px;">
-<<<<<<< HEAD
+
                         <button id="back-btn" data-i18n="actions.back" style="margin: 0; padding: 6px 10px; font-size: 12px;">
-=======
+
                         <button id="back-btn" style="margin: 0; padding: 6px 10px; font-size: 12px;">
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                             返回
                         </button>
                         <div class="breadcrumb" id="breadcrumb" style="flex: 1; overflow-x: auto; white-space: nowrap;"></div>
@@ -4421,11 +4421,11 @@ async def handle_index(request):
                     
                     <!-- Action Buttons -->
             <div class="action-buttons" style="display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap;">
-<<<<<<< HEAD
+
                 <button id="refresh-btn" data-i18n="actions.refresh" style="margin: 0;">
-=======
+
                 <button id="refresh-btn" style="margin: 0;">
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                     刷新
                 </button>
                 <button id="new-file-btn" data-i18n="actions.newFile" style="margin: 0;">
@@ -4444,7 +4444,7 @@ async def handle_index(request):
                     复制
                 </button>
             </div>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                     
                     <!-- File List -->
                     <div class="file-list-container" style="padding: 10px; flex: 1 1 auto; overflow: auto; min-height: 0; display: flex;">
@@ -4453,7 +4453,7 @@ async def handle_index(request):
                 </div>
                 
                 <!-- File Editor Modal -->
-<<<<<<< HEAD
+
                 <div id="file-editor-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
                     <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 800px; margin: 50px auto; max-height: 80vh; overflow-y: auto;">
                         <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -4947,7 +4947,7 @@ async def handle_index(request):
                         resizeFileManagerPanel();
                     }
                 });
-=======
+
                 <div id="file-editor-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
                     <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 800px; margin: 50px auto; max-height: 80vh; overflow-y: auto;">
                         <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -5002,11 +5002,11 @@ async def handle_index(request):
                 <div id="unpack-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
                     <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 420px; margin: 100px auto;">
                         <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-<<<<<<< HEAD
+
                             <h3 data-i18n="modal.unpackTitle" style="margin: 0; color: var(--text);">正在解压</h3>
-=======
+
                             <h3 style="margin: 0; color: var(--text);">正在解压</h3>
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                             <button id="unpack-close" style="visibility: hidden;">×</button>
                         </div>
                         <div id="unpack-filename" style="font-size: 13px; color: var(--muted);"></div>
@@ -5016,7 +5016,7 @@ async def handle_index(request):
                         <div id="unpack-progress-text" class="unpack-progress-text">0%</div>
                     </div>
                 </div>
-<<<<<<< HEAD
+
 
                 <!-- File Operation Progress Modal -->
                 <div id="fileop-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
@@ -5032,15 +5032,15 @@ async def handle_index(request):
                         <div id="fileop-progress-text" class="unpack-progress-text">0%</div>
                     </div>
                 </div>
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
             </div>
         </div>
 
         <!-- Upload Path Modal -->
         <div id="upload-path-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
             <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 420px; margin: 100px auto;">
-<<<<<<< HEAD
+
                 <h3 data-i18n="modal.uploadPathTitle" style="margin: 0 0 12px 0; color: var(--text);">选择传输路径</h3>
                 <div id="upload-path-current" class="upload-path-current"></div>
                 <div id="upload-path-list" class="upload-path-list"></div>
@@ -5052,7 +5052,7 @@ async def handle_index(request):
                         选择当前目录
                     </button>
                     <button id="upload-path-cancel" data-i18n="modal.uploadPathCancel" style="padding: 10px 20px; margin: 0; background: var(--panel-strong); color: var(--text); border: 1px solid var(--border); box-shadow: none;">
-=======
+
                 <h3 style="margin: 0 0 12px 0; color: var(--text);">选择传输路径</h3>
                 <div id="upload-path-current" class="upload-path-current"></div>
                 <div id="upload-path-list" class="upload-path-list"></div>
@@ -5064,7 +5064,7 @@ async def handle_index(request):
                         选择当前目录
                     </button>
                     <button id="upload-path-cancel" style="padding: 10px 20px; margin: 0; background: var(--panel-strong); color: var(--text); border: 1px solid var(--border); box-shadow: none;">
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                         取消
                     </button>
                 </div>
@@ -5072,7 +5072,7 @@ async def handle_index(request):
         </div>
 
         <script>
-<<<<<<< HEAD
+
             const PAGE_TITLE_KEY = 'title.upload';
             const I18N = {
                 'zh-CN': {
@@ -5377,10 +5377,10 @@ async def handle_index(request):
             // Wait for DOM to fully load before executing scripts
             document.addEventListener('DOMContentLoaded', async () => {
                 await initLanguage();
-=======
+
             // Wait for DOM to fully load before executing scripts
             document.addEventListener('DOMContentLoaded', () => {
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                 // Tab functionality
                 const tabButtons = document.querySelectorAll('.tab-button');
                 const tabPanels = document.querySelectorAll('.tab-panel');
@@ -5467,18 +5467,18 @@ async def handle_index(request):
                         resizeFileManagerPanel();
                     }
                 });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             
             // 文件上传功能
-<<<<<<< HEAD
+
             const uploadArea = document.getElementById('upload-area');
             const fileInput = document.getElementById('file-input');
             const fileList = document.getElementById('file-list');
-=======
+
             const uploadArea = document.getElementById('upload-area');
             const fileInput = document.getElementById('file-input');
             const fileList = document.getElementById('file-list');
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
             const uploadBtn = document.getElementById('upload-btn');
             
             let selectedFiles = [];
@@ -5517,17 +5517,17 @@ async def handle_index(request):
                     });
                     const data = await response.json();
                     if (data.status !== 'success') {
-<<<<<<< HEAD
+
                         throw new Error(data.message || t('modal.uploadPathError'));
                     }
                     uploadPathCurrentValue = data.current_path;
                     uploadPathCurrent.textContent = t('modal.uploadPathCurrent', { path: uploadPathCurrentValue });
-=======
+
                         throw new Error(data.message || '无法读取目录');
                     }
                     uploadPathCurrentValue = data.current_path;
                     uploadPathCurrent.textContent = `当前路径：${uploadPathCurrentValue}`;
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                     uploadPathList.innerHTML = '';
 
                     if (uploadPathCurrentValue && uploadPathCurrentValue !== '/') {
@@ -5552,11 +5552,11 @@ async def handle_index(request):
                         });
                 } catch (error) {
                     console.error('读取目录失败:', error);
-<<<<<<< HEAD
+
                     uploadPathCurrent.textContent = t('modal.uploadPathError');
-=======
+
                     uploadPathCurrent.textContent = '无法读取目录';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                     uploadPathList.innerHTML = '';
                 }
             }
@@ -5604,10 +5604,10 @@ async def handle_index(request):
                 });
             }
             
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
+
+
+
+
             let selectedFiles = [];
             const folderDisplayMap = new Map();
             let uploadPromptEnabled = false;
@@ -5721,21 +5721,21 @@ async def handle_index(request):
                 });
             }
             
-<<<<<<< HEAD
+
             uploadArea.addEventListener('click', () => {
                 // Reset input so selecting the same file triggers change
                 fileInput.value = '';
                 fileInput.click();
             });
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
             uploadArea.addEventListener('click', () => {
                 // Reset input so selecting the same file triggers change
                 fileInput.value = '';
                 fileInput.click();
             });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             
             uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -5746,7 +5746,7 @@ async def handle_index(request):
                 uploadArea.classList.remove('dragover');
             });
             
-<<<<<<< HEAD
+
             uploadArea.addEventListener('drop', async (e) => {
                 e.preventDefault();
                 uploadArea.classList.remove('dragover');
@@ -5792,7 +5792,7 @@ async def handle_index(request):
                         files.push(...entryFiles);
                     }
                     return files;
-=======
+
             uploadArea.addEventListener('drop', async (e) => {
                 e.preventDefault();
                 uploadArea.classList.remove('dragover');
@@ -5805,7 +5805,7 @@ async def handle_index(request):
                 // Clear value so re-selecting the same file works next time
                 fileInput.value = '';
             });
-<<<<<<< HEAD
+
 
             refreshUploadOptions();
 
@@ -5877,13 +5877,13 @@ async def handle_index(request):
                 }
                 return [];
             }
-=======
-<<<<<<< HEAD
+
+
 
             refreshUploadOptions();
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
             
             function addFiles(files) {
                 for (let file of files) {
@@ -5941,7 +5941,7 @@ async def handle_index(request):
                     fileItem.dataset.filename = file.name;
                     
                     fileList.appendChild(fileItem);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 }
                 return Array.from(dt.files || []);
             }
@@ -5990,7 +5990,7 @@ async def handle_index(request):
                 return [];
             }
             
-<<<<<<< HEAD
+
             
 function addFiles(files, options = {}) {
     const groupFolders = !!options.groupFolders;
@@ -6116,7 +6116,7 @@ function cancelFile(file) {
             // 更新文件列表内的进度条
             function updateFileProgress(fileKey, progress, speed, status = 'uploading') {
                 const safeFileName = fileKey.replace(/[^a-zA-Z0-9_-]/g, '_');
-=======
+
             function cancelFile(file) {
                 const key = getFileKey(file);
                 const index = selectedFiles.findIndex(f => getFileKey(f) === key);
@@ -6137,17 +6137,17 @@ function cancelFile(file) {
             // 更新文件列表内的进度条
             function updateFileProgress(fileKey, progress, speed, status = 'uploading') {
                 const safeFileName = fileKey.replace(/[^a-zA-Z0-9_-]/g, '_');
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                 const progressSection = document.getElementById(`progress-section-${safeFileName}`);
                 const progressFill = document.getElementById(`progress-fill-${safeFileName}`);
                 const progressPercent = document.getElementById(`progress-percent-${safeFileName}`);
                 const progressSpeed = document.getElementById(`progress-speed-${safeFileName}`);
                 
-<<<<<<< HEAD
+
                 console.log(`updateFileProgress调用: ${fileKey}`, {
-=======
+
                 console.log(`updateFileProgress调用: ${fileKey}`, {
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                     progressSection: !!progressSection,
                     progressFill: !!progressFill,
                     progressPercent: !!progressPercent,
@@ -6176,15 +6176,15 @@ function cancelFile(file) {
                 
                 if (progressPercent) {
                     if (status === 'success') {
-<<<<<<< HEAD
+
                         progressPercent.textContent = t('status.done');
                     } else if (status === 'error') {
                         progressPercent.textContent = t('status.failed');
-=======
+
                         progressPercent.textContent = t('status.done');
                     } else if (status === 'error') {
                         progressPercent.textContent = t('status.failed');
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                     } else {
                         progressPercent.textContent = `${progress}%`;
                     }
@@ -6199,7 +6199,7 @@ function cancelFile(file) {
                 }
             }
             
-<<<<<<< HEAD
+
                         
 const FILE_PARALLEL = 2;
 const CHUNK_THRESHOLD = 512 * 1024 * 1024;
@@ -6368,7 +6368,7 @@ async function uploadFileChunked(file, chosenPath, fileHash) {
                 const chunkSize = index === totalChunks - 1 ? (file.size - (totalChunks - 1) * CHUNK_SIZE) : CHUNK_SIZE;
                 chunkProgress[index] = chunkSize;
                 uploadedBytes += chunkSize;
-=======
+
             uploadBtn.addEventListener('click', async () => {
                 if (selectedFiles.length === 0) {
                     alert('请先选择文件');
@@ -6389,20 +6389,20 @@ async function uploadFileChunked(file, chosenPath, fileHash) {
                 const totalFiles = selectedFiles.length;
                 
                 selectedFiles.forEach(file => {
-<<<<<<< HEAD
+
                     const fileKey = getFileKey(file);
                     // 显示该文件的进度条
                     const safeFileName = fileKey.replace(/[^a-zA-Z0-9_-]/g, '_');
                     const progressSection = document.getElementById(`progress-section-${safeFileName}`);
                     
                     console.log(`准备上传文件: ${fileKey}, 进度条元素:`, progressSection);
-=======
+
                     // 显示该文件的进度条
                     const safeFileName = file.name.replace(/[^a-zA-Z0-9_-]/g, '_');
                     const progressSection = document.getElementById(`progress-section-${safeFileName}`);
                     
                     console.log(`准备上传文件: ${file.name}, 进度条元素:`, progressSection);
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                     
                     if (progressSection) {
                         progressSection.classList.add('active');
@@ -6417,13 +6417,13 @@ async function uploadFileChunked(file, chosenPath, fileHash) {
                     if (chosenPath) {
                         formData.append('dest_path', chosenPath);
                     }
-<<<<<<< HEAD
+
                     const relPath = getFileRelativePath(file);
                     if (relPath) {
                         formData.append('relative_path', relPath);
                     }
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
                     formData.append('file', file);
                     
                     // 记录时间和字节数用于计算速度
@@ -6507,7 +6507,7 @@ async function uploadFileChunked(file, chosenPath, fileHash) {
                     xhr.open('POST', '/upload');
                     xhr.send(formData);
                 });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             });
             const progress = Math.min(100, Math.round((uploadedBytes / file.size) * 100));
             updateFileProgress(fileKey, progress, 0);
@@ -6726,7 +6726,7 @@ const textInput = document.getElementById('text-input');
             let currentInputAction = null;
             
             // File Manager Functionality
-<<<<<<< HEAD
+
             let currentPath = '/home/deck'; // Set default path to /home/deck
             let selectedFileManagerFiles = [];
             let editingFile = null;
@@ -6737,7 +6737,7 @@ const textInput = document.getElementById('text-input');
             let suppressNextClick = false;
             
             // DOM Elements
-=======
+
             let currentPath = '/home/deck'; // Set default path to /home/deck
             let selectedFileManagerFiles = [];
             let editingFile = null;
@@ -6748,7 +6748,7 @@ const textInput = document.getElementById('text-input');
             let suppressNextClick = false;
             
             // DOM Elements
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             const breadcrumb = document.getElementById('breadcrumb');
             const fileManagerList = document.getElementById('file-manager-list');
             const backBtn = document.getElementById('back-btn');
@@ -6774,7 +6774,7 @@ const textInput = document.getElementById('text-input');
             const confirmYes = document.getElementById('confirm-yes');
             const confirmNo = document.getElementById('confirm-no');
             
-<<<<<<< HEAD
+
             const inputModal = document.getElementById('input-modal');
             const inputTitle = document.getElementById('input-title');
             const inputField = document.getElementById('input-field');
@@ -6803,7 +6803,7 @@ const textInput = document.getElementById('text-input');
                     }
                 });
             }
-=======
+
             const inputModal = document.getElementById('input-modal');
             const inputTitle = document.getElementById('input-title');
             const inputField = document.getElementById('input-field');
@@ -6817,7 +6817,7 @@ const textInput = document.getElementById('text-input');
             let unpackTimer = null;
             let unpackProgressValue = 0;
 
-<<<<<<< HEAD
+
             const fileOpModal = document.getElementById('fileop-modal');
             const fileOpTitle = document.getElementById('fileop-title');
             const fileOpFilename = document.getElementById('fileop-filename');
@@ -6826,8 +6826,8 @@ const textInput = document.getElementById('text-input');
             let fileOpTimer = null;
             let fileOpProgressValue = 0;
 
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
             if (sdcardBtn) {
                 sdcardBtn.addEventListener('click', () => {
                     if (sdcardPath) {
@@ -6835,7 +6835,7 @@ const textInput = document.getElementById('text-input');
                     }
                 });
             }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             
             // Context Menu
             const contextMenu = document.createElement('div');
@@ -6867,7 +6867,7 @@ const textInput = document.getElementById('text-input');
             document.body.appendChild(newMenu);
             
             // Context Menu Items
-<<<<<<< HEAD
+
             let pinMenuItem = null;
             let unpackMenuItem = null;
             const contextMenuItems = [
@@ -7102,11 +7102,11 @@ const textInput = document.getElementById('text-input');
                 contextMenu.style.left = x + 'px';
                 contextMenu.style.top = y + 'px';
             }
-=======
+
             let pinMenuItem = null;
             let unpackMenuItem = null;
             const contextMenuItems = [
-<<<<<<< HEAD
+
                 { text: t('menu.open'), action: 'open' },
                 { text: t('menu.download'), action: 'download' },
                 { text: t('menu.addToSteam'), action: 'add-to-steam' },
@@ -7116,7 +7116,7 @@ const textInput = document.getElementById('text-input');
                 { text: t('menu.cut'), action: 'cut' },
                 { text: t('menu.delete'), action: 'delete' },
                 { text: t('menu.rename'), action: 'rename' }
-=======
+
                 { text: '打开', action: 'open' },
                 { text: '添加到本地', action: 'download' },
                 { text: '添加到steam', action: 'add-to-steam' },
@@ -7125,7 +7125,7 @@ const textInput = document.getElementById('text-input');
                 { text: '复制', action: 'copy' },
                 { text: '删除', action: 'delete' },
                 { text: '重命名', action: 'rename' }
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
             ];
             
             contextMenuItems.forEach(item => {
@@ -7189,13 +7189,13 @@ const textInput = document.getElementById('text-input');
                 });
                 newMenu.appendChild(menuItem);
             });
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
+
+
+
+
 
             const PINNED_STORAGE_KEY = 'decky_send_pinned_items';
 
@@ -7244,25 +7244,25 @@ const textInput = document.getElementById('text-input');
             function updatePinMenuLabel() {
                 if (!pinMenuItem) return;
                 const set = getPinnedSet(currentPath);
-<<<<<<< HEAD
+
                 pinMenuItem.textContent = set.has(contextMenuPath) ? t('menu.unpin') : t('menu.pin');
-=======
+
                 pinMenuItem.textContent = set.has(contextMenuPath) ? '取消置顶' : '置顶';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
             }
 
             function isArchiveFile(name) {
                 if (!name) return false;
                 const lower = name.toLowerCase();
-<<<<<<< HEAD
+
                 const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar', '.exe'];
-=======
-<<<<<<< HEAD
+
+
                 const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar', '.exe'];
-=======
+
                 const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar'];
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
                 return exts.some(ext => lower.endsWith(ext));
             }
 
@@ -7275,20 +7275,20 @@ const textInput = document.getElementById('text-input');
                 unpackMenuItem.style.display = canUnpack ? 'block' : 'none';
             }
             
-<<<<<<< HEAD
+
             // Context Menu Functions
             let copiedPath = null; // Store copied/cut file/folder path
             let clipboardMode = 'copy';
-=======
-<<<<<<< HEAD
-=======
-=======
+
+
+
+
             
->>>>>>> 59ce7365bd91331c34ba7d6af0b0cd651ee0c00f
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
+
+
             // Context Menu Functions
             let copiedPath = null; // Store copied file/folder path
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
 
             function bindLongPressContextMenu(element, path, beforeShow) {
                 if (!isIOS) {
@@ -7378,7 +7378,7 @@ const textInput = document.getElementById('text-input');
                 contextMenu.style.left = x + 'px';
                 contextMenu.style.top = y + 'px';
             }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             
             function hideContextMenu() {
                 contextMenu.style.display = 'none';
@@ -7535,7 +7535,7 @@ const textInput = document.getElementById('text-input');
                             } catch (error) {
                                 console.error('添加到Steam出错:', error);
                                 alert('添加到Steam失败: ' + error.message);
-<<<<<<< HEAD
+
                             }
                         }
                         break;
@@ -7605,21 +7605,21 @@ const textInput = document.getElementById('text-input');
                             await cutPath(contextMenuPath);
                         }
                         break;
-=======
+
                             }
                         }
                         break;
                     case 'unpack':
                         if (contextMenuPath) {
                             try {
-<<<<<<< HEAD
+
                                 showUnpackProgress(contextMenuPath.split('/').pop());
-=======
-<<<<<<< HEAD
+
+
                                 showUnpackProgress(contextMenuPath.split('/').pop());
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
                                 const response = await fetch('/api/files/unpack', {
                                     method: 'POST',
                                     headers: {
@@ -7629,35 +7629,35 @@ const textInput = document.getElementById('text-input');
                                 });
                                 const result = await response.json();
                                 if (result.status === 'success') {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
+
                                     finishUnpackProgress(true);
                                     alert(result.message || '解压完成');
                                     await renderFileList(currentPath);
                                 } else {
                                     finishUnpackProgress(false);
-<<<<<<< HEAD
-=======
-=======
+
+
+
                                     alert(result.message || '解压完成');
                                     await renderFileList(currentPath);
                                 } else {
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
                                     alert('解压失败: ' + (result.message || '未知错误'));
                                 }
                             } catch (error) {
                                 console.error('解压出错:', error);
-<<<<<<< HEAD
+
                                 finishUnpackProgress(false);
-=======
-<<<<<<< HEAD
+
+
                                 finishUnpackProgress(false);
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
                                 alert('解压出错');
                             }
                         }
@@ -7696,7 +7696,7 @@ const textInput = document.getElementById('text-input');
                             await copyPath(contextMenuPath);
                         }
                         break;
-<<<<<<< HEAD
+
                     case 'cut':
                         if (contextMenuPath) {
                             await cutPath(contextMenuPath);
@@ -7705,21 +7705,21 @@ const textInput = document.getElementById('text-input');
                     case 'paste':
                         await pastePath(currentPath);
                         break;
-=======
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
+
                     case 'paste':
                         await pastePath(currentPath);
                         break;
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                     case 'delete':
                         if (contextMenuPath) {
                             // Save the path before showing confirm modal (which hides context menu)
                             const pathToDelete = contextMenuPath;
-<<<<<<< HEAD
+
                             showConfirmModal(t('modal.deleteConfirm'), async () => {
-=======
+
                             showConfirmModal(t('modal.deleteConfirm'), async () => {
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                                 await deletePath(pathToDelete);
                             });
                         }
@@ -7727,7 +7727,7 @@ const textInput = document.getElementById('text-input');
                     case 'rename':
                         if (contextMenuPath) {
                             // Implement rename functionality
-<<<<<<< HEAD
+
                             const oldName = contextMenuPath.split('/').pop() || '';
                             showInputModal(t('modal.renameTitle'), t('modal.renamePlaceholder'), (newName) => {
                                 // Implement rename API call here
@@ -7771,7 +7771,7 @@ const textInput = document.getElementById('text-input');
             });
             
             window.addEventListener('resize', applyFileManagerLayout);
-=======
+
                             const oldName = contextMenuPath.split('/').pop() || '';
                             showInputModal(t('modal.renameTitle'), t('modal.renamePlaceholder'), (newName) => {
                                 // Implement rename API call here
@@ -7815,7 +7815,7 @@ const textInput = document.getElementById('text-input');
             });
             
             window.addEventListener('resize', applyFileManagerLayout);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             
             function showConfirmModal(message, action) {
                 confirmMessage.textContent = message;
@@ -7828,7 +7828,7 @@ const textInput = document.getElementById('text-input');
                 currentConfirmAction = null;
             }
             
-<<<<<<< HEAD
+
             function showInputModal(title, placeholder, action, defaultValue = '') {
                 inputTitle.textContent = title;
                 inputField.placeholder = placeholder;
@@ -7942,7 +7942,7 @@ const textInput = document.getElementById('text-input');
                     fileOpModal.style.display = 'none';
                 }, 500);
             }
-=======
+
             function showInputModal(title, placeholder, action, defaultValue = '') {
                 inputTitle.textContent = title;
                 inputField.placeholder = placeholder;
@@ -7967,11 +7967,11 @@ const textInput = document.getElementById('text-input');
             function showUnpackProgress(filename) {
                 if (!unpackModal) return;
                 if (unpackFilename) {
-<<<<<<< HEAD
+
                     unpackFilename.textContent = filename ? t('modal.unpackingWithName', { name: filename }) : t('modal.unpacking');
-=======
+
                     unpackFilename.textContent = filename ? `正在解压：${filename}` : '正在解压...';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                 }
                 unpackProgressValue = 0;
                 if (unpackProgressFill) {
@@ -8006,17 +8006,17 @@ const textInput = document.getElementById('text-input');
                     unpackProgressFill.style.width = '100%';
                 }
                 if (unpackProgressText) {
-<<<<<<< HEAD
+
                     unpackProgressText.textContent = success ? t('status.done') : t('status.failed');
-=======
+
                     unpackProgressText.textContent = success ? '完成' : '失败';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
                 }
                 setTimeout(() => {
                     unpackModal.style.display = 'none';
                 }, 500);
             }
-<<<<<<< HEAD
+
 
             function showFileOpProgress(title, filename) {
                 if (!fileOpModal) return;
@@ -8065,9 +8065,9 @@ const textInput = document.getElementById('text-input');
                     fileOpModal.style.display = 'none';
                 }, 500);
             }
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
+
+
             
             function showFileEditor(title, content, filePath) {
                 editorTitle.textContent = title;
@@ -8105,7 +8105,7 @@ const textInput = document.getElementById('text-input');
             inputCancel.addEventListener('click', hideInputModal);
             
             // Close modals when clicking outside
-<<<<<<< HEAD
+
                 window.addEventListener('click', (e) => {
                     if (e.target.classList.contains('modal')) {
                         hideConfirmModal();
@@ -8116,7 +8116,7 @@ const textInput = document.getElementById('text-input');
                         }
                     }
                 });
-=======
+
                 window.addEventListener('click', (e) => {
                     if (e.target.classList.contains('modal')) {
                         hideConfirmModal();
@@ -8127,7 +8127,7 @@ const textInput = document.getElementById('text-input');
                         }
                     }
                 });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             
             // Close modal with Escape key
             window.addEventListener('keydown', (e) => {
@@ -8289,7 +8289,7 @@ const textInput = document.getElementById('text-input');
                         body: JSON.stringify({ path })
                     });
                     
-<<<<<<< HEAD
+
                     const data = await response.json();
                     if (data.status === 'success') {
                         fileManagerList.innerHTML = '';
@@ -8327,7 +8327,7 @@ const textInput = document.getElementById('text-input');
                             if (isPinned) {
                                 fileItem.classList.add('pinned');
                             }
-=======
+
                     const data = await response.json();
                     if (data.status === 'success') {
                         fileManagerList.innerHTML = '';
@@ -8365,7 +8365,7 @@ const textInput = document.getElementById('text-input');
                             if (isPinned) {
                                 fileItem.classList.add('pinned');
                             }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                             
                             fileItem.style.border = '1px solid var(--border)';
                             fileItem.style.borderRadius = '10px';
@@ -8386,7 +8386,7 @@ const textInput = document.getElementById('text-input');
                                 fileItem.style.boxSizing = 'border-box';
                             
                             // 点击事件：切换选中状态
-<<<<<<< HEAD
+
                             fileItem.addEventListener('click', (e) => {
                                 if (suppressNextClick) {
                                     suppressNextClick = false;
@@ -8417,7 +8417,7 @@ const textInput = document.getElementById('text-input');
                                     selectedFileManagerFiles = [file.path];
                                 }
                             });
-=======
+
                             fileItem.addEventListener('click', (e) => {
                                 if (suppressNextClick) {
                                     suppressNextClick = false;
@@ -8448,7 +8448,7 @@ const textInput = document.getElementById('text-input');
                                     selectedFileManagerFiles = [file.path];
                                 }
                             });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                             
                             // 双击事件：打开文件或进入目录
                             fileItem.addEventListener('dblclick', () => {
@@ -8459,7 +8459,7 @@ const textInput = document.getElementById('text-input');
                                 }
                             });
                             
-<<<<<<< HEAD
+
                             fileItem.addEventListener('contextmenu', (e) => {
                                 e.preventDefault();
                                 // 自动选中当前文件
@@ -8499,7 +8499,7 @@ const textInput = document.getElementById('text-input');
                             icon.className = 'file-icon';
                             icon.textContent = getFileIcon(file.name, file.is_dir);
                             icon.style.fontSize = '24px';
-=======
+
                             fileItem.addEventListener('contextmenu', (e) => {
                                 e.preventDefault();
                                 // 自动选中当前文件
@@ -8527,13 +8527,13 @@ const textInput = document.getElementById('text-input');
                                 selectedFileManagerFiles = [file.path];
                             });
                             
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
+
+
+
+
                             const pinBadge = document.createElement('div');
                             pinBadge.className = 'pin-badge';
                             pinBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#ffffff" d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-9a1 1 0 0 1 1-1h1zm2 0h6V7a3 3 0 0 0-6 0v3zm3 4a2 2 0 0 0-1 3.732V19a1 1 0 0 0 2 0v-1.268A2 2 0 0 0 12 14z"/></svg>';
@@ -8541,20 +8541,20 @@ const textInput = document.getElementById('text-input');
                                 pinBadge.style.display = 'none';
                             }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 59ce7365bd91331c34ba7d6af0b0cd651ee0c00f
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
+
+
+
+
+
                             // File Icon
                             const icon = document.createElement('div');
                             icon.className = 'file-icon';
                             icon.textContent = getFileIcon(file.name, file.is_dir);
                             icon.style.fontSize = '24px';
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                             
                             // File Name
                             const fileName = document.createElement('div');
@@ -8584,13 +8584,13 @@ const textInput = document.getElementById('text-input');
                                 fileDetails.innerHTML = `${formatSize(file.size)}<br>${formatDate(file.mtime)}`;
                             }
                             
-<<<<<<< HEAD
+
                             fileItem.appendChild(pinBadge);
                             fileItem.appendChild(icon);
-=======
+
                             fileItem.appendChild(pinBadge);
                             fileItem.appendChild(icon);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                             fileItem.appendChild(fileName);
                             fileItem.appendChild(fileDetails);
                             
@@ -8642,11 +8642,11 @@ const textInput = document.getElementById('text-input');
                     
                     const data = await response.json();
                     if (data.status === 'success') {
-<<<<<<< HEAD
+
                         showFileEditor(t('modal.editorTitleWithName', { name: filePath.split('/').pop() || '' }), data.content, filePath);
-=======
+
                         showFileEditor(t('modal.editorTitleWithName', { name: filePath.split('/').pop() || '' }), data.content, filePath);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                     } else {
                         alert('打开文件失败: ' + data.message);
                     }
@@ -8770,7 +8770,7 @@ const textInput = document.getElementById('text-input');
             }
             
             // Copy file or directory path
-<<<<<<< HEAD
+
             async function copyPath(path) {
                 try {
                     if (!path) {
@@ -8811,7 +8811,7 @@ const textInput = document.getElementById('text-input');
                 try {
                     if (!copiedPath) {
                         alert('粘贴失败: 没有要粘贴的内容');
-=======
+
             async function copyPath(path) {
                 try {
                     if (!path) {
@@ -8852,7 +8852,7 @@ const textInput = document.getElementById('text-input');
                 try {
                     if (!copiedPath) {
                         alert('粘贴失败: 没有要粘贴的内容');
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                         return;
                     }
                     
@@ -8861,7 +8861,7 @@ const textInput = document.getElementById('text-input');
                         return;
                     }
                     
-<<<<<<< HEAD
+
                     // Get filename from copied path
                     const filename = copiedPath.split('/').pop();
                     const targetPath = destPath + '/' + filename;
@@ -8896,7 +8896,7 @@ const textInput = document.getElementById('text-input');
                     alert('粘贴出错: ' + error.message);
                 }
             }
-=======
+
                     // Get filename from copied path
                     const filename = copiedPath.split('/').pop();
                     const targetPath = destPath + '/' + filename;
@@ -8931,7 +8931,7 @@ const textInput = document.getElementById('text-input');
                     alert('粘贴出错: ' + error.message);
                 }
             }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             
             // Update paste button visibility
             function updatePasteButtonVisibility() {
@@ -8974,20 +8974,20 @@ const textInput = document.getElementById('text-input');
             
             // 新建文件按钮事件
             newFileBtn.addEventListener('click', () => {
-<<<<<<< HEAD
+
                 showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
-=======
+
                 showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             });
             
             // 新建文件夹按钮事件
             newDirBtn.addEventListener('click', () => {
-<<<<<<< HEAD
+
                 showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
-=======
+
                 showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
             });
             
             pasteBtn.addEventListener('click', async () => {
@@ -9021,7 +9021,7 @@ async def handle_upload_options(request, plugin):
     except Exception as e:
         decky.logger.error(f"Failed to get upload options: {e}")
         return web.json_response({"status": "error", "message": str(e)}, status=500)
-<<<<<<< HEAD
+
 
 
 async def handle_language_settings(request, plugin):
@@ -9032,11 +9032,11 @@ async def handle_language_settings(request, plugin):
     except Exception as e:
         decky.logger.error(f"Failed to get language preference: {e}")
         return web.json_response({"status": "error", "message": str(e), "language": "auto"}, status=500)
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
 
 
-<<<<<<< HEAD
+
+
+
 async def handle_upload_options(request, plugin):
     """Return upload options for the web client"""
     try:
@@ -9061,9 +9061,9 @@ async def handle_language_settings(request, plugin):
 
 
 async def handle_upload(request, plugin):
-=======
+
 async def handle_upload(request, plugin):
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
     """Handle file upload request
     
     Args:
@@ -9071,18 +9071,18 @@ async def handle_upload(request, plugin):
         plugin: Plugin instance to access downloads_dir and text_file_path
     """
     try:
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
+
         # Parse multipart form data
         reader = await request.multipart()
         field = await reader.next()
         dest_path = None
-<<<<<<< HEAD
+
         relative_path = None
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
         file_field = None
 
         while field:
@@ -9091,14 +9091,14 @@ async def handle_upload(request, plugin):
                     dest_path = (await field.text()).strip()
                 except Exception:
                     dest_path = None
-<<<<<<< HEAD
+
             elif field.name == 'relative_path':
                 try:
                     relative_path = (await field.text()).strip()
                 except Exception:
                     relative_path = None
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
             elif field.name == 'file' and field.filename:
                 file_field = field
                 break
@@ -9106,13 +9106,13 @@ async def handle_upload(request, plugin):
 
         if file_field and file_field.filename:
             raw_filename = file_field.filename.replace('\x00', '')
-<<<<<<< HEAD
-=======
-=======
+
+
+
         # Parse multipart form data
         reader = await request.multipart()
         field = await reader.next()
-<<<<<<< HEAD
+
         dest_path = None
         relative_path = None
         file_field = None
@@ -9183,20 +9183,20 @@ async def handle_upload(request, plugin):
                 os.makedirs(os.path.dirname(file_path), exist_ok=True)
             except Exception:
                 return web.json_response({"status": "error", "message": "无法创建目标目录"}, status=400)
-=======
+
         
         if field.name == 'file' and field.filename:
             raw_filename = field.filename.replace('\x00', '')
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
             safe_filename = os.path.basename(raw_filename.replace('\\', '/')).strip()
             if safe_filename in ("", ".", ".."):
                 safe_filename = f"upload_{int(time.time())}"
             filename = safe_filename
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
+
+
+
+
             upload_dir = plugin.downloads_dir
             if dest_path:
                 if "\x00" in dest_path:
@@ -9211,7 +9211,7 @@ async def handle_upload(request, plugin):
                 except Exception:
                     return web.json_response({"status": "error", "message": "无法创建目标目录"}, status=400)
                 upload_dir = resolved
-<<<<<<< HEAD
+
             rel_path = None
             if relative_path:
                 cleaned = relative_path.replace('\\', '/').lstrip('/')
@@ -9230,13 +9230,13 @@ async def handle_upload(request, plugin):
                 os.makedirs(os.path.dirname(file_path), exist_ok=True)
             except Exception:
                 return web.json_response({"status": "error", "message": "无法创建目标目录"}, status=400)
-=======
+
             file_path = os.path.join(upload_dir, filename)
-=======
+
             file_path = os.path.join(plugin.downloads_dir, filename)
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
+
+
             
             # Get content length from header, but note this includes multipart overhead
             # For more accurate progress, we'll track actual bytes written
@@ -9266,13 +9266,13 @@ async def handle_upload(request, plugin):
             # Save file and track progress
             with open(file_path, 'wb', buffering=1024 * 1024) as f:
                 while True:
-<<<<<<< HEAD
+
                     try:
                         chunk = await file_field.read_chunk(size=1024 * 1024)  # Read 1MB chunk
-=======
+
                     try:
                         chunk = await file_field.read_chunk()  # Read chunk
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
                         if not chunk:  # EOF
                             break
                         f.write(chunk)
@@ -9702,7 +9702,7 @@ async def handle_text_upload(request, plugin):
             f.write(text)
         decky.logger.info(f"Saved text to file: {plugin.text_file_path}")
         
-<<<<<<< HEAD
+
         # Emit text received event to frontend with the saved text
         # NOTE: Wrap in list for frontend destructuring
         await _emit_decky(plugin, "text_received", [text])
@@ -9714,7 +9714,7 @@ async def handle_text_upload(request, plugin):
                     decky.logger.warning("Auto copy text failed: clipboard utility not available")
             except Exception as copy_error:
                 decky.logger.warning(f"Auto copy text failed: {copy_error}")
-=======
+
         # Emit text received event to frontend with the saved text
         # NOTE: Wrap in list for frontend destructuring
         await decky.emit("text_received", [text])
@@ -9726,7 +9726,7 @@ async def handle_text_upload(request, plugin):
                     decky.logger.warning("Auto copy text failed: clipboard utility not available")
             except Exception as copy_error:
                 decky.logger.warning(f"Auto copy text failed: {copy_error}")
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
         
         # Send notifications (Decky UI + system) so it works even when UI is closed
         notification_title = "文本传输完成"

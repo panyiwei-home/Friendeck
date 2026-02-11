@@ -10,9 +10,9 @@ import os
 import logging
 from pathlib import Path
 
-# =============================================================================
+# 
 # Logger Setup
-# =============================================================================
+# 
 
 def setup_logger():
     """Setup and configure the logger for decky-send"""
@@ -37,9 +37,9 @@ def setup_logger():
 logger = setup_logger()
 logger.setLevel(logging.INFO)
 
-# =============================================================================
+# 
 # Path Constants
-# =============================================================================
+# 
 
 # User home directory
 HOME_DIR = str(Path.home())
@@ -60,9 +60,9 @@ SWITCH_FILE_PATH = os.path.join(DECKY_SEND_DIR, "decky-sendswitch.txt")
 # Toast queue file path (for background notifications)
 NOTIFICATION_QUEUE_PATH = os.path.join(DECKY_SEND_DIR, "notification_queue.json")
 
-# =============================================================================
+# 
 # Server Configuration
-# =============================================================================
+# 
 
 # Default server host (bind to all interfaces)
 DEFAULT_SERVER_HOST = "0.0.0.0"
@@ -70,9 +70,9 @@ DEFAULT_SERVER_HOST = "0.0.0.0"
 # Main server port
 DEFAULT_SERVER_PORT = 59271
 
-# =============================================================================
+# 
 # Timeout Configuration
-# =============================================================================
+# 
 
 # Server startup timeout (seconds) - time to wait for port to become available
 SERVER_STARTUP_TIMEOUT = 10.0
@@ -93,9 +93,9 @@ WATCHDOG_CHECK_INTERVAL = 3.0
 PORT_CHECK_RETRIES = 5
 PORT_CHECK_RETRY_DELAY = 0.5
 
-# =============================================================================
+# 
 # Settings Keys
-# =============================================================================
+# 
 
 # Key for storing server settings in decky settings
 SETTINGS_KEY = "server_settings"
@@ -105,17 +105,17 @@ SETTING_RUNNING = "running"
 SETTING_PORT = "port"
 SETTING_DOWNLOAD_DIR = "download_dir"
 SETTING_AUTO_COPY_TEXT = "auto_copy_text"
-<<<<<<< HEAD
+
 SETTING_PROMPT_UPLOAD_PATH = "prompt_upload_path"
 SETTING_LANGUAGE = "language"
-=======
-<<<<<<< HEAD
+
+
 SETTING_PROMPT_UPLOAD_PATH = "prompt_upload_path"
 SETTING_LANGUAGE = "language"
-=======
-<<<<<<< HEAD
+
+
 SETTING_PROMPT_UPLOAD_PATH = "prompt_upload_path"
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
+
+
+

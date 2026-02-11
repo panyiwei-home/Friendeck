@@ -16,9 +16,9 @@ from aiohttp import web
 # NOTE: Direct import - Decky adds py_modules/ to sys.path
 import config
 
-# =============================================================================
+# 
 # System Detection Helpers
-# =============================================================================
+# 
 
 def _find_sdcard_mount():
     """Find the SD card mount path on Steam Deck.
@@ -74,9 +74,9 @@ def _find_sdcard_mount():
 
     return candidates[0] if candidates else None
 
-# =============================================================================
+# 
 # HTTP API Handlers (for aiohttp routes)
-# =============================================================================
+# 
 
 async def get_file_list(request):
     """Get list of files in a directory
@@ -464,18 +464,18 @@ def _strip_archive_ext(filename: str) -> str:
         ".zip",
         ".7z",
         ".rar",
-<<<<<<< HEAD
+
         ".exe",
-=======
-<<<<<<< HEAD
+
+
         ".exe",
-=======
-<<<<<<< HEAD
+
+
         ".exe",
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
+
+
+
     ):
         if lower.endswith(ext):
             return filename[: -len(ext)]
@@ -566,19 +566,19 @@ async def unpack_archive(request):
             shutil.unpack_archive(path, dest_dir)
         except shutil.ReadError:
             lower = path.lower()
-<<<<<<< HEAD
+
             if lower.endswith(".7z") or lower.endswith(".rar") or lower.endswith(".exe"):
-=======
-<<<<<<< HEAD
+
+
             if lower.endswith(".7z") or lower.endswith(".rar") or lower.endswith(".exe"):
-=======
-<<<<<<< HEAD
+
+
             if lower.endswith(".7z") or lower.endswith(".rar") or lower.endswith(".exe"):
-=======
+
             if lower.endswith(".7z") or lower.endswith(".rar"):
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
+
+
+
                 seven_zip = _find_7z()
                 if seven_zip:
                     _run_cmd([seven_zip, "x", "-y", f"-o{dest_dir}", path])
@@ -677,9 +677,9 @@ async def add_file_to_steam(request):
         return web.json_response({"status": "error", "message": str(e)}, status=500)
 
 
-# =============================================================================
+# 
 # Plugin API Methods (called via callPluginMethod)
-# =============================================================================
+# 
 
 async def get_text_content(plugin) -> dict:
     """Get the current text content from the file

@@ -17,9 +17,9 @@ from typing import List, Dict, Any
 # NOTE: Direct import - Decky adds py_modules/ to sys.path
 import config
 
-# =============================================================================
+# 
 # Network Utilities
-# =============================================================================
+# 
 
 def _is_vpn_interface(name: str) -> bool:
     if not name:
@@ -231,9 +231,9 @@ async def wait_for_service_healthy(port, endpoint='/', timeout=None, check_inter
     return False
 
 
-# =============================================================================
+# 
 # Notification Utilities
-# =============================================================================
+# 
 
 def send_system_notification(title: str, body: str, duration: float = 5.0) -> bool:
     """Send a system notification without relying on the plugin UI.
@@ -276,9 +276,9 @@ def send_system_notification(title: str, body: str, duration: float = 5.0) -> bo
         return False
 
 
-# =============================================================================
+# 
 # Clipboard Utilities
-# =============================================================================
+# 
 
 def set_clipboard_text(text: str) -> bool:
     """Set system clipboard text using available clipboard utilities."""
@@ -356,9 +356,9 @@ def set_clipboard_text(text: str) -> bool:
         return False
 
 
-# =============================================================================
+# 
 # Toast Queue Utilities
-# =============================================================================
+# 
 
 def queue_notification(title: str, body: str, urgency: str = "normal") -> bool:
     """Queue a toast notification for frontend polling.
