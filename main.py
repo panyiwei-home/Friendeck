@@ -37,9 +37,9 @@ class Plugin:
     allowing users to upload files and text from other devices.
     """
     
-    # ====
+    # ==========================================================================
     # Server Status Variables
-    # ====
+    # ==========================================================================
     
     # Main server
     server_running = False
@@ -50,9 +50,9 @@ class Plugin:
     runner = None
     site = None
     
-    # ====
+    # ==========================================================================
     # Thread Control Variables (for graceful shutdown)
-    # ====
+    # ==========================================================================
     
     server_stop_event = None        # threading.Event for main server stop signal
     server_loop = None              # event loop reference for main server
@@ -64,9 +64,9 @@ class Plugin:
     # Lock for preventing race conditions during server operations
     _server_lock = None  # will be initialized as threading.Lock()
     
-    # ====
+    # ==========================================================================
     # Path Variables (from config)
-    # ====
+    # ==========================================================================
     
     downloads_dir = config.DOWNLOADS_DIR
     share_dir = config.SHARE_DIR
@@ -74,48 +74,24 @@ class Plugin:
     text_file_path = config.TEXT_FILE_PATH
     switch_file_path = config.SWITCH_FILE_PATH
     auto_copy_text_enabled = False
-
     prompt_upload_path_enabled = False
     language_preference = "auto"
-
-
-    prompt_upload_path_enabled = False
-    language_preference = "auto"
-
-
-    prompt_upload_path_enabled = False
-
-
-
-
     
-    # ====
+    # ==========================================================================
     # Settings Keys (from config)
-    # ====
+    # ==========================================================================
     
     SETTINGS_KEY = config.SETTINGS_KEY
     SETTING_RUNNING = config.SETTING_RUNNING
     SETTING_PORT = config.SETTING_PORT
     SETTING_DOWNLOAD_DIR = config.SETTING_DOWNLOAD_DIR
     SETTING_AUTO_COPY_TEXT = config.SETTING_AUTO_COPY_TEXT
-
     SETTING_PROMPT_UPLOAD_PATH = config.SETTING_PROMPT_UPLOAD_PATH
     SETTING_LANGUAGE = config.SETTING_LANGUAGE
-
-
-    SETTING_PROMPT_UPLOAD_PATH = config.SETTING_PROMPT_UPLOAD_PATH
-    SETTING_LANGUAGE = config.SETTING_LANGUAGE
-
-
-    SETTING_PROMPT_UPLOAD_PATH = config.SETTING_PROMPT_UPLOAD_PATH
-
-
-
-
     
-    # ====
+    # ==========================================================================
     # Lifecycle Methods
-    # ====
+    # ==========================================================================
     
     async def _main(self):
         """Plugin main entry point - called when plugin is loaded
@@ -227,9 +203,9 @@ class Plugin:
         """Plugin uninstall handler"""
         decky.logger.info("Uninstalling decky-send plugin")
     
-    # ====
+    # ==========================================================================
     # Frontend API Methods (called via callPluginMethod)
-    # ====
+    # ==========================================================================
     
     async def start_server(self, port: int = config.DEFAULT_SERVER_PORT) -> dict:
         """Start HTTP server - delegate to server_manager"""
@@ -275,13 +251,6 @@ class Plugin:
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-
-
-
-
-
-
-
     async def get_prompt_upload_path(self) -> dict:
         """Get upload path prompt setting"""
         try:
@@ -297,10 +266,6 @@ class Plugin:
             return {"status": "success", "enabled": self.prompt_upload_path_enabled}
         except Exception as e:
             return {"status": "error", "message": str(e)}
-
-
-
-
 
     async def get_language_preference(self) -> dict:
         """Get saved UI language preference"""
@@ -319,13 +284,6 @@ class Plugin:
             return {"status": "success", "language": value}
         except Exception as e:
             return {"status": "error", "message": str(e)}
-
-
-
-
-
-
-
 
     async def set_server_port(self, port: int) -> dict:
         """Set server port and optionally restart server if running"""
@@ -442,9 +400,9 @@ class Plugin:
                 "url": ""
             }
     
-    # ====
+    # ==========================================================================
     # Internal Helper Methods (for backward compatibility)
-    # ====
+    # ==========================================================================
     
     def _get_ip_address(self):
         """Get IP address - wrapper for utils function"""
