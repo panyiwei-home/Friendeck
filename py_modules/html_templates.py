@@ -168,7 +168,6 @@ def get_file_manager_html():
                 background-color: #d93025;
             }
             
-<<<<<<< HEAD
             /* File List */
             .file-list-container {
                 border: 1px solid #333;
@@ -287,126 +286,6 @@ def get_file_manager_html():
                 -webkit-user-select: none;
                 -ms-user-select: none;
             }
-=======
-            /* File List */
-            .file-list-container {
-                border: 1px solid #333;
-                border-radius: 6px;
-                padding: 10px;
-                flex: 1 1 auto;
-                overflow: auto;
-                background-color: rgba(255, 255, 255, 0.05);
-                min-height: 0; /* Prevent overflow in flex container */
-                display: flex;
-            }
-            .file-grid {
-                display: flex;
-                flex-wrap: wrap;
-                align-content: flex-start;
-                gap: 12px;
-                width: 100%;
-            }
-            .file-grid.list-mode {
-                flex-direction: column;
-            }
-            .file-grid.list-mode .file-item {
-                flex: 1 1 auto;
-                max-width: none;
-                width: 100%;
-                flex-direction: row;
-                align-items: center;
-                justify-content: flex-start;
-                gap: 10px;
-                min-height: 56px;
-            }
-            .file-grid.list-mode .file-icon {
-                font-size: 20px;
-            }
-            .file-grid.list-mode .file-name {
-                text-align: left;
-                flex: 1 1 auto;
-            }
-            .file-grid.list-mode .file-details {
-                margin-left: auto;
-                text-align: right;
-            }
-            .file-grid .file-item {
-                min-width: 0;
-                position: relative;
-            }
-            .file-grid .pin-badge {
-                position: absolute;
-                top: 6px;
-                left: 6px;
-                font-size: 12px;
-                color: #ffffff;
-                background: #000000;
-                padding: 2px 4px;
-                border-radius: 6px;
-                border: 1px solid #ffffff;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                line-height: 1;
-                pointer-events: none;
-            }
-            .file-grid.list-mode {
-                flex-direction: column;
-            }
-            .file-grid.list-mode .file-item {
-                flex: 1 1 auto;
-                max-width: none;
-                width: 100%;
-                flex-direction: row;
-                align-items: center;
-                justify-content: flex-start;
-                gap: 10px;
-                min-height: 56px;
-            }
-            .file-grid.list-mode .file-icon {
-                font-size: 20px;
-            }
-            .file-grid.list-mode .file-name {
-                text-align: left;
-                flex: 1 1 auto;
-            }
-            .file-grid.list-mode .file-details {
-                margin-left: auto;
-                text-align: right;
-            }
-            .file-grid .file-name {
-                max-width: 100%;
-                min-width: 0;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            .file-item.is-dir .file-details {
-                display: none;
-            }
-            .file-item {
-                border: 1px solid #333;
-                border-radius: 6px;
-                padding: 10px;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                min-height: 100px;
-                justify-content: center;
-                gap: 5px;
-                flex: 1 1 120px;
-                max-width: 200px;
-                -webkit-touch-callout: none;
-            }
-            .file-item,
-            .file-item * {
-                user-select: none;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-            }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             .file-item:hover {
                 background-color: rgba(27, 115, 232, 0.2);
                 border-color: #1b73e8;
@@ -443,7 +322,6 @@ def get_file_manager_html():
                 margin: 0;
                 color: #1b73e8;
             }
-<<<<<<< HEAD
             .modal-header button {
                 background: none;
                 border: none;
@@ -500,64 +378,6 @@ def get_file_manager_html():
                     gap: 8px;
                 }
             }
-=======
-            .modal-header button {
-                background: none;
-                border: none;
-                color: white;
-                font-size: 20px;
-                cursor: pointer;
-            }
-            .unpack-progress-bar {
-                width: 100%;
-                height: 8px;
-                background: rgba(255, 255, 255, 0.12);
-                border-radius: 6px;
-                overflow: hidden;
-                margin-top: 12px;
-            }
-            .unpack-progress-fill {
-                height: 100%;
-                width: 0%;
-                background: #1b73e8;
-                transition: width 0.2s ease;
-            }
-            .unpack-progress-text {
-                font-size: 12px;
-                color: #bdbdbd;
-                margin-top: 8px;
-                text-align: right;
-            }
-
-            @media (max-width: 640px) {
-                body {
-                    padding: 8px;
-                }
-                .breadcrumb {
-                    padding: 6px 8px;
-                }
-                .action-buttons {
-                    gap: 6px;
-                }
-                .action-buttons button {
-                    padding: 6px 12px;
-                    font-size: 12px;
-                }
-                .file-grid {
-                    gap: 8px;
-                }
-                .file-item {
-                    min-height: 90px;
-                    flex: 1 1 96px;
-                    max-width: 160px;
-                }
-                .file-grid.list-mode .file-item {
-                    min-height: 52px;
-                    padding: 8px 10px;
-                    gap: 8px;
-                }
-            }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             /* Textarea */
             textarea {
@@ -610,7 +430,6 @@ def get_file_manager_html():
         </style>
     </head>
     <body style="margin: 0; padding: 10px; overflow: hidden; height: 100vh; display: flex; flex-direction: column;">
-<<<<<<< HEAD
         <!-- Breadcrumb Navigation -->
         <div style="display: flex; align-items: center; gap: 8px;">
             <div class="breadcrumb" id="breadcrumb" style="flex: 1; overflow-x: auto; white-space: nowrap;">
@@ -630,27 +449,6 @@ def get_file_manager_html():
             <button id="new-dir-btn" data-i18n="actions.newFolder">新建文件夹</button>
             <button id="new-btn" data-i18n="actions.new" style="display: none;">新建</button>
         </div>
-=======
-        <!-- Breadcrumb Navigation -->
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <div class="breadcrumb" id="breadcrumb" style="flex: 1; overflow-x: auto; white-space: nowrap;">
-                <span class="breadcrumb-item" data-path="" data-i18n="breadcrumb.home">主页</span>
-            </div>
-            <button id="sdcard-btn" data-i18n="actions.sdcard" style="padding: 6px 12px; background-color: #1b73e8; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; margin: 0; display: none; white-space: nowrap;">
-                内存卡
-            </button>
-        </div>
-        
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button id="back-btn" data-i18n="actions.back">返回</button>
-            <button id="refresh-btn" data-i18n="actions.refresh">刷新</button>
-            <button id="paste-btn" data-i18n="actions.paste" style="display: none;">粘贴</button>
-            <button id="new-file-btn" data-i18n="actions.newFile">新建文件</button>
-            <button id="new-dir-btn" data-i18n="actions.newFolder">新建文件夹</button>
-            <button id="new-btn" data-i18n="actions.new" style="display: none;">新建</button>
-        </div>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
         
         <!-- File List -->
         <div class="file-list-container" style="flex: 1 1 auto; overflow: auto; max-height: none; min-height: 0; display: flex;">
@@ -660,7 +458,6 @@ def get_file_manager_html():
         <!-- File Editor Modal -->
         <div id="file-editor-modal" class="modal">
             <div class="modal-content">
-<<<<<<< HEAD
                 <div class="modal-header">
                     <h3 id="editor-title" data-i18n="modal.editorTitle">文件编辑器</h3>
                     <button id="close-editor">×</button>
@@ -670,24 +467,12 @@ def get_file_manager_html():
                     <button id="save-file-btn" data-i18n="actions.save">保存</button>
                     <button id="cancel-edit-btn" data-i18n="actions.cancel">取消</button>
                 </div>
-=======
-                <div class="modal-header">
-                    <h3 id="editor-title" data-i18n="modal.editorTitle">文件编辑器</h3>
-                    <button id="close-editor">×</button>
-                </div>
-                <textarea id="file-content"></textarea>
-                <div style="margin: 15px 0; display: flex; gap: 10px; justify-content: flex-end;">
-                    <button id="save-file-btn" data-i18n="actions.save">保存</button>
-                    <button id="cancel-edit-btn" data-i18n="actions.cancel">取消</button>
-                </div>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             </div>
         </div>
         
         <!-- Confirmation Modal -->
         <div id="confirm-modal" class="modal">
             <div class="modal-content">
-<<<<<<< HEAD
                 <h3 data-i18n="modal.confirmTitle" style="margin: 0 0 15px 0;">确认操作</h3>
                 <p id="confirm-message"></p>
                 <div style="display: flex; gap: 10px; justify-content: flex-end;">
@@ -738,76 +523,11 @@ def get_file_manager_html():
                 <div id="fileop-progress-text" class="unpack-progress-text">0%</div>
             </div>
         </div>
-=======
-                <h3 data-i18n="modal.confirmTitle" style="margin: 0 0 15px 0;">确认操作</h3>
-                <p id="confirm-message"></p>
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button id="confirm-yes" data-i18n="modal.confirmYes">确认</button>
-                    <button id="confirm-no" data-i18n="modal.confirmNo">取消</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Input Modal for New Files/Folders -->
-        <div id="input-modal" class="modal">
-            <div class="modal-content">
-                <h3 id="input-title"></h3>
-                <input type="text" id="input-field">
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-<<<<<<< HEAD
-                    <button id="input-ok" data-i18n="modal.inputOk">确认</button>
-                    <button id="input-cancel" data-i18n="modal.inputCancel">取消</button>
-=======
-                    <button id="input-ok">确认</button>
-                    <button id="input-cancel">取消</button>
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                </div>
-            </div>
-        </div>
-
-        <!-- Unpack Progress Modal -->
-        <div id="unpack-modal" class="modal">
-            <div class="modal-content" style="max-width: 420px;">
-                <div class="modal-header">
-<<<<<<< HEAD
-                    <h3 data-i18n="modal.unpackTitle">正在解压</h3>
-=======
-                    <h3>正在解压</h3>
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                    <button id="unpack-close" style="visibility: hidden;">×</button>
-                </div>
-                <div id="unpack-filename" style="font-size: 13px; color: #bdbdbd;"></div>
-                <div class="unpack-progress-bar">
-                    <div id="unpack-progress-fill" class="unpack-progress-fill"></div>
-                </div>
-                <div id="unpack-progress-text" class="unpack-progress-text">0%</div>
-            </div>
-        </div>
-<<<<<<< HEAD
-
-        <!-- File Operation Progress Modal -->
-        <div id="fileop-modal" class="modal">
-            <div class="modal-content" style="max-width: 420px;">
-                <div class="modal-header">
-                    <h3 id="fileop-title" data-i18n="modal.fileOpCopy">正在复制</h3>
-                    <button id="fileop-close" style="visibility: hidden;">×</button>
-                </div>
-                <div id="fileop-filename" style="font-size: 13px; color: #bdbdbd;"></div>
-                <div class="unpack-progress-bar">
-                    <div id="fileop-progress-fill" class="unpack-progress-fill"></div>
-                </div>
-                <div id="fileop-progress-text" class="unpack-progress-text">0%</div>
-            </div>
-        </div>
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
         
         <!-- Context Menu -->
         <div class="context-menu" id="context-menu"></div>
         <div class="context-menu" id="new-menu"></div>
         
-<<<<<<< HEAD
         <script>
             const PAGE_TITLE_KEY = 'title.fileManager';
             const I18N = {
@@ -1114,314 +834,6 @@ def get_file_manager_html():
             document.addEventListener('DOMContentLoaded', async () => {
                 await initLanguage();
                 // Modal handlers
-=======
-        <script>
-            const PAGE_TITLE_KEY = 'title.fileManager';
-            const I18N = {
-                'zh-CN': {
-                    title: {
-                        fileManager: 'decky-send 文件管理器',
-                        upload: 'decky-send 文件上传'
-                    },
-                    subtitle: '将文件或文本上传到 Steam Deck',
-                    tabs: {
-                        file: '文件上传',
-                        text: '文本传输',
-                        fileManager: '文件管理'
-                    },
-                    breadcrumb: {
-                        home: '主页'
-                    },
-                    upload: {
-                        hint: '点击或拖拽文件/文件夹到此处',
-                        sendFile: '发送文件'
-                    },
-                    text: {
-                        placeholder: '在此输入要传输的文本...',
-                        send: '发送文本'
-                    },
-                    actions: {
-                        back: '返回',
-                        refresh: '刷新',
-                        paste: '粘贴',
-                        newFile: '新建文件',
-                        newFolder: '新建文件夹',
-                        new: '新建',
-                        save: '保存',
-                        cancel: '取消',
-                        sdcard: '内存卡'
-                    },
-                    status: {
-                        done: '完成',
-                        failed: '失败'
-                    },
-                    modal: {
-                        confirmTitle: '确认操作',
-                        confirmYes: '确认',
-                        confirmNo: '取消',
-                        inputOk: '确认',
-                        inputCancel: '取消',
-                        editorTitle: '文件编辑器',
-                        editorTitleWithName: '编辑文件：{{name}}',
-                        unpackTitle: '正在解压',
-                        unpacking: '正在解压...',
-                        unpackingWithName: '正在解压：{{name}}',
-                        fileOpCopy: '正在复制',
-                        fileOpMove: '正在剪切',
-                        fileOpTarget: '目标：{{name}}',
-                        renameTitle: '重命名',
-                        newFileTitle: '新建文件',
-                        newFolderTitle: '新建文件夹',
-                        renamePlaceholder: '请输入新名称',
-                        newFilePlaceholder: '请输入文件名',
-                        newFolderPlaceholder: '请输入文件夹名',
-                        deleteConfirm: '确定要删除此项目吗？',
-                        uploadPathTitle: '选择传输路径',
-                        uploadPathUp: '上一级',
-                        uploadPathSelect: '选择当前目录',
-                        uploadPathCancel: '取消',
-                        uploadPathCurrent: '当前路径：{{path}}',
-                        uploadPathError: '无法读取目录'
-                    },
-                    menu: {
-                        open: '打开',
-                        download: '下载到本地',
-                        addToSteam: '添加到Steam',
-                        unpack: '解压',
-                        pin: '置顶',
-                        unpin: '取消置顶',
-                        copy: '复制',
-                        cut: '剪切',
-                        delete: '删除',
-                        rename: '重命名'
-                    }
-                },
-                'en-US': {
-                    title: {
-                        fileManager: 'decky-send File Manager',
-                        upload: 'decky-send File Transfer'
-                    },
-                    subtitle: 'Upload files or text to Steam Deck',
-                    tabs: {
-                        file: 'File Upload',
-                        text: 'Text Transfer',
-                        fileManager: 'File Manager'
-                    },
-                    breadcrumb: {
-                        home: 'Home'
-                    },
-                    upload: {
-                        hint: 'Click or drag files/folders here',
-                        sendFile: 'Send Files'
-                    },
-                    text: {
-                        placeholder: 'Enter text to send...',
-                        send: 'Send Text'
-                    },
-                    actions: {
-                        back: 'Back',
-                        refresh: 'Refresh',
-                        paste: 'Paste',
-                        newFile: 'New File',
-                        newFolder: 'New Folder',
-                        new: 'New',
-                        save: 'Save',
-                        cancel: 'Cancel',
-                        sdcard: 'SD Card'
-                    },
-                    status: {
-                        done: 'Done',
-                        failed: 'Failed'
-                    },
-                    modal: {
-                        confirmTitle: 'Confirm',
-                        confirmYes: 'Confirm',
-                        confirmNo: 'Cancel',
-                        inputOk: 'OK',
-                        inputCancel: 'Cancel',
-                        editorTitle: 'File Editor',
-                        editorTitleWithName: 'Edit file: {{name}}',
-                        unpackTitle: 'Extracting',
-                        unpacking: 'Extracting...',
-                        unpackingWithName: 'Extracting: {{name}}',
-                        fileOpCopy: 'Copying',
-                        fileOpMove: 'Moving',
-                        fileOpTarget: 'Target: {{name}}',
-                        renameTitle: 'Rename',
-                        newFileTitle: 'New File',
-                        newFolderTitle: 'New Folder',
-                        renamePlaceholder: 'Enter new name',
-                        newFilePlaceholder: 'Enter file name',
-                        newFolderPlaceholder: 'Enter folder name',
-                        deleteConfirm: 'Delete this item?',
-                        uploadPathTitle: 'Choose destination',
-                        uploadPathUp: 'Up',
-                        uploadPathSelect: 'Select current folder',
-                        uploadPathCancel: 'Cancel',
-                        uploadPathCurrent: 'Current path: {{path}}',
-                        uploadPathError: 'Failed to read directory'
-                    },
-                    menu: {
-                        open: 'Open',
-                        download: 'Download',
-                        addToSteam: 'Add to Steam',
-                        unpack: 'Extract',
-                        pin: 'Pin',
-                        unpin: 'Unpin',
-                        copy: 'Copy',
-                        cut: 'Cut',
-                        delete: 'Delete',
-                        rename: 'Rename'
-                    }
-                }
-            };
-
-            let currentLang = 'zh-CN';
-
-            function normalizeLang(lang) {
-                if (!lang) return 'zh-CN';
-                const lower = String(lang).toLowerCase();
-                if (lower === 'auto') return normalizeLang(navigator.language);
-                if (lower.startsWith('zh')) return 'zh-CN';
-                if (lower.startsWith('en')) return 'en-US';
-                return I18N[lang] ? lang : 'zh-CN';
-            }
-
-            function t(key, vars) {
-                const table = I18N[currentLang] || I18N['zh-CN'];
-                const parts = key.split('.');
-                let value = table;
-                for (const part of parts) {
-                    if (value && typeof value === 'object' && part in value) {
-                        value = value[part];
-                    } else {
-                        value = null;
-                        break;
-                    }
-                }
-                if (typeof value !== 'string') return key;
-                if (vars) {
-                    Object.keys(vars).forEach((varKey) => {
-                        value = value.replace(new RegExp(`{{\\s*${varKey}\\s*}}`, 'g'), String(vars[varKey]));
-                    });
-                }
-                return value;
-            }
-
-            function applyTranslations() {
-                document.documentElement.lang = currentLang;
-                if (PAGE_TITLE_KEY) {
-                    document.title = t(PAGE_TITLE_KEY);
-                }
-                document.querySelectorAll('[data-i18n]').forEach((el) => {
-                    const key = el.getAttribute('data-i18n');
-                    if (key) {
-                        el.textContent = t(key);
-                    }
-                });
-                document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
-                    const key = el.getAttribute('data-i18n-placeholder');
-                    if (key) {
-                        el.setAttribute('placeholder', t(key));
-                    }
-                });
-            }
-
-            const ALERT_FULL_MAP = {
-                '只能下载文件，不能下载文件夹': 'Only files can be downloaded',
-                '下载失败': 'Download failed',
-                '文件已添加到Steam库': 'File added to Steam',
-                '只能将文件添加到Steam库，不能添加文件夹': 'Only files can be added to Steam',
-                '重命名功能将在后续版本中实现': 'Rename will be available in a future version',
-                '获取文件列表出错': 'Failed to load file list',
-                '打开文件出错': 'Failed to open file',
-                '文件保存成功': 'File saved',
-                '保存文件出错': 'Failed to save file',
-                '文件名不能为空': 'File name cannot be empty',
-                '文件创建成功': 'File created',
-                '创建文件出错': 'Failed to create file',
-                '文件夹名不能为空': 'Folder name cannot be empty',
-                '文件夹创建成功': 'Folder created',
-                '创建文件夹出错': 'Failed to create folder',
-                '删除成功': 'Deleted',
-                '复制成功': 'Copied',
-                '复制出错': 'Copy failed',
-                '剪切成功': 'Moved',
-                '剪切出错': 'Move failed',
-                '粘贴成功': 'Pasted',
-                '粘贴失败: 没有要粘贴的内容': 'Paste failed: nothing to paste',
-                '粘贴失败: 目标路径不能为空': 'Paste failed: destination is empty',
-                '粘贴出错': 'Paste failed',
-                '无法读取目录': 'Failed to read directory',
-                '未知错误': 'Unknown error',
-                '请直接点击右键或双击文件进行操作': 'Please right-click or double click to operate',
-                '请先选择文件': 'Please select files',
-                '请先选择传输路径': 'Please choose a destination first',
-                '所有文件上传完成': 'All files uploaded',
-                '部分文件上传失败': 'Some files failed to upload',
-                '部分文件上传超时': 'Some files timed out',
-                '请先输入要传输的文本': 'Please enter text to send',
-                '文本传输成功': 'Text sent',
-                '文本传输失败': 'Text transfer failed',
-                '文本传输出错': 'Text transfer error',
-                '解压完成': 'Extraction complete',
-                '解压出错': 'Extraction error',
-                '请先选择一个文件或文件夹': 'Please select a file or folder'
-            };
-
-            const ALERT_PREFIX_MAP = {
-                '下载失败: ': 'Download failed: ',
-                '添加到Steam失败: ': 'Add to Steam failed: ',
-                '获取文件列表失败: ': 'Failed to load file list: ',
-                '打开文件失败: ': 'Failed to open file: ',
-                '保存文件失败: ': 'Failed to save file: ',
-                '创建文件失败: ': 'Failed to create file: ',
-                '创建文件夹失败: ': 'Failed to create folder: ',
-                '删除失败: ': 'Delete failed: ',
-                '复制失败: ': 'Copy failed: ',
-                '剪切失败: ': 'Move failed: ',
-                '粘贴失败: ': 'Paste failed: ',
-                '粘贴出错: ': 'Paste error: ',
-                '解压失败: ': 'Extraction failed: '
-            };
-
-            function translateMessage(message) {
-                if (currentLang.startsWith('zh')) return message;
-                const text = String(message ?? '');
-                if (ALERT_FULL_MAP[text]) return ALERT_FULL_MAP[text];
-                for (const prefix in ALERT_PREFIX_MAP) {
-                    if (text.startsWith(prefix)) {
-                        return ALERT_PREFIX_MAP[prefix] + text.slice(prefix.length);
-                    }
-                }
-                return text;
-            }
-
-            const rawAlert = window.alert.bind(window);
-            window.alert = (message) => rawAlert(translateMessage(message));
-
-            async function initLanguage() {
-                try {
-                    const response = await fetch('/api/settings/language');
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data && data.language) {
-                            currentLang = normalizeLang(data.language);
-                        } else {
-                            currentLang = normalizeLang('auto');
-                        }
-                    }
-                } catch (e) {
-                    currentLang = normalizeLang('auto');
-                }
-                applyTranslations();
-            }
-
-            // Wait for DOM to fully load before executing scripts
-            document.addEventListener('DOMContentLoaded', async () => {
-                await initLanguage();
-                // Modal handlers
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 let currentConfirmAction = null;
                 let currentInputAction = null;
                 
@@ -1433,7 +845,6 @@ def get_file_manager_html():
                 // DOM Elements
                 const breadcrumb = document.getElementById('breadcrumb');
                 const fileManagerList = document.getElementById('file-manager-list');
-<<<<<<< HEAD
                 const backBtn = document.getElementById('back-btn');
                 const refreshBtn = document.getElementById('refresh-btn');
                 const pasteBtn = document.getElementById('paste-btn');
@@ -1451,25 +862,6 @@ def get_file_manager_html():
                 let suppressNextClick = false;
                 
                 // Modal Elements
-=======
-                const backBtn = document.getElementById('back-btn');
-                const refreshBtn = document.getElementById('refresh-btn');
-                const pasteBtn = document.getElementById('paste-btn');
-                const newFileBtn = document.getElementById('new-file-btn');
-                const newDirBtn = document.getElementById('new-dir-btn');
-                const newBtn = document.getElementById('new-btn');
-                const sdcardBtn = document.getElementById('sdcard-btn');
-                let sdcardPath = '';
-
-                const contextMenu = document.getElementById('context-menu');
-                const newMenu = document.getElementById('new-menu');
-
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-                let suppressNextClick = false;
-                
-                // Modal Elements
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 const fileEditorModal = document.getElementById('file-editor-modal');
                 const editorTitle = document.getElementById('editor-title');
                 const fileContent = document.getElementById('file-content');
@@ -1482,7 +874,6 @@ def get_file_manager_html():
                 const confirmYes = document.getElementById('confirm-yes');
                 const confirmNo = document.getElementById('confirm-no');
                 
-<<<<<<< HEAD
                 const inputModal = document.getElementById('input-modal');
                 const inputTitle = document.getElementById('input-title');
                 const inputField = document.getElementById('input-field');
@@ -1724,293 +1115,6 @@ def get_file_manager_html():
                     contextMenu.style.left = x + 'px';
                     contextMenu.style.top = y + 'px';
                 }
-=======
-                const inputModal = document.getElementById('input-modal');
-                const inputTitle = document.getElementById('input-title');
-                const inputField = document.getElementById('input-field');
-                const inputOk = document.getElementById('input-ok');
-                const inputCancel = document.getElementById('input-cancel');
-
-                const unpackModal = document.getElementById('unpack-modal');
-                const unpackFilename = document.getElementById('unpack-filename');
-                const unpackProgressFill = document.getElementById('unpack-progress-fill');
-                const unpackProgressText = document.getElementById('unpack-progress-text');
-                let unpackTimer = null;
-                let unpackProgressValue = 0;
-
-<<<<<<< HEAD
-                const fileOpModal = document.getElementById('fileop-modal');
-                const fileOpTitle = document.getElementById('fileop-title');
-                const fileOpFilename = document.getElementById('fileop-filename');
-                const fileOpProgressFill = document.getElementById('fileop-progress-fill');
-                const fileOpProgressText = document.getElementById('fileop-progress-text');
-                let fileOpTimer = null;
-                let fileOpProgressValue = 0;
-
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                if (sdcardBtn) {
-                    sdcardBtn.addEventListener('click', () => {
-                        if (sdcardPath) {
-                            navigateTo(sdcardPath);
-                        }
-                    });
-                }
-                
-                // Context Menu Items
-                let pinMenuItem = null;
-                let unpackMenuItem = null;
-                const contextMenuItems = [
-<<<<<<< HEAD
-                    { text: t('menu.open'), action: 'open' },
-                    { text: t('menu.download'), action: 'download' },
-                    { text: t('menu.addToSteam'), action: 'add-to-steam' },
-                    { text: t('menu.unpack'), action: 'unpack' },
-                    { text: t('menu.pin'), action: 'pin' },
-                    { text: t('menu.copy'), action: 'copy' },
-                    { text: t('menu.cut'), action: 'cut' },
-                    { text: t('menu.delete'), action: 'delete' },
-                    { text: t('menu.rename'), action: 'rename' }
-=======
-                    { text: '打开', action: 'open' },
-                    { text: '下载到本地', action: 'download' },
-                    { text: '添加到steam', action: 'add-to-steam' },
-                    { text: '解压', action: 'unpack' },
-                    { text: '置顶', action: 'pin' },
-                    { text: '复制', action: 'copy' },
-                    { text: '删除', action: 'delete' },
-                    { text: '重命名', action: 'rename' }
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                ]
-                
-                // Create context menu items
-                contextMenuItems.forEach(item => {
-                    const menuItem = document.createElement('div');
-                    menuItem.className = 'context-menu-item';
-                    menuItem.textContent = item.text;
-                    menuItem.addEventListener('click', async () => {
-                        await handleContextMenuAction(item.action);
-                        hideContextMenu();
-                    });
-                    contextMenu.appendChild(menuItem);
-                    if (item.action === 'pin') {
-                        pinMenuItem = menuItem;
-                    }
-                    if (item.action === 'unpack') {
-                        unpackMenuItem = menuItem;
-                    }
-                });
-
-                // New Menu Items (for compact screens)
-                const newMenuItems = [
-                    { text: t('actions.newFile'), action: 'new-file' },
-                    { text: t('actions.newFolder'), action: 'new-dir' }
-                ];
-                
-                newMenuItems.forEach(item => {
-                    const menuItem = document.createElement('div');
-                    menuItem.className = 'context-menu-item';
-                    menuItem.textContent = item.text;
-                    menuItem.addEventListener('click', () => {
-                        if (item.action === 'new-file') {
-                            showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
-                        } else {
-                            showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
-                        }
-                        hideNewMenu();
-                    });
-                    newMenu.appendChild(menuItem);
-                });
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-
-                const PINNED_STORAGE_KEY = 'decky_send_pinned_items';
-
-                function loadPinnedMap() {
-                    try {
-                        const raw = localStorage.getItem(PINNED_STORAGE_KEY);
-                        if (!raw) return {};
-                        const parsed = JSON.parse(raw);
-                        return parsed && typeof parsed === 'object' ? parsed : {};
-                    } catch (e) {
-                        console.error('读取置顶信息失败:', e);
-                        return {};
-                    }
-                }
-
-                function savePinnedMap(map) {
-                    try {
-                        localStorage.setItem(PINNED_STORAGE_KEY, JSON.stringify(map));
-                    } catch (e) {
-                        console.error('保存置顶信息失败:', e);
-                    }
-                }
-
-                function getPinnedSet(path) {
-                    const map = loadPinnedMap();
-                    const list = Array.isArray(map[path]) ? map[path] : [];
-                    return new Set(list);
-                }
-
-                function setPinnedSet(path, set) {
-                    const map = loadPinnedMap();
-                    map[path] = Array.from(set);
-                    savePinnedMap(map);
-                }
-
-                function togglePin(path) {
-                    const set = getPinnedSet(currentPath);
-                    if (set.has(path)) {
-                        set.delete(path);
-                    } else {
-                        set.add(path);
-                    }
-                    setPinnedSet(currentPath, set);
-                }
-
-                function updatePinMenuLabel() {
-                    if (!pinMenuItem) return;
-                    const set = getPinnedSet(currentPath);
-<<<<<<< HEAD
-                    pinMenuItem.textContent = set.has(contextMenuPath) ? t('menu.unpin') : t('menu.pin');
-=======
-                    pinMenuItem.textContent = set.has(contextMenuPath) ? '取消置顶' : '置顶';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                }
-
-                function isArchiveFile(name) {
-                    if (!name) return false;
-                    const lower = name.toLowerCase();
-<<<<<<< HEAD
-                    const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar', '.exe'];
-=======
-<<<<<<< HEAD
-                    const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar', '.exe'];
-=======
-                    const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar'];
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                    return exts.some(ext => lower.endsWith(ext));
-                }
-
-                function updateUnpackMenuVisibility() {
-                    if (!unpackMenuItem) return;
-                    const fileItem = document.querySelector(`[data-path="${contextMenuPath}"]`);
-                    const isDir = fileItem && fileItem.dataset.isDir === 'true';
-                    const filename = contextMenuPath ? contextMenuPath.split('/').pop() : '';
-                    const canUnpack = !isDir && isArchiveFile(filename);
-                    unpackMenuItem.style.display = canUnpack ? 'block' : 'none';
-                }
-                
-<<<<<<< HEAD
-                // Context Menu Functions
-                let copiedPath = null; // Store copied/cut file/folder path
-                let clipboardMode = 'copy';
-=======
-<<<<<<< HEAD
-=======
-=======
-                
->>>>>>> 59ce7365bd91331c34ba7d6af0b0cd651ee0c00f
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
-                // Context Menu Functions
-                let copiedPath = null; // Store copied file/folder path
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-
-                function bindLongPressContextMenu(element, path, beforeShow) {
-                    if (!isIOS) {
-                        return;
-                    }
-
-                    let pressTimer = null;
-                    let startX = 0;
-                    let startY = 0;
-                    let lastX = 0;
-                    let lastY = 0;
-                    const longPressMs = 550;
-                    const moveTolerance = 10;
-
-                    const clearPressTimer = () => {
-                        if (pressTimer) {
-                            clearTimeout(pressTimer);
-                            pressTimer = null;
-                        }
-                    };
-
-                    element.addEventListener('touchstart', (e) => {
-                        if (!e.touches || e.touches.length !== 1) {
-                            return;
-                        }
-                        const touch = e.touches[0];
-                        startX = touch.clientX;
-                        startY = touch.clientY;
-                        lastX = startX;
-                        lastY = startY;
-                        clearPressTimer();
-                        pressTimer = setTimeout(() => {
-                            pressTimer = null;
-                            suppressNextClick = true;
-                            if (beforeShow) {
-                                beforeShow();
-                            }
-                            showContextMenu({ clientX: lastX, clientY: lastY, preventDefault: () => {} }, path);
-                        }, longPressMs);
-                    }, { passive: true });
-
-                    element.addEventListener('touchmove', (e) => {
-                        if (!pressTimer || !e.touches || e.touches.length !== 1) {
-                            return;
-                        }
-                        const touch = e.touches[0];
-                        lastX = touch.clientX;
-                        lastY = touch.clientY;
-                        if (Math.abs(lastX - startX) > moveTolerance || Math.abs(lastY - startY) > moveTolerance) {
-                            clearPressTimer();
-                        }
-                    }, { passive: true });
-
-                    element.addEventListener('touchend', clearPressTimer);
-                    element.addEventListener('touchcancel', clearPressTimer);
-                }
-                
-                function showContextMenu(e, path) {
-                    if (e && e.preventDefault) {
-                        e.preventDefault();
-                    }
-                    contextMenuPath = path;
-                    updatePinMenuLabel();
-                    updateUnpackMenuVisibility();
-                    contextMenu.style.display = 'block';
-                    
-                    const padding = 8;
-                    const menuRect = contextMenu.getBoundingClientRect();
-                    const point = (e && e.touches && e.touches[0]) ||
-                        (e && e.changedTouches && e.changedTouches[0]) ||
-                        e || { clientX: 0, clientY: 0 };
-                    let x = point.clientX;
-                    let y = point.clientY;
-                    const maxX = window.innerWidth - menuRect.width - padding;
-                    const maxY = window.innerHeight - menuRect.height - padding;
-                    if (maxX < padding) {
-                        x = padding;
-                    } else {
-                        x = Math.min(Math.max(x, padding), maxX);
-                    }
-                    if (maxY < padding) {
-                        y = padding;
-                    } else {
-                        y = Math.min(Math.max(y, padding), maxY);
-                    }
-                    
-                    contextMenu.style.left = x + 'px';
-                    contextMenu.style.top = y + 'px';
-                }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 
                 function hideContextMenu() {
                     contextMenu.style.display = 'none';
@@ -2170,7 +1274,6 @@ def get_file_manager_html():
                                 }
                             }
                             break;
-<<<<<<< HEAD
                         case 'copy':
                             if (contextMenuPath) {
                                 await copyPath(contextMenuPath);
@@ -2184,30 +1287,11 @@ def get_file_manager_html():
                         case 'paste':
                             await pastePath(currentPath);
                             break;
-=======
-                        case 'copy':
-                            if (contextMenuPath) {
-                                await copyPath(contextMenuPath);
-                            }
-                            break;
-                        case 'cut':
-                            if (contextMenuPath) {
-                                await cutPath(contextMenuPath);
-                            }
-                            break;
-                        case 'paste':
-                            await pastePath(currentPath);
-                            break;
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                         case 'delete':
                             if (contextMenuPath) {
                                 // Save the path before showing confirm modal (which hides context menu)
                                 const pathToDelete = contextMenuPath;
-<<<<<<< HEAD
                                 showConfirmModal(t('modal.deleteConfirm'), async () => {
-=======
-                                showConfirmModal(t('modal.deleteConfirm'), async () => {
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                                     await deletePath(pathToDelete);
                                 });
                             }
@@ -2215,7 +1299,6 @@ def get_file_manager_html():
                         case 'rename':
                             if (contextMenuPath) {
                                 // Implement rename functionality
-<<<<<<< HEAD
                                 const oldName = contextMenuPath.split('/').pop() || '';
                                 showInputModal(t('modal.renameTitle'), t('modal.renamePlaceholder'), (newName) => {
                                     // Implement rename API call here
@@ -2259,51 +1342,6 @@ def get_file_manager_html():
                 });
                 
                 window.addEventListener('resize', applyFileManagerLayout);
-=======
-                                const oldName = contextMenuPath.split('/').pop() || '';
-                                showInputModal(t('modal.renameTitle'), t('modal.renamePlaceholder'), (newName) => {
-                                    // Implement rename API call here
-                                    alert('重命名功能将在后续版本中实现');
-                                }, oldName);
-                            }
-                            break;
-                    }
-                }
-                
-                if (newBtn) {
-                    newBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        hideContextMenu();
-                        showNewMenu();
-                    });
-                }
-                
-                if (newMenu) {
-                    newMenu.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                    });
-                }
-                
-                // Hide menus when clicking elsewhere
-                document.addEventListener('click', (e) => {
-                    if (suppressNextClick && e.target.closest('.file-item')) {
-                        suppressNextClick = false;
-                        return;
-                    }
-                    suppressNextClick = false;
-                    hideContextMenu();
-                    hideNewMenu();
-                });
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') {
-                        hideContextMenu();
-                        hideNewMenu();
-                    }
-                });
-                
-                window.addEventListener('resize', applyFileManagerLayout);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 
                 // Modal functions
                 function showConfirmModal(message, action) {
@@ -2317,7 +1355,6 @@ def get_file_manager_html():
                     currentConfirmAction = null;
                 }
                 
-<<<<<<< HEAD
                 function showInputModal(title, placeholder, action, defaultValue = '') {
                     inputTitle.textContent = title;
                     inputField.placeholder = placeholder;
@@ -2431,132 +1468,6 @@ def get_file_manager_html():
                         fileOpModal.style.display = 'none';
                     }, 500);
                 }
-=======
-                function showInputModal(title, placeholder, action, defaultValue = '') {
-                    inputTitle.textContent = title;
-                    inputField.placeholder = placeholder;
-                    inputField.value = defaultValue || '';
-                    currentInputAction = action;
-                    inputModal.style.display = 'block';
-                    inputField.focus();
-                    try {
-                        if (inputField.value) {
-                            inputField.setSelectionRange(0, inputField.value.length);
-                        }
-                    } catch (e) {
-                        // ignore
-                    }
-                }
-                
-                function hideInputModal() {
-                    inputModal.style.display = 'none';
-                    currentInputAction = null;
-                }
-
-                function showUnpackProgress(filename) {
-                    if (!unpackModal) return;
-                    if (unpackFilename) {
-<<<<<<< HEAD
-                        unpackFilename.textContent = filename ? t('modal.unpackingWithName', { name: filename }) : t('modal.unpacking');
-=======
-                        unpackFilename.textContent = filename ? `正在解压：${filename}` : '正在解压...';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                    }
-                    unpackProgressValue = 0;
-                    if (unpackProgressFill) {
-                        unpackProgressFill.style.width = '0%';
-                    }
-                    if (unpackProgressText) {
-                        unpackProgressText.textContent = '0%';
-                    }
-                    unpackModal.style.display = 'block';
-                    if (unpackTimer) {
-                        clearInterval(unpackTimer);
-                    }
-                    unpackTimer = setInterval(() => {
-                        const increment = Math.max(1, Math.round(Math.random() * 4));
-                        unpackProgressValue = Math.min(90, unpackProgressValue + increment);
-                        if (unpackProgressFill) {
-                            unpackProgressFill.style.width = `${unpackProgressValue}%`;
-                        }
-                        if (unpackProgressText) {
-                            unpackProgressText.textContent = `${unpackProgressValue}%`;
-                        }
-                    }, 200);
-                }
-
-                function finishUnpackProgress(success) {
-                    if (!unpackModal) return;
-                    if (unpackTimer) {
-                        clearInterval(unpackTimer);
-                        unpackTimer = null;
-                    }
-                    if (unpackProgressFill) {
-                        unpackProgressFill.style.width = '100%';
-                    }
-                    if (unpackProgressText) {
-<<<<<<< HEAD
-                        unpackProgressText.textContent = success ? t('status.done') : t('status.failed');
-=======
-                        unpackProgressText.textContent = success ? '完成' : '失败';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                    }
-                    setTimeout(() => {
-                        unpackModal.style.display = 'none';
-                    }, 500);
-                }
-<<<<<<< HEAD
-
-                function showFileOpProgress(title, filename) {
-                    if (!fileOpModal) return;
-                    if (fileOpTitle) {
-                        fileOpTitle.textContent = title || t('modal.fileOpCopy');
-                    }
-                    if (fileOpFilename) {
-                        fileOpFilename.textContent = filename ? t('modal.fileOpTarget', { name: filename }) : '';
-                    }
-                    fileOpProgressValue = 0;
-                    if (fileOpProgressFill) {
-                        fileOpProgressFill.style.width = '0%';
-                    }
-                    if (fileOpProgressText) {
-                        fileOpProgressText.textContent = '0%';
-                    }
-                    fileOpModal.style.display = 'block';
-                    if (fileOpTimer) {
-                        clearInterval(fileOpTimer);
-                    }
-                    fileOpTimer = setInterval(() => {
-                        const increment = Math.max(1, Math.round(Math.random() * 4));
-                        fileOpProgressValue = Math.min(90, fileOpProgressValue + increment);
-                        if (fileOpProgressFill) {
-                            fileOpProgressFill.style.width = `${fileOpProgressValue}%`;
-                        }
-                        if (fileOpProgressText) {
-                            fileOpProgressText.textContent = `${fileOpProgressValue}%`;
-                        }
-                    }, 200);
-                }
-
-                function finishFileOpProgress(success) {
-                    if (!fileOpModal) return;
-                    if (fileOpTimer) {
-                        clearInterval(fileOpTimer);
-                        fileOpTimer = null;
-                    }
-                    if (fileOpProgressFill) {
-                        fileOpProgressFill.style.width = '100%';
-                    }
-                    if (fileOpProgressText) {
-                        fileOpProgressText.textContent = success ? t('status.done') : t('status.failed');
-                    }
-                    setTimeout(() => {
-                        fileOpModal.style.display = 'none';
-                    }, 500);
-                }
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 
                 function showFileEditor(title, content, filePath) {
                     editorTitle.textContent = title;
@@ -2594,7 +1505,6 @@ def get_file_manager_html():
                 inputCancel.addEventListener('click', hideInputModal);
                 
                 // Close modals when clicking outside
-<<<<<<< HEAD
             window.addEventListener('click', (e) => {
                 if (e.target.classList.contains('modal')) {
                     hideConfirmModal();
@@ -2610,23 +1520,6 @@ def get_file_manager_html():
                     }
                 }
             });
-=======
-            window.addEventListener('click', (e) => {
-                if (e.target.classList.contains('modal')) {
-                    hideConfirmModal();
-                    hideInputModal();
-                    hideFileEditor();
-                    if (unpackModal) {
-                        unpackModal.style.display = 'none';
-                    }
-                    if (typeof closeUploadPathModal === 'function') {
-                        closeUploadPathModal(null);
-                    } else if (typeof uploadPathModal !== 'undefined' && uploadPathModal) {
-                        uploadPathModal.style.display = 'none';
-                    }
-                }
-            });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 
                 // Update breadcrumb
                 function updateBreadcrumb(path) {
@@ -2770,7 +1663,6 @@ def get_file_manager_html():
                         });
                         
                         const data = await response.json();
-<<<<<<< HEAD
                         if (data.status === 'success') {
                             fileManagerList.innerHTML = '';
 
@@ -2825,62 +1717,6 @@ def get_file_manager_html():
                                     }
                                     // 切换文件选中状态
                                     if (fileItem.classList.contains('selected')) {
-=======
-                        if (data.status === 'success') {
-                            fileManagerList.innerHTML = '';
-
-                            const pinnedSet = getPinnedSet(data.current_path);
-                            const currentPaths = new Set(data.files.map(item => item.path));
-                            let cleaned = false;
-                            for (const pinnedPath of Array.from(pinnedSet)) {
-                                if (!currentPaths.has(pinnedPath)) {
-                                    pinnedSet.delete(pinnedPath);
-                                    cleaned = true;
-                                }
-                            }
-                            if (cleaned) {
-                                setPinnedSet(data.current_path, pinnedSet);
-                            }
-
-                            const files = data.files.map((file, index) => ({ ...file, __index: index }));
-                            files.sort((a, b) => {
-                                const aPinned = pinnedSet.has(a.path);
-                                const bPinned = pinnedSet.has(b.path);
-                                if (aPinned !== bPinned) return aPinned ? -1 : 1;
-                                return a.__index - b.__index;
-                            });
-                            
-                            files.forEach(file => {
-                                const fileItem = document.createElement('div');
-                                fileItem.className = 'file-item';
-                                if (file.is_dir) {
-                                    fileItem.classList.add('is-dir');
-                                }
-                                fileItem.dataset.path = file.path;
-                                fileItem.dataset.isDir = file.is_dir;
-                                const isPinned = pinnedSet.has(file.path);
-                                if (isPinned) {
-                                    fileItem.classList.add('pinned');
-                                }
-
-                                const pinBadge = document.createElement('div');
-                                pinBadge.className = 'pin-badge';
-                                pinBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#ffffff" d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-9a1 1 0 0 1 1-1h1zm2 0h6V7a3 3 0 0 0-6 0v3zm3 4a2 2 0 0 0-1 3.732V19a1 1 0 0 0 2 0v-1.268A2 2 0 0 0 12 14z"/></svg>';
-                                if (!isPinned) {
-                                    pinBadge.style.display = 'none';
-                                }
-                                fileItem.appendChild(pinBadge);
-                                
-                                fileItem.addEventListener('click', (e) => {
-                                    if (suppressNextClick) {
-                                        suppressNextClick = false;
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        return;
-                                    }
-                                    // 切换文件选中状态
-                                    if (fileItem.classList.contains('selected')) {
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                                         // 取消选中
                                         fileItem.classList.remove('selected');
                                         const index = selectedFileManagerFiles.indexOf(file.path);
@@ -2907,7 +1743,6 @@ def get_file_manager_html():
                                     }
                                 });
                                 
-<<<<<<< HEAD
                                 fileItem.addEventListener('contextmenu', (e) => {
                                     e.preventDefault();
                                     showContextMenu(e, file.path);
@@ -2920,20 +1755,6 @@ def get_file_manager_html():
                                 icon.className = 'file-icon';
                                 icon.textContent = getFileIcon(file.name, file.is_dir);
                                 icon.style.fontSize = '24px';
-=======
-                                fileItem.addEventListener('contextmenu', (e) => {
-                                    e.preventDefault();
-                                    showContextMenu(e, file.path);
-                                });
-
-                                bindLongPressContextMenu(fileItem, file.path);
-                                
-                                // File Icon
-                                const icon = document.createElement('div');
-                                icon.className = 'file-icon';
-                                icon.textContent = getFileIcon(file.name, file.is_dir);
-                                icon.style.fontSize = '24px';
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                                 
                                 // File Name
                                 const fileName = document.createElement('div');
@@ -2999,11 +1820,7 @@ def get_file_manager_html():
                         
                         const data = await response.json();
                         if (data.status === 'success') {
-<<<<<<< HEAD
                             showFileEditor(t('modal.editorTitleWithName', { name: filePath.split('/').pop() || '' }), data.content, filePath);
-=======
-                            showFileEditor(t('modal.editorTitleWithName', { name: filePath.split('/').pop() || '' }), data.content, filePath);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                         } else {
                             alert('打开文件失败: ' + data.message);
                         }
@@ -3127,7 +1944,6 @@ def get_file_manager_html():
                 }
                 
                 // Copy file or directory path
-<<<<<<< HEAD
                 async function copyPath(path) {
                     try {
                         if (!path) {
@@ -3168,48 +1984,6 @@ def get_file_manager_html():
                     try {
                         if (!copiedPath) {
                             alert('粘贴失败: 没有要粘贴的内容');
-=======
-                async function copyPath(path) {
-                    try {
-                        if (!path) {
-                            alert('复制失败: 路径不能为空');
-                            return;
-                        }
-                        
-                        copiedPath = path;
-                        clipboardMode = 'copy';
-                        alert('复制成功');
-                        // Show paste button
-                        updatePasteButtonVisibility();
-                    } catch (error) {
-                        console.error('复制出错:', error);
-                        alert('复制出错');
-                    }
-                }
-
-                async function cutPath(path) {
-                    try {
-                        if (!path) {
-                            alert('剪切失败: 路径不能为空');
-                            return;
-                        }
-
-                        copiedPath = path;
-                        clipboardMode = 'cut';
-                        alert('剪切成功');
-                        updatePasteButtonVisibility();
-                    } catch (error) {
-                        console.error('剪切出错:', error);
-                        alert('剪切出错');
-                    }
-                }
-                
-                // Paste file or directory
-                async function pastePath(destPath) {
-                    try {
-                        if (!copiedPath) {
-                            alert('粘贴失败: 没有要粘贴的内容');
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                             return;
                         }
                         
@@ -3218,7 +1992,6 @@ def get_file_manager_html():
                             return;
                         }
                         
-<<<<<<< HEAD
                         // Get filename from copied path
                         const filename = copiedPath.split('/').pop();
                         const targetPath = destPath + '/' + filename;
@@ -3253,42 +2026,6 @@ def get_file_manager_html():
                         alert('粘贴出错: ' + error.message);
                     }
                 }
-=======
-                        // Get filename from copied path
-                        const filename = copiedPath.split('/').pop();
-                        const targetPath = destPath + '/' + filename;
-                        const isCut = clipboardMode === 'cut';
-                        const opTitle = isCut ? t('modal.fileOpMove') : t('modal.fileOpCopy');
-                        showFileOpProgress(opTitle, filename);
-                        const endpoint = isCut ? '/api/files/move' : '/api/files/copy';
-                        
-                        const response = await fetch(endpoint, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ source: copiedPath, destination: targetPath })
-                        });
-                        
-                        const data = await response.json();
-                        finishFileOpProgress(data.status === 'success');
-                        if (data.status === 'success') {
-                            await renderFileList(currentPath);
-                            alert(isCut ? '剪切成功' : '粘贴成功');
-                            // Hide paste button after successful paste
-                            copiedPath = null;
-                            clipboardMode = 'copy';
-                            updatePasteButtonVisibility();
-                        } else {
-                            alert((isCut ? '剪切' : '粘贴') + '失败: ' + data.message);
-                        }
-                    } catch (error) {
-                        console.error('粘贴出错:', error);
-                        finishFileOpProgress(false);
-                        alert('粘贴出错: ' + error.message);
-                    }
-                }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 
                 // Update paste button visibility
                 function updatePasteButtonVisibility() {
@@ -3318,19 +2055,11 @@ def get_file_manager_html():
                 });
                 
                 newFileBtn.addEventListener('click', () => {
-<<<<<<< HEAD
                     showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
                 });
                 
                 newDirBtn.addEventListener('click', () => {
                     showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
-=======
-                    showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
-                });
-                
-                newDirBtn.addEventListener('click', () => {
-                    showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 });
                 
                 deleteBtn.addEventListener('click', () => {
@@ -3373,7 +2102,6 @@ async def handle_index(request):
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>decky-send 文件上传</title>
-<<<<<<< HEAD
         <style>
             :root {
                 --bg: #0f1216;
@@ -3825,483 +2553,21 @@ async def handle_index(request):
     <body>
         <h1>decky-send</h1>
         <p class="subtitle" data-i18n="subtitle">将文件或文本上传到 Steam Deck</p>
-=======
-        <style>
-            :root {
-                --bg: #0f1216;
-                --bg-elev: #141a20;
-                --panel: rgba(255, 255, 255, 0.06);
-                --panel-strong: rgba(255, 255, 255, 0.12);
-                --border: rgba(255, 255, 255, 0.12);
-                --text: #e7edf3;
-                --muted: #9aa6b2;
-                --accent: #4db6ac;
-                --accent-strong: #2fa69a;
-                --accent-soft: rgba(77, 182, 172, 0.18);
-                --danger: #ff6b6b;
-                --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-            }
-            * {
-                box-sizing: border-box;
-            }
-            html {
-                height: 100%;
-                background-color: var(--bg);
-                background-image:
-                    radial-gradient(900px 500px at 20% -10%, rgba(77, 182, 172, 0.16), transparent 60%),
-                    radial-gradient(800px 400px at 120% 20%, rgba(94, 156, 255, 0.12), transparent 60%),
-                    linear-gradient(180deg, #0f1216 0%, #10161b 100%);
-                background-repeat: no-repeat;
-                background-attachment: fixed;
-                background-size: cover;
-            }
-            html, body {
-                height: 100%;
-                overflow: hidden;
-            }
-            body {
-                font-family: "IBM Plex Sans", "Noto Sans", "Ubuntu", "Segoe UI", sans-serif;
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 24px;
-                text-align: center;
-                background: transparent;
-                color: var(--text);
-                min-height: 100vh;
-            }
-            body::after {
-                content: "";
-                position: fixed;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                height: 30vh;
-                background: linear-gradient(180deg, rgba(15, 18, 22, 0) 0%, rgba(15, 18, 22, 0.7) 100%);
-                pointer-events: none;
-                z-index: 0;
-            }
-            body > * {
-                position: relative;
-                z-index: 1;
-            }
-            h1 {
-                color: var(--text);
-                font-weight: 700;
-                letter-spacing: 0.5px;
-                margin-bottom: 6px;
-            }
-            p {
-                color: var(--muted);
-                margin-top: 0;
-            }
-            .subtitle {
-                margin-bottom: 0;
-            }
-            
-            /* Tab styles */
-            .tab-container {
-                margin: 20px 0;
-            }
-            .tab-buttons {
-                display: flex;
-                justify-content: center;
-                gap: 6px;
-                margin-bottom: 18px;
-                padding: 6px;
-                background: var(--panel);
-                border: 1px solid var(--border);
-                border-radius: 999px;
-                box-shadow: var(--shadow);
-            }
-            .tab-buttons,
-            .tab-buttons * {
-                user-select: none;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-            }
-            .tab-button {
-                background: transparent;
-                border: 1px solid transparent;
-                color: var(--muted);
-                padding: 10px 16px;
-                font-size: 14px;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                border-radius: 999px;
-                margin: 0;
-            }
-            .tab-button.active {
-                color: var(--text);
-                background: var(--accent-soft);
-                border-color: rgba(77, 182, 172, 0.45);
-                box-shadow: inset 0 0 0 1px rgba(77, 182, 172, 0.15);
-            }
-            .tab-button:hover {
-                color: var(--text);
-                background-color: rgba(255, 255, 255, 0.06);
-            }
-            
-            .tab-panel {
-                display: none;
-                animation: fadeUp 200ms ease;
-            }
-            .tab-panel.active {
-                display: block;
-            }
-            @keyframes fadeUp {
-                from { opacity: 0; transform: translateY(6px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            
-            .upload-area {
-                border: 1.5px dashed var(--border);
-                border-radius: 16px;
-                padding: 36px;
-                margin: 18px 0;
-                cursor: pointer;
-                background: var(--panel);
-                box-shadow: var(--shadow);
-                transition: all 0.25s ease;
-            }
-            .upload-area:hover {
-                border-color: rgba(77, 182, 172, 0.6);
-                background-color: rgba(77, 182, 172, 0.08);
-            }
-            .upload-area.dragover {
-                background-color: rgba(77, 182, 172, 0.16);
-                border-color: var(--accent);
-            }
-            #file-input {
-                display: none;
-            }
-            button {
-                background: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
-                color: #0c1416;
-                border: 1px solid rgba(0, 0, 0, 0.1);
-                padding: 11px 20px;
-                border-radius: 10px;
-                cursor: pointer;
-                font-size: 14px;
-                margin: 8px;
-                box-shadow: 0 8px 18px rgba(47, 166, 154, 0.25);
-                transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
-            }
-            button:hover {
-                filter: brightness(1.05);
-                box-shadow: 0 10px 24px rgba(47, 166, 154, 0.3);
-            }
-            button:active {
-                transform: translateY(1px);
-            }
-            button:disabled {
-                opacity: 0.6;
-                cursor: not-allowed;
-                box-shadow: none;
-            }
-            textarea,
-            input[type="text"] {
-                width: 100%;
-                padding: 12px;
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                background-color: var(--panel);
-                color: var(--text);
-                font-size: 14px;
-            }
-            .file-list {
-                margin: 18px 0;
-                text-align: left;
-            }
-            .file-grid .file-item {
-                min-width: 0;
-                position: relative;
-            }
-            .file-grid .pin-badge {
-                position: absolute;
-                top: 6px;
-                left: 6px;
-                font-size: 12px;
-                color: #ffffff;
-                background: #000000;
-                padding: 2px 4px;
-                border-radius: 6px;
-                border: 1px solid #ffffff;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                line-height: 1;
-                pointer-events: none;
-            }
-            .file-grid .file-name {
-                max-width: 100%;
-                min-width: 0;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            .file-item.is-dir .file-details {
-                display: none;
-            }
-            .file-item {
-                background-color: var(--panel);
-                border: 1px solid var(--border);
-                padding: 10px;
-                margin: 6px 0;
-                border-radius: 10px;
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-                -webkit-touch-callout: none;
-            }
-            .file-item,
-            .file-item * {
-                user-select: none;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-            }
-            .file-item-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .file-item-info {
-                flex: 1;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                color: var(--text);
-            }
-            .file-item-progress {
-                width: 100%;
-                display: none;
-            }
-            .file-item-progress.active {
-                display: block;
-            }
-            .file-progress-bar {
-                width: 100%;
-                height: 6px;
-                background-color: rgba(255, 255, 255, 0.08);
-                border-radius: 3px;
-                overflow: hidden;
-                margin-bottom: 4px;
-            }
-            .file-progress-fill {
-                height: 100%;
-                background: linear-gradient(90deg, var(--accent) 0%, #5fa6ff 100%);
-                border-radius: 3px;
-                width: 0%;
-                transition: width 0.2s ease;
-            }
-            .file-progress-text {
-                display: flex;
-                justify-content: space-between;
-                font-size: 11px;
-                color: var(--muted);
-            }
-            .file-progress-text .speed {
-                color: var(--accent);
-            }
-            .cancel-btn {
-                background-color: var(--danger);
-                color: #1a0b0b;
-                border: 1px solid rgba(0, 0, 0, 0.1);
-                padding: 5px 10px;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 12px;
-                margin: 0;
-                transition: filter 0.2s ease;
-                flex-shrink: 0;
-                box-shadow: none;
-            }
-            .cancel-btn:hover {
-                filter: brightness(0.95);
-            }
-            .breadcrumb-bar {
-                background: var(--panel);
-                border: 1px solid var(--border);
-                border-radius: 12px;
-            }
-            .breadcrumb-bar,
-            .breadcrumb-bar * {
-                user-select: none;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-            }
-            .breadcrumb {
-                color: var(--muted);
-            }
-            .breadcrumb-item {
-                color: var(--text);
-            }
-            .breadcrumb-item:hover {
-                color: var(--accent);
-            }
-            .action-buttons button {
-                background: var(--panel-strong);
-                color: var(--text);
-                border: 1px solid var(--border);
-                box-shadow: none;
-                padding: 8px 14px;
-                font-size: 13px;
-                margin: 0;
-            }
-            .action-buttons button:hover {
-                border-color: rgba(77, 182, 172, 0.5);
-            }
-            .action-buttons,
-            .action-buttons * {
-                user-select: none;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-            }
-            .file-list-container {
-                border: 1px solid var(--border);
-                border-radius: 12px;
-                background-color: var(--panel);
-            }
-            #sdcard-btn {
-                background: var(--panel-strong);
-                color: var(--text);
-                border: 1px solid var(--border);
-                box-shadow: none;
-            }
-            .modal {
-                backdrop-filter: blur(4px);
-            }
-            .modal-content {
-                background-color: var(--bg-elev);
-                border: 1px solid var(--border);
-                box-shadow: var(--shadow);
-                border-radius: 14px;
-            }
-            .unpack-progress-bar {
-                width: 100%;
-                height: 8px;
-                background: rgba(255, 255, 255, 0.08);
-                border-radius: 6px;
-                overflow: hidden;
-                margin-top: 12px;
-            }
-            .unpack-progress-fill {
-                height: 100%;
-                width: 0%;
-                background: linear-gradient(90deg, var(--accent) 0%, #5fa6ff 100%);
-                transition: width 0.2s ease;
-            }
-            .unpack-progress-text {
-                font-size: 12px;
-                color: var(--muted);
-                margin-top: 8px;
-                text-align: right;
-            }
-            .upload-path-current {
-                font-size: 12px;
-                color: var(--muted);
-                margin-bottom: 10px;
-                word-break: break-all;
-            }
-            .upload-path-list {
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                background: var(--panel);
-                max-height: 260px;
-                overflow-y: auto;
-                padding: 6px;
-                text-align: left;
-            }
-            .upload-path-item {
-                padding: 8px 10px;
-                border-radius: 8px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                color: var(--text);
-                transition: background-color 0.15s ease;
-            }
-            .upload-path-item:hover {
-                background: rgba(77, 182, 172, 0.12);
-            }
-            .upload-path-actions {
-                display: flex;
-                gap: 10px;
-                justify-content: flex-end;
-                margin-top: 14px;
-                flex-wrap: wrap;
-            }
-
-            @media (max-width: 640px) {
-                body {
-                    max-width: 100%;
-                    padding: 16px;
-                }
-                .subtitle {
-                    display: none;
-                }
-                .tab-buttons {
-                    flex-wrap: wrap;
-                    border-radius: 18px;
-                }
-                .tab-button {
-                    padding: 8px 12px;
-                    font-size: 13px;
-                }
-                .upload-area {
-                    padding: 26px 18px;
-                }
-                button {
-                    padding: 10px 16px;
-                    font-size: 13px;
-                }
-                .file-grid {
-                    gap: 8px;
-                }
-                #file-manager .file-grid .file-item {
-                    min-height: 90px;
-                    flex: 1 1 96px;
-                    max-width: 160px;
-                }
-                #file-manager .breadcrumb-bar {
-                    padding: 6px 8px;
-                }
-                #file-manager .file-grid.list-mode .file-item {
-                    min-height: 52px;
-                    padding: 8px 10px;
-                    gap: 8px;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <h1>decky-send</h1>
-        <p class="subtitle" data-i18n="subtitle">将文件或文本上传到 Steam Deck</p>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
         
         <!-- Tab Container -->
         <div class="tab-container">
             <!-- Tab Buttons -->
-<<<<<<< HEAD
             <div class="tab-buttons">
                 <button class="tab-button active" data-tab="file" data-i18n="tabs.file">文件上传</button>
                 <button class="tab-button" data-tab="text" data-i18n="tabs.text">文本传输</button>
                 <button class="tab-button" data-tab="file-manager" data-i18n="tabs.fileManager">文件管理</button>
             </div>
-=======
-            <div class="tab-buttons">
-                <button class="tab-button active" data-tab="file" data-i18n="tabs.file">文件上传</button>
-                <button class="tab-button" data-tab="text" data-i18n="tabs.text">文本传输</button>
-                <button class="tab-button" data-tab="file-manager" data-i18n="tabs.fileManager">文件管理</button>
-            </div>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             <!-- File Upload Tab -->
             <div id="file" class="tab-panel active">
-<<<<<<< HEAD
                 <div class="upload-area" id="upload-area">
                     <p data-i18n="upload.hint">点击或拖拽文件/文件夹到此处</p>
-                    <input type="file" id="file-input" multiple accept="*/*">
+                    <input type="file" id="file-input" multiple accept="*/*" webkitdirectory>
                 </div>
                 
                 <div class="file-list" id="file-list"></div>
@@ -4310,29 +2576,10 @@ async def handle_index(request):
                     <button id="upload-btn" data-i18n="upload.sendFile">发送文件</button>
                 </div>
             </div>
-=======
-                <div class="upload-area" id="upload-area">
-<<<<<<< HEAD
-                    <p data-i18n="upload.hint">点击或拖拽文件/文件夹到此处</p>
-                    <input type="file" id="file-input" multiple accept="*/*">
-=======
-                    <p>点击或拖拽文件到此处</p>
-                    <input type="file" id="file-input" multiple accept="*/*">
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
-                </div>
-                
-                <div class="file-list" id="file-list"></div>
-                
-                <div style="margin: 10px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <button id="upload-btn" data-i18n="upload.sendFile">发送文件</button>
-                </div>
-            </div>
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             
             <!-- Text Transfer Tab -->
             <div id="text" class="tab-panel">
                 <div style="margin: 15px 0;">
-<<<<<<< HEAD
                     <textarea 
                         id="text-input" 
                         placeholder="在此输入要传输的文本..." 
@@ -4384,67 +2631,6 @@ async def handle_index(request):
                     复制
                 </button>
             </div>
-=======
-                    <textarea 
-                        id="text-input" 
-                        placeholder="在此输入要传输的文本..." 
-                        data-i18n-placeholder="text.placeholder"
-                        rows="6" 
-                        style="width: 100%; resize: vertical;"></textarea>
-                </div>
-                
-                <div style="margin: 10px 0;">
-                    <button id="send-text-btn" data-i18n="text.send" style="margin: 0;">
-                        发送文本
-                    </button>
-                </div>
-            </div>
-            
-            <!-- File Manager Tab -->
-            <div id="file-manager" class="tab-panel">
-                <!-- File Manager UI -->
-                <div id="file-manager-wrap" style="margin: 15px 0; display: flex; flex-direction: column; height: 100%; min-height: 0;">
-                    <!-- Breadcrumb Navigation -->
-                    <div class="breadcrumb-bar" style="margin: 10px 0; padding: 8px 12px; display: flex; align-items: center; gap: 8px;">
-<<<<<<< HEAD
-                        <button id="back-btn" data-i18n="actions.back" style="margin: 0; padding: 6px 10px; font-size: 12px;">
-=======
-                        <button id="back-btn" style="margin: 0; padding: 6px 10px; font-size: 12px;">
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                            返回
-                        </button>
-                        <div class="breadcrumb" id="breadcrumb" style="flex: 1; overflow-x: auto; white-space: nowrap;"></div>
-                        <button id="sdcard-btn" data-i18n="actions.sdcard" style="padding: 6px 12px; font-size: 12px; margin: 0; display: none; white-space: nowrap;">
-                            内存卡
-                        </button>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-            <div class="action-buttons" style="display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap;">
-<<<<<<< HEAD
-                <button id="refresh-btn" data-i18n="actions.refresh" style="margin: 0;">
-=======
-                <button id="refresh-btn" style="margin: 0;">
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                    刷新
-                </button>
-                <button id="new-file-btn" data-i18n="actions.newFile" style="margin: 0;">
-                    新建文件
-                </button>
-                <button id="new-dir-btn" data-i18n="actions.newFolder" style="margin: 0;">
-                    新建文件夹
-                </button>
-                <button id="new-btn" data-i18n="actions.new" style="margin: 0; display: none;">
-                    新建
-                </button>
-                <button id="paste-btn" data-i18n="actions.paste" style="margin: 0; display: none;">
-                    粘贴
-                </button>
-                <button id="copy-btn" data-i18n="menu.copy" style="margin: 0;">
-                    复制
-                </button>
-            </div>
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                     
                     <!-- File List -->
                     <div class="file-list-container" style="padding: 10px; flex: 1 1 auto; overflow: auto; min-height: 0; display: flex;">
@@ -4453,7 +2639,6 @@ async def handle_index(request):
                 </div>
                 
                 <!-- File Editor Modal -->
-<<<<<<< HEAD
                 <div id="file-editor-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
                     <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 800px; margin: 50px auto; max-height: 80vh; overflow-y: auto;">
                         <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -4947,667 +3132,13 @@ async def handle_index(request):
                         resizeFileManagerPanel();
                     }
                 });
-=======
-                <div id="file-editor-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
-                    <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 800px; margin: 50px auto; max-height: 80vh; overflow-y: auto;">
-                        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <h3 id="editor-title" data-i18n="modal.editorTitle" style="margin: 0; color: var(--text);">文件编辑器</h3>
-                            <button id="close-editor" style="background: none; border: none; color: var(--text); font-size: 20px; cursor: pointer; box-shadow: none;">×</button>
-                        </div>
-                        <textarea id="file-content" style="width: 100%; height: 300px; padding: 10px; border: 1px solid var(--border); border-radius: 10px; background-color: var(--panel); color: var(--text); font-size: 14px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace;"></textarea>
-                        <div style="margin: 15px 0; display: flex; gap: 10px; justify-content: flex-end;">
-                            <button id="save-file-btn" data-i18n="actions.save" style="padding: 10px 20px; margin: 0;">
-                                保存
-                            </button>
-                            <button id="cancel-edit-btn" data-i18n="actions.cancel" style="padding: 10px 20px; margin: 0; background: var(--panel-strong); color: var(--text); border: 1px solid var(--border); box-shadow: none;">
-                                取消
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Confirmation Modal -->
-                <div id="confirm-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
-                    <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 400px; margin: 100px auto;">
-                        <h3 data-i18n="modal.confirmTitle" style="margin: 0 0 15px 0; color: var(--text);">确认操作</h3>
-                        <p id="confirm-message" style="color: var(--muted); margin: 0 0 20px 0;"></p>
-                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                            <button id="confirm-yes" data-i18n="modal.confirmYes" style="padding: 10px 20px; margin: 0;">
-                                确认
-                            </button>
-                            <button id="confirm-no" data-i18n="modal.confirmNo" style="padding: 10px 20px; margin: 0; background: var(--panel-strong); color: var(--text); border: 1px solid var(--border); box-shadow: none;">
-                                取消
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Input Modal for New Files/Folders -->
-                <div id="input-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
-                    <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 400px; margin: 100px auto;">
-                        <h3 id="input-title" style="margin: 0 0 15px 0; color: var(--text);"></h3>
-                        <input type="text" id="input-field" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 10px; background-color: var(--panel); color: var(--text); font-size: 14px; margin-bottom: 15px;">
-                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                            <button id="input-ok" data-i18n="modal.inputOk" style="padding: 10px 20px; margin: 0;">
-                                确认
-                            </button>
-                            <button id="input-cancel" data-i18n="modal.inputCancel" style="padding: 10px 20px; margin: 0; background: var(--panel-strong); color: var(--text); border: 1px solid var(--border); box-shadow: none;">
-                                取消
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Unpack Progress Modal -->
-                <div id="unpack-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
-                    <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 420px; margin: 100px auto;">
-                        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-<<<<<<< HEAD
-                            <h3 data-i18n="modal.unpackTitle" style="margin: 0; color: var(--text);">正在解压</h3>
-=======
-                            <h3 style="margin: 0; color: var(--text);">正在解压</h3>
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                            <button id="unpack-close" style="visibility: hidden;">×</button>
-                        </div>
-                        <div id="unpack-filename" style="font-size: 13px; color: var(--muted);"></div>
-                        <div class="unpack-progress-bar">
-                            <div id="unpack-progress-fill" class="unpack-progress-fill"></div>
-                        </div>
-                        <div id="unpack-progress-text" class="unpack-progress-text">0%</div>
-                    </div>
-                </div>
-<<<<<<< HEAD
-
-                <!-- File Operation Progress Modal -->
-                <div id="fileop-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
-                    <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 420px; margin: 100px auto;">
-                        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                            <h3 id="fileop-title" data-i18n="modal.fileOpCopy" style="margin: 0; color: var(--text);">正在复制</h3>
-                            <button id="fileop-close" style="visibility: hidden;">×</button>
-                        </div>
-                        <div id="fileop-filename" style="font-size: 13px; color: var(--muted);"></div>
-                        <div class="unpack-progress-bar">
-                            <div id="fileop-progress-fill" class="unpack-progress-fill"></div>
-                        </div>
-                        <div id="fileop-progress-text" class="unpack-progress-text">0%</div>
-                    </div>
-                </div>
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-            </div>
-        </div>
-
-        <!-- Upload Path Modal -->
-        <div id="upload-path-modal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(8, 10, 12, 0.7); padding: 20px;">
-            <div class="modal-content" style="background-color: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; padding: 20px; max-width: 420px; margin: 100px auto;">
-<<<<<<< HEAD
-                <h3 data-i18n="modal.uploadPathTitle" style="margin: 0 0 12px 0; color: var(--text);">选择传输路径</h3>
-                <div id="upload-path-current" class="upload-path-current"></div>
-                <div id="upload-path-list" class="upload-path-list"></div>
-                <div class="upload-path-actions">
-                    <button id="upload-path-up" data-i18n="modal.uploadPathUp" style="padding: 10px 20px; margin: 0; background: var(--panel-strong); color: var(--text); border: 1px solid var(--border); box-shadow: none;">
-                        上一级
-                    </button>
-                    <button id="upload-path-ok" data-i18n="modal.uploadPathSelect" style="padding: 10px 20px; margin: 0;">
-                        选择当前目录
-                    </button>
-                    <button id="upload-path-cancel" data-i18n="modal.uploadPathCancel" style="padding: 10px 20px; margin: 0; background: var(--panel-strong); color: var(--text); border: 1px solid var(--border); box-shadow: none;">
-=======
-                <h3 style="margin: 0 0 12px 0; color: var(--text);">选择传输路径</h3>
-                <div id="upload-path-current" class="upload-path-current"></div>
-                <div id="upload-path-list" class="upload-path-list"></div>
-                <div class="upload-path-actions">
-                    <button id="upload-path-up" style="padding: 10px 20px; margin: 0; background: var(--panel-strong); color: var(--text); border: 1px solid var(--border); box-shadow: none;">
-                        上一级
-                    </button>
-                    <button id="upload-path-ok" style="padding: 10px 20px; margin: 0;">
-                        选择当前目录
-                    </button>
-                    <button id="upload-path-cancel" style="padding: 10px 20px; margin: 0; background: var(--panel-strong); color: var(--text); border: 1px solid var(--border); box-shadow: none;">
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                        取消
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <script>
-<<<<<<< HEAD
-            const PAGE_TITLE_KEY = 'title.upload';
-            const I18N = {
-                'zh-CN': {
-                    title: {
-                        fileManager: 'decky-send 文件管理器',
-                        upload: 'decky-send 文件上传'
-                    },
-                    subtitle: '将文件或文本上传到 Steam Deck',
-                    tabs: {
-                        file: '文件上传',
-                        text: '文本传输',
-                        fileManager: '文件管理'
-                    },
-                    breadcrumb: {
-                        home: '主页'
-                    },
-                    upload: {
-                        hint: '点击或拖拽文件/文件夹到此处',
-                        sendFile: '发送文件'
-                    },
-                    text: {
-                        placeholder: '在此输入要传输的文本...',
-                        send: '发送文本'
-                    },
-                    actions: {
-                        back: '返回',
-                        refresh: '刷新',
-                        paste: '粘贴',
-                        newFile: '新建文件',
-                        newFolder: '新建文件夹',
-                        new: '新建',
-                        save: '保存',
-                        cancel: '取消',
-                        sdcard: '内存卡'
-                    },
-                    status: {
-                        done: '完成',
-                        failed: '失败'
-                    },
-                    modal: {
-                        confirmTitle: '确认操作',
-                        confirmYes: '确认',
-                        confirmNo: '取消',
-                        inputOk: '确认',
-                        inputCancel: '取消',
-                        editorTitle: '文件编辑器',
-                        editorTitleWithName: '编辑文件：{{name}}',
-                        unpackTitle: '正在解压',
-                        unpacking: '正在解压...',
-                        unpackingWithName: '正在解压：{{name}}',
-                        fileOpCopy: '正在复制',
-                        fileOpMove: '正在剪切',
-                        fileOpTarget: '目标：{{name}}',
-                        renameTitle: '重命名',
-                        newFileTitle: '新建文件',
-                        newFolderTitle: '新建文件夹',
-                        renamePlaceholder: '请输入新名称',
-                        newFilePlaceholder: '请输入文件名',
-                        newFolderPlaceholder: '请输入文件夹名',
-                        deleteConfirm: '确定要删除此项目吗？',
-                        uploadPathTitle: '选择传输路径',
-                        uploadPathUp: '上一级',
-                        uploadPathSelect: '选择当前目录',
-                        uploadPathCancel: '取消',
-                        uploadPathCurrent: '当前路径：{{path}}',
-                        uploadPathError: '无法读取目录'
-                    },
-                    menu: {
-                        open: '打开',
-                        download: '下载到本地',
-                        addToSteam: '添加到Steam',
-                        unpack: '解压',
-                        pin: '置顶',
-                        unpin: '取消置顶',
-                        copy: '复制',
-                        cut: '剪切',
-                        delete: '删除',
-                        rename: '重命名'
-                    }
-                },
-                'en-US': {
-                    title: {
-                        fileManager: 'decky-send File Manager',
-                        upload: 'decky-send File Transfer'
-                    },
-                    subtitle: 'Upload files or text to Steam Deck',
-                    tabs: {
-                        file: 'File Upload',
-                        text: 'Text Transfer',
-                        fileManager: 'File Manager'
-                    },
-                    breadcrumb: {
-                        home: 'Home'
-                    },
-                    upload: {
-                        hint: 'Click or drag files/folders here',
-                        sendFile: 'Send Files'
-                    },
-                    text: {
-                        placeholder: 'Enter text to send...',
-                        send: 'Send Text'
-                    },
-                    actions: {
-                        back: 'Back',
-                        refresh: 'Refresh',
-                        paste: 'Paste',
-                        newFile: 'New File',
-                        newFolder: 'New Folder',
-                        new: 'New',
-                        save: 'Save',
-                        cancel: 'Cancel',
-                        sdcard: 'SD Card'
-                    },
-                    status: {
-                        done: 'Done',
-                        failed: 'Failed'
-                    },
-                    modal: {
-                        confirmTitle: 'Confirm',
-                        confirmYes: 'Confirm',
-                        confirmNo: 'Cancel',
-                        inputOk: 'OK',
-                        inputCancel: 'Cancel',
-                        editorTitle: 'File Editor',
-                        editorTitleWithName: 'Edit file: {{name}}',
-                        unpackTitle: 'Extracting',
-                        unpacking: 'Extracting...',
-                        unpackingWithName: 'Extracting: {{name}}',
-                        fileOpCopy: 'Copying',
-                        fileOpMove: 'Moving',
-                        fileOpTarget: 'Target: {{name}}',
-                        renameTitle: 'Rename',
-                        newFileTitle: 'New File',
-                        newFolderTitle: 'New Folder',
-                        renamePlaceholder: 'Enter new name',
-                        newFilePlaceholder: 'Enter file name',
-                        newFolderPlaceholder: 'Enter folder name',
-                        deleteConfirm: 'Delete this item?',
-                        uploadPathTitle: 'Choose destination',
-                        uploadPathUp: 'Up',
-                        uploadPathSelect: 'Select current folder',
-                        uploadPathCancel: 'Cancel',
-                        uploadPathCurrent: 'Current path: {{path}}',
-                        uploadPathError: 'Failed to read directory'
-                    },
-                    menu: {
-                        open: 'Open',
-                        download: 'Download',
-                        addToSteam: 'Add to Steam',
-                        unpack: 'Extract',
-                        pin: 'Pin',
-                        unpin: 'Unpin',
-                        copy: 'Copy',
-                        cut: 'Cut',
-                        delete: 'Delete',
-                        rename: 'Rename'
-                    }
-                }
-            };
-
-            let currentLang = 'zh-CN';
-
-            function normalizeLang(lang) {
-                if (!lang) return 'zh-CN';
-                const lower = String(lang).toLowerCase();
-                if (lower === 'auto') return normalizeLang(navigator.language);
-                if (lower.startsWith('zh')) return 'zh-CN';
-                if (lower.startsWith('en')) return 'en-US';
-                return I18N[lang] ? lang : 'zh-CN';
-            }
-
-            function t(key, vars) {
-                const table = I18N[currentLang] || I18N['zh-CN'];
-                const parts = key.split('.');
-                let value = table;
-                for (const part of parts) {
-                    if (value && typeof value === 'object' && part in value) {
-                        value = value[part];
-                    } else {
-                        value = null;
-                        break;
-                    }
-                }
-                if (typeof value !== 'string') return key;
-                if (vars) {
-                    Object.keys(vars).forEach((varKey) => {
-                        value = value.replace(new RegExp(`{{\\s*${varKey}\\s*}}`, 'g'), String(vars[varKey]));
-                    });
-                }
-                return value;
-            }
-
-            function applyTranslations() {
-                document.documentElement.lang = currentLang;
-                if (PAGE_TITLE_KEY) {
-                    document.title = t(PAGE_TITLE_KEY);
-                }
-                document.querySelectorAll('[data-i18n]').forEach((el) => {
-                    const key = el.getAttribute('data-i18n');
-                    if (key) {
-                        el.textContent = t(key);
-                    }
-                });
-                document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
-                    const key = el.getAttribute('data-i18n-placeholder');
-                    if (key) {
-                        el.setAttribute('placeholder', t(key));
-                    }
-                });
-            }
-
-            const ALERT_FULL_MAP = {
-                '只能下载文件，不能下载文件夹': 'Only files can be downloaded',
-                '下载失败': 'Download failed',
-                '文件已添加到Steam库': 'File added to Steam',
-                '只能将文件添加到Steam库，不能添加文件夹': 'Only files can be added to Steam',
-                '重命名功能将在后续版本中实现': 'Rename will be available in a future version',
-                '获取文件列表出错': 'Failed to load file list',
-                '打开文件出错': 'Failed to open file',
-                '文件保存成功': 'File saved',
-                '保存文件出错': 'Failed to save file',
-                '文件名不能为空': 'File name cannot be empty',
-                '文件创建成功': 'File created',
-                '创建文件出错': 'Failed to create file',
-                '文件夹名不能为空': 'Folder name cannot be empty',
-                '文件夹创建成功': 'Folder created',
-                '创建文件夹出错': 'Failed to create folder',
-                '删除成功': 'Deleted',
-                '复制成功': 'Copied',
-                '复制出错': 'Copy failed',
-                '剪切成功': 'Moved',
-                '剪切出错': 'Move failed',
-                '粘贴成功': 'Pasted',
-                '粘贴失败: 没有要粘贴的内容': 'Paste failed: nothing to paste',
-                '粘贴失败: 目标路径不能为空': 'Paste failed: destination is empty',
-                '粘贴出错': 'Paste failed',
-                '无法读取目录': 'Failed to read directory',
-                '未知错误': 'Unknown error',
-                '请直接点击右键或双击文件进行操作': 'Please right-click or double click to operate',
-                '请先选择文件': 'Please select files',
-                '请先选择传输路径': 'Please choose a destination first',
-                '所有文件上传完成': 'All files uploaded',
-                '部分文件上传失败': 'Some files failed to upload',
-                '部分文件上传超时': 'Some files timed out',
-                '请先输入要传输的文本': 'Please enter text to send',
-                '文本传输成功': 'Text sent',
-                '文本传输失败': 'Text transfer failed',
-                '文本传输出错': 'Text transfer error',
-                '解压完成': 'Extraction complete',
-                '解压出错': 'Extraction error',
-                '请先选择一个文件或文件夹': 'Please select a file or folder'
-            };
-
-            const ALERT_PREFIX_MAP = {
-                '下载失败: ': 'Download failed: ',
-                '添加到Steam失败: ': 'Add to Steam failed: ',
-                '获取文件列表失败: ': 'Failed to load file list: ',
-                '打开文件失败: ': 'Failed to open file: ',
-                '保存文件失败: ': 'Failed to save file: ',
-                '创建文件失败: ': 'Failed to create file: ',
-                '创建文件夹失败: ': 'Failed to create folder: ',
-                '删除失败: ': 'Delete failed: ',
-                '复制失败: ': 'Copy failed: ',
-                '剪切失败: ': 'Move failed: ',
-                '粘贴失败: ': 'Paste failed: ',
-                '粘贴出错: ': 'Paste error: ',
-                '解压失败: ': 'Extraction failed: '
-            };
-
-            function translateMessage(message) {
-                if (currentLang.startsWith('zh')) return message;
-                const text = String(message ?? '');
-                if (ALERT_FULL_MAP[text]) return ALERT_FULL_MAP[text];
-                for (const prefix in ALERT_PREFIX_MAP) {
-                    if (text.startsWith(prefix)) {
-                        return ALERT_PREFIX_MAP[prefix] + text.slice(prefix.length);
-                    }
-                }
-                return text;
-            }
-
-            const rawAlert = window.alert.bind(window);
-            window.alert = (message) => rawAlert(translateMessage(message));
-
-            async function initLanguage() {
-                try {
-                    const response = await fetch('/api/settings/language');
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data && data.language) {
-                            currentLang = normalizeLang(data.language);
-                        } else {
-                            currentLang = normalizeLang('auto');
-                        }
-                    }
-                } catch (e) {
-                    currentLang = normalizeLang('auto');
-                }
-                applyTranslations();
-            }
-
-            // Wait for DOM to fully load before executing scripts
-            document.addEventListener('DOMContentLoaded', async () => {
-                await initLanguage();
-=======
-            // Wait for DOM to fully load before executing scripts
-            document.addEventListener('DOMContentLoaded', () => {
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                // Tab functionality
-                const tabButtons = document.querySelectorAll('.tab-button');
-                const tabPanels = document.querySelectorAll('.tab-panel');
-                
-                const activateTab = (targetTab) => {
-                    if (!targetTab) return;
-                    
-                    // Remove active class from all buttons and panels
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabPanels.forEach(panel => panel.classList.remove('active'));
-                    
-                    // Add active class to corresponding button and panel
-                    const targetButton = Array.from(tabButtons).find(btn => btn.getAttribute('data-tab') === targetTab);
-                    if (targetButton) {
-                        targetButton.classList.add('active');
-                    }
-                    const targetPanel = document.getElementById(targetTab);
-                    if (targetPanel) {
-                        targetPanel.classList.add('active');
-                    }
-                    
-                    // Render file list when file manager tab is activated
-                    if (targetTab === 'file-manager') {
-                        // Check if fileManagerList exists before calling renderFileList
-                        if (typeof renderFileList === 'function') {
-                            resizeFileManagerPanel();
-                            updateSdcardButton();
-                            applyFileManagerLayout();
-                            renderFileList(currentPath);
-                        }
-                    }
-                };
-                
-                tabButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        activateTab(button.getAttribute('data-tab'));
-                    });
-                });
-
-                const hasFileDrag = (event) => {
-                    const dt = event.dataTransfer;
-                    if (!dt) return false;
-                    
-                    if (dt.types) {
-                        const types = Array.from(dt.types);
-                        if (types.includes('Files') ||
-                            types.includes('application/x-moz-file') ||
-                            types.includes('application/x-moz-file-promise')) {
-                            return true;
-                        }
-                    }
-                    
-                    if (dt.items && dt.items.length) {
-                        for (const item of dt.items) {
-                            if (item && item.kind === 'file') {
-                                return true;
-                            }
-                        }
-                    }
-                    
-                    if (dt.files && dt.files.length) {
-                        return true;
-                    }
-                    
-                    return false;
-                };
-
-                const handleFileDrag = (event) => {
-                    if (hasFileDrag(event)) {
-                        activateTab('file');
-                    }
-                };
-
-                document.addEventListener('dragenter', handleFileDrag, true);
-                document.addEventListener('dragover', handleFileDrag, true);
-                document.addEventListener('drop', handleFileDrag, true);
-                window.addEventListener('dragenter', handleFileDrag, true);
-                window.addEventListener('dragover', handleFileDrag, true);
-                window.addEventListener('drop', handleFileDrag, true);
-
-                window.addEventListener('resize', () => {
-                    const panel = document.getElementById('file-manager');
-                    if (panel && panel.classList.contains('active')) {
-                        resizeFileManagerPanel();
-                    }
-                });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             // 文件上传功能
-<<<<<<< HEAD
             const uploadArea = document.getElementById('upload-area');
             const fileInput = document.getElementById('file-input');
             const fileList = document.getElementById('file-list');
-=======
-            const uploadArea = document.getElementById('upload-area');
-            const fileInput = document.getElementById('file-input');
-            const fileList = document.getElementById('file-list');
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
             const uploadBtn = document.getElementById('upload-btn');
             
-            let selectedFiles = [];
-            let uploadPromptEnabled = false;
-            let defaultUploadDir = '';
-            const uploadPathModal = document.getElementById('upload-path-modal');
-            const uploadPathCurrent = document.getElementById('upload-path-current');
-            const uploadPathList = document.getElementById('upload-path-list');
-            const uploadPathUp = document.getElementById('upload-path-up');
-            const uploadPathOk = document.getElementById('upload-path-ok');
-            const uploadPathCancel = document.getElementById('upload-path-cancel');
-            let uploadPathResolve = null;
-            let uploadPathCurrentValue = '';
-
-            async function refreshUploadOptions() {
-                try {
-                    const response = await fetch('/api/settings/upload-options');
-                    if (!response.ok) return;
-                    const data = await response.json();
-                    if (data.status === 'success') {
-                        uploadPromptEnabled = !!data.prompt_upload_path;
-                        defaultUploadDir = data.default_dir || '';
-                    }
-                } catch (error) {
-                    console.error('获取上传设置失败:', error);
-                }
-            }
-
-            async function loadUploadPathList(path) {
-                if (!uploadPathList || !uploadPathCurrent) return;
-                try {
-                    const response = await fetch('/api/files/list', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ path })
-                    });
-                    const data = await response.json();
-                    if (data.status !== 'success') {
-<<<<<<< HEAD
-                        throw new Error(data.message || t('modal.uploadPathError'));
-                    }
-                    uploadPathCurrentValue = data.current_path;
-                    uploadPathCurrent.textContent = t('modal.uploadPathCurrent', { path: uploadPathCurrentValue });
-=======
-                        throw new Error(data.message || '无法读取目录');
-                    }
-                    uploadPathCurrentValue = data.current_path;
-                    uploadPathCurrent.textContent = `当前路径：${uploadPathCurrentValue}`;
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                    uploadPathList.innerHTML = '';
-
-                    if (uploadPathCurrentValue && uploadPathCurrentValue !== '/') {
-                        const parent = uploadPathCurrentValue.split('/').filter(Boolean);
-                        parent.pop();
-                        const parentPath = '/' + parent.join('/');
-                        const parentItem = document.createElement('div');
-                        parentItem.className = 'upload-path-item';
-                        parentItem.textContent = '⬆️ ..';
-                        parentItem.addEventListener('click', () => loadUploadPathList(parentPath || '/'));
-                        uploadPathList.appendChild(parentItem);
-                    }
-
-                    data.files
-                        .filter(item => item.is_dir)
-                        .forEach(dir => {
-                            const item = document.createElement('div');
-                            item.className = 'upload-path-item';
-                            item.textContent = `📁 ${dir.name}`;
-                            item.addEventListener('click', () => loadUploadPathList(dir.path));
-                            uploadPathList.appendChild(item);
-                        });
-                } catch (error) {
-                    console.error('读取目录失败:', error);
-<<<<<<< HEAD
-                    uploadPathCurrent.textContent = t('modal.uploadPathError');
-=======
-                    uploadPathCurrent.textContent = '无法读取目录';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                    uploadPathList.innerHTML = '';
-                }
-            }
-
-            function closeUploadPathModal(value) {
-                if (uploadPathModal) {
-                    uploadPathModal.style.display = 'none';
-                }
-                if (uploadPathResolve) {
-                    uploadPathResolve(value);
-                    uploadPathResolve = null;
-                }
-            }
-
-            function promptUploadPath() {
-                return new Promise((resolve) => {
-                    if (!uploadPathModal) {
-                        resolve(null);
-                        return;
-                    }
-                    uploadPathResolve = resolve;
-                    uploadPathModal.style.display = 'block';
-                    const startPath = defaultUploadDir || '/home/deck';
-                    loadUploadPathList(startPath);
-
-                    if (uploadPathOk) {
-                        uploadPathOk.onclick = () => {
-                            closeUploadPathModal(uploadPathCurrentValue || null);
-                        };
-                    }
-                    if (uploadPathCancel) {
-                        uploadPathCancel.onclick = () => {
-                            closeUploadPathModal(null);
-                        };
-                    }
-                    if (uploadPathUp) {
-                        uploadPathUp.onclick = () => {
-                            if (!uploadPathCurrentValue || uploadPathCurrentValue === '/') return;
-                            const parent = uploadPathCurrentValue.split('/').filter(Boolean);
-                            parent.pop();
-                            const parentPath = '/' + parent.join('/');
-                            loadUploadPathList(parentPath || '/');
-                        };
-                    }
-                });
-            }
-            
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
             let selectedFiles = [];
             const folderDisplayMap = new Map();
             let uploadPromptEnabled = false;
@@ -5721,21 +3252,11 @@ async def handle_index(request):
                 });
             }
             
-<<<<<<< HEAD
             uploadArea.addEventListener('click', () => {
                 // Reset input so selecting the same file triggers change
                 fileInput.value = '';
                 fileInput.click();
             });
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-            uploadArea.addEventListener('click', () => {
-                // Reset input so selecting the same file triggers change
-                fileInput.value = '';
-                fileInput.click();
-            });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -5746,7 +3267,6 @@ async def handle_index(request):
                 uploadArea.classList.remove('dragover');
             });
             
-<<<<<<< HEAD
             uploadArea.addEventListener('drop', async (e) => {
                 e.preventDefault();
                 uploadArea.classList.remove('dragover');
@@ -5755,7 +3275,7 @@ async def handle_index(request):
             });
             
             fileInput.addEventListener('change', (e) => {
-                addFiles(e.target.files, { groupFolders: false });
+                addFiles(e.target.files, { groupFolders: true });
                 // Clear value so re-selecting the same file works next time
                 fileInput.value = '';
             });
@@ -5792,156 +3312,6 @@ async def handle_index(request):
                         files.push(...entryFiles);
                     }
                     return files;
-=======
-            uploadArea.addEventListener('drop', async (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                const files = await getFilesFromDataTransfer(e.dataTransfer);
-                addFiles(files);
-            });
-            
-            fileInput.addEventListener('change', (e) => {
-                addFiles(e.target.files);
-                // Clear value so re-selecting the same file works next time
-                fileInput.value = '';
-            });
-<<<<<<< HEAD
-
-            refreshUploadOptions();
-
-            function getFileKey(file) {
-                return file._relativePath || file.webkitRelativePath || file.name;
-            }
-
-            function getFileRelativePath(file) {
-                return file._relativePath || file.webkitRelativePath || '';
-            }
-
-            async function getFilesFromDataTransfer(dt) {
-                if (!dt) return [];
-                const items = dt.items ? Array.from(dt.items) : [];
-                const entries = items
-                    .map(item => item.webkitGetAsEntry && item.webkitGetAsEntry())
-                    .filter(Boolean);
-                if (entries.length) {
-                    const files = [];
-                    for (const entry of entries) {
-                        const entryFiles = await walkEntry(entry, '');
-                        files.push(...entryFiles);
-                    }
-                    return files;
-                }
-                return Array.from(dt.files || []);
-            }
-
-            function readAllEntries(reader) {
-                return new Promise((resolve) => {
-                    const entries = [];
-                    const readBatch = () => {
-                        reader.readEntries((batch) => {
-                            if (!batch.length) {
-                                resolve(entries);
-                                return;
-                            }
-                            entries.push(...batch);
-                            readBatch();
-                        }, () => resolve(entries));
-                    };
-                    readBatch();
-                });
-            }
-
-            async function walkEntry(entry, pathPrefix) {
-                if (entry.isFile) {
-                    return new Promise((resolve) => {
-                        entry.file((file) => {
-                            const rel = `${pathPrefix}${file.name}`;
-                            try {
-                                file._relativePath = rel;
-                            } catch (e) {
-                                // ignore
-                            }
-                            resolve([file]);
-                        }, () => resolve([]));
-                    });
-                }
-                if (entry.isDirectory) {
-                    const reader = entry.createReader();
-                    const children = await readAllEntries(reader);
-                    const files = [];
-                    for (const child of children) {
-                        const childFiles = await walkEntry(child, `${pathPrefix}${entry.name}/`);
-                        files.push(...childFiles);
-                    }
-                    return files;
-                }
-                return [];
-            }
-=======
-<<<<<<< HEAD
-
-            refreshUploadOptions();
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-            
-            function addFiles(files) {
-                for (let file of files) {
-                    selectedFiles.push(file);
-                    const fileKey = getFileKey(file);
-                    const fileItem = document.createElement('div');
-                    fileItem.className = 'file-item';
-                    fileItem.dataset.fileKey = fileKey;
-                    
-                    // File header (info + cancel button)
-                    const fileHeader = document.createElement('div');
-                    fileHeader.className = 'file-item-header';
-                    
-                    // Create file info element
-                    const fileInfo = document.createElement('span');
-                    fileInfo.className = 'file-item-info';
-                    fileInfo.textContent = `${fileKey} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
-                    
-                    // Create cancel button
-                    const cancelBtn = document.createElement('button');
-                    cancelBtn.className = 'cancel-btn';
-                    cancelBtn.textContent = t('actions.cancel');
-                    cancelBtn.onclick = () => cancelFile(file);
-                    
-                    fileHeader.appendChild(fileInfo);
-                    fileHeader.appendChild(cancelBtn);
-                    
-                    // Progress section (hidden by default, shown during upload)
-                    const progressSection = document.createElement('div');
-                    progressSection.className = 'file-item-progress';
-                    progressSection.id = `progress-section-${fileKey.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
-                    
-                    const progressBar = document.createElement('div');
-                    progressBar.className = 'file-progress-bar';
-                    
-                    const progressFill = document.createElement('div');
-                    progressFill.className = 'file-progress-fill';
-                    progressFill.id = `progress-fill-${fileKey.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
-                    
-                    progressBar.appendChild(progressFill);
-                    
-                    const progressText = document.createElement('div');
-                    progressText.className = 'file-progress-text';
-                    progressText.innerHTML = `
-                        <span id="progress-percent-${fileKey.replace(/[^a-zA-Z0-9_-]/g, '_')}">0%</span>
-                        <span class="speed" id="progress-speed-${fileKey.replace(/[^a-zA-Z0-9_-]/g, '_')}">0 KB/s</span>
-                    `;
-                    
-                    progressSection.appendChild(progressBar);
-                    progressSection.appendChild(progressText);
-                    
-                    // Add elements to file item
-                    fileItem.appendChild(fileHeader);
-                    fileItem.appendChild(progressSection);
-                    fileItem.dataset.filename = file.name;
-                    
-                    fileList.appendChild(fileItem);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 }
                 return Array.from(dt.files || []);
             }
@@ -5990,7 +3360,6 @@ async def handle_index(request):
                 return [];
             }
             
-<<<<<<< HEAD
             
 function addFiles(files, options = {}) {
     const groupFolders = !!options.groupFolders;
@@ -6015,7 +3384,7 @@ function addFiles(files, options = {}) {
 
                 const fileInfo = document.createElement('span');
                 fileInfo.className = 'file-item-info';
-                fileInfo.textContent = `?? ${folderName}`;
+                fileInfo.textContent = `📁 ${folderName}`;
                 fileInfo.title = folderName;
 
                 const cancelBtn = document.createElement('button');
@@ -6116,38 +3485,12 @@ function cancelFile(file) {
             // 更新文件列表内的进度条
             function updateFileProgress(fileKey, progress, speed, status = 'uploading') {
                 const safeFileName = fileKey.replace(/[^a-zA-Z0-9_-]/g, '_');
-=======
-            function cancelFile(file) {
-                const key = getFileKey(file);
-                const index = selectedFiles.findIndex(f => getFileKey(f) === key);
-                if (index > -1) {
-                    // Remove file from array
-                    selectedFiles.splice(index, 1);
-                    
-                    // Remove corresponding DOM element
-                    const fileItems = document.querySelectorAll('.file-item');
-                    fileItems.forEach(item => {
-                        if (item.dataset.fileKey === key) {
-                            item.remove();
-                        }
-                    });
-                }
-            }
-            
-            // 更新文件列表内的进度条
-            function updateFileProgress(fileKey, progress, speed, status = 'uploading') {
-                const safeFileName = fileKey.replace(/[^a-zA-Z0-9_-]/g, '_');
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                 const progressSection = document.getElementById(`progress-section-${safeFileName}`);
                 const progressFill = document.getElementById(`progress-fill-${safeFileName}`);
                 const progressPercent = document.getElementById(`progress-percent-${safeFileName}`);
                 const progressSpeed = document.getElementById(`progress-speed-${safeFileName}`);
                 
-<<<<<<< HEAD
                 console.log(`updateFileProgress调用: ${fileKey}`, {
-=======
-                console.log(`updateFileProgress调用: ${fileKey}`, {
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                     progressSection: !!progressSection,
                     progressFill: !!progressFill,
                     progressPercent: !!progressPercent,
@@ -6176,15 +3519,9 @@ function cancelFile(file) {
                 
                 if (progressPercent) {
                     if (status === 'success') {
-<<<<<<< HEAD
                         progressPercent.textContent = t('status.done');
                     } else if (status === 'error') {
                         progressPercent.textContent = t('status.failed');
-=======
-                        progressPercent.textContent = t('status.done');
-                    } else if (status === 'error') {
-                        progressPercent.textContent = t('status.failed');
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                     } else {
                         progressPercent.textContent = `${progress}%`;
                     }
@@ -6199,7 +3536,6 @@ function cancelFile(file) {
                 }
             }
             
-<<<<<<< HEAD
                         
 const FILE_PARALLEL = 2;
 const CHUNK_THRESHOLD = 512 * 1024 * 1024;
@@ -6368,146 +3704,6 @@ async function uploadFileChunked(file, chosenPath, fileHash) {
                 const chunkSize = index === totalChunks - 1 ? (file.size - (totalChunks - 1) * CHUNK_SIZE) : CHUNK_SIZE;
                 chunkProgress[index] = chunkSize;
                 uploadedBytes += chunkSize;
-=======
-            uploadBtn.addEventListener('click', async () => {
-                if (selectedFiles.length === 0) {
-                    alert('请先选择文件');
-                    return;
-                }
-
-                await refreshUploadOptions();
-                let chosenPath = null;
-                if (uploadPromptEnabled) {
-                    chosenPath = await promptUploadPath();
-                    if (!chosenPath) {
-                        alert('请先选择传输路径');
-                        return;
-                    }
-                }
-                
-                let uploadedFiles = 0;
-                const totalFiles = selectedFiles.length;
-                
-                selectedFiles.forEach(file => {
-<<<<<<< HEAD
-                    const fileKey = getFileKey(file);
-                    // 显示该文件的进度条
-                    const safeFileName = fileKey.replace(/[^a-zA-Z0-9_-]/g, '_');
-                    const progressSection = document.getElementById(`progress-section-${safeFileName}`);
-                    
-                    console.log(`准备上传文件: ${fileKey}, 进度条元素:`, progressSection);
-=======
-                    // 显示该文件的进度条
-                    const safeFileName = file.name.replace(/[^a-zA-Z0-9_-]/g, '_');
-                    const progressSection = document.getElementById(`progress-section-${safeFileName}`);
-                    
-                    console.log(`准备上传文件: ${file.name}, 进度条元素:`, progressSection);
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                    
-                    if (progressSection) {
-                        progressSection.classList.add('active');
-                        console.log(`已激活进度条显示: ${fileKey}`);
-                    } else {
-                        console.error(`找不到进度条元素: progress-section-${safeFileName}`);
-                    }
-                    
-                    // 使用XMLHttpRequest上传文件
-                    const xhr = new XMLHttpRequest();
-                    const formData = new FormData();
-                    if (chosenPath) {
-                        formData.append('dest_path', chosenPath);
-                    }
-<<<<<<< HEAD
-                    const relPath = getFileRelativePath(file);
-                    if (relPath) {
-                        formData.append('relative_path', relPath);
-                    }
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                    formData.append('file', file);
-                    
-                    // 记录时间和字节数用于计算速度
-                    let lastUpdateTime = Date.now();
-                    let lastUploadedBytes = 0;
-                    
-                    // 监听上传进度
-                    xhr.upload.addEventListener('progress', (e) => {
-                        if (e.lengthComputable) {
-                            const currentTime = Date.now();
-                            const timeDiff = (currentTime - lastUpdateTime) / 1000;
-                            const bytesDiff = e.loaded - lastUploadedBytes;
-                            
-                            // 限制更新频率
-                            if (timeDiff >= 0.2 || e.loaded === e.total) {
-                                const progress = Math.min(100, Math.round((e.loaded / e.total) * 100));
-                                const speed = Math.round((bytesDiff / 1024) / timeDiff);
-                                
-                                console.log(`更新进度: ${fileKey} - ${progress}% (${speed} KB/s)`);
-                                updateFileProgress(fileKey, progress, speed);
-                                
-                                lastUpdateTime = currentTime;
-                                lastUploadedBytes = e.loaded;
-                            }
-                        }
-                    });
-                    
-                    // 监听上传完成
-                    xhr.addEventListener('load', () => {
-                        uploadedFiles++;
-                        
-                        if (xhr.status === 200) {
-                            console.log(`${fileKey} 上传成功`);
-                            updateFileProgress(fileKey, 100, 0, 'success');
-                        } else {
-                            console.error(`${fileKey} 上传失败`);
-                            updateFileProgress(fileKey, 100, 0, 'error');
-                        }
-                        
-                        // 检查是否所有文件都上传完成
-                        if (uploadedFiles === totalFiles) {
-                            setTimeout(() => {
-                                alert('所有文件上传完成');
-                                // 延迟后清空文件列表
-                                setTimeout(() => {
-                                    selectedFiles = [];
-                                    fileList.innerHTML = '';
-                                }, 2000);
-                            }, 500);
-                        }
-                    });
-                    
-                    // 监听上传错误
-                    xhr.addEventListener('error', () => {
-                        uploadedFiles++;
-                        console.error(`${fileKey} 上传出错`);
-                        updateFileProgress(fileKey, 0, 0, 'error');
-                        
-                        if (uploadedFiles === totalFiles) {
-                            setTimeout(() => {
-                                alert('部分文件上传失败');
-                            }, 500);
-                        }
-                    });
-                    
-                    // 设置超时（10分钟）
-                    xhr.timeout = 600000;
-                    xhr.addEventListener('timeout', () => {
-                        uploadedFiles++;
-                        console.error(`${fileKey} 上传超时`);
-                        updateFileProgress(fileKey, 0, 0, 'error');
-                        
-                        if (uploadedFiles === totalFiles) {
-                            setTimeout(() => {
-                                alert('部分文件上传超时');
-                            }, 500);
-                        }
-                    });
-                    
-                    // 发送请求
-                    xhr.open('POST', '/upload');
-                    xhr.send(formData);
-                });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             });
             const progress = Math.min(100, Math.round((uploadedBytes / file.size) * 100));
             updateFileProgress(fileKey, progress, 0);
@@ -6726,7 +3922,6 @@ const textInput = document.getElementById('text-input');
             let currentInputAction = null;
             
             // File Manager Functionality
-<<<<<<< HEAD
             let currentPath = '/home/deck'; // Set default path to /home/deck
             let selectedFileManagerFiles = [];
             let editingFile = null;
@@ -6737,18 +3932,6 @@ const textInput = document.getElementById('text-input');
             let suppressNextClick = false;
             
             // DOM Elements
-=======
-            let currentPath = '/home/deck'; // Set default path to /home/deck
-            let selectedFileManagerFiles = [];
-            let editingFile = null;
-            let contextMenuPath = '';
-
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-            let suppressNextClick = false;
-            
-            // DOM Elements
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             const breadcrumb = document.getElementById('breadcrumb');
             const fileManagerList = document.getElementById('file-manager-list');
             const backBtn = document.getElementById('back-btn');
@@ -6774,7 +3957,6 @@ const textInput = document.getElementById('text-input');
             const confirmYes = document.getElementById('confirm-yes');
             const confirmNo = document.getElementById('confirm-no');
             
-<<<<<<< HEAD
             const inputModal = document.getElementById('input-modal');
             const inputTitle = document.getElementById('input-title');
             const inputField = document.getElementById('input-field');
@@ -6803,39 +3985,6 @@ const textInput = document.getElementById('text-input');
                     }
                 });
             }
-=======
-            const inputModal = document.getElementById('input-modal');
-            const inputTitle = document.getElementById('input-title');
-            const inputField = document.getElementById('input-field');
-            const inputOk = document.getElementById('input-ok');
-            const inputCancel = document.getElementById('input-cancel');
-
-            const unpackModal = document.getElementById('unpack-modal');
-            const unpackFilename = document.getElementById('unpack-filename');
-            const unpackProgressFill = document.getElementById('unpack-progress-fill');
-            const unpackProgressText = document.getElementById('unpack-progress-text');
-            let unpackTimer = null;
-            let unpackProgressValue = 0;
-
-<<<<<<< HEAD
-            const fileOpModal = document.getElementById('fileop-modal');
-            const fileOpTitle = document.getElementById('fileop-title');
-            const fileOpFilename = document.getElementById('fileop-filename');
-            const fileOpProgressFill = document.getElementById('fileop-progress-fill');
-            const fileOpProgressText = document.getElementById('fileop-progress-text');
-            let fileOpTimer = null;
-            let fileOpProgressValue = 0;
-
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-            if (sdcardBtn) {
-                sdcardBtn.addEventListener('click', () => {
-                    if (sdcardPath) {
-                        navigateTo(sdcardPath);
-                    }
-                });
-            }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             // Context Menu
             const contextMenu = document.createElement('div');
@@ -6867,7 +4016,6 @@ const textInput = document.getElementById('text-input');
             document.body.appendChild(newMenu);
             
             // Context Menu Items
-<<<<<<< HEAD
             let pinMenuItem = null;
             let unpackMenuItem = null;
             const contextMenuItems = [
@@ -7102,283 +4250,6 @@ const textInput = document.getElementById('text-input');
                 contextMenu.style.left = x + 'px';
                 contextMenu.style.top = y + 'px';
             }
-=======
-            let pinMenuItem = null;
-            let unpackMenuItem = null;
-            const contextMenuItems = [
-<<<<<<< HEAD
-                { text: t('menu.open'), action: 'open' },
-                { text: t('menu.download'), action: 'download' },
-                { text: t('menu.addToSteam'), action: 'add-to-steam' },
-                { text: t('menu.unpack'), action: 'unpack' },
-                { text: t('menu.pin'), action: 'pin' },
-                { text: t('menu.copy'), action: 'copy' },
-                { text: t('menu.cut'), action: 'cut' },
-                { text: t('menu.delete'), action: 'delete' },
-                { text: t('menu.rename'), action: 'rename' }
-=======
-                { text: '打开', action: 'open' },
-                { text: '添加到本地', action: 'download' },
-                { text: '添加到steam', action: 'add-to-steam' },
-                { text: '解压', action: 'unpack' },
-                { text: '置顶', action: 'pin' },
-                { text: '复制', action: 'copy' },
-                { text: '删除', action: 'delete' },
-                { text: '重命名', action: 'rename' }
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-            ];
-            
-            contextMenuItems.forEach(item => {
-                const menuItem = document.createElement('div');
-                menuItem.textContent = item.text;
-                menuItem.style.cssText = `
-                    padding: 8px 12px;
-                    cursor: pointer;
-                    font-size: 14px;
-                    color: var(--text);
-                    transition: background-color 0.2s;
-                `;
-                menuItem.addEventListener('mouseenter', () => {
-                    menuItem.style.backgroundColor = 'rgba(77, 182, 172, 0.2)';
-                });
-                menuItem.addEventListener('mouseleave', () => {
-                    menuItem.style.backgroundColor = 'transparent';
-                });
-                menuItem.addEventListener('click', async () => {
-                    await handleContextMenuAction(item.action);
-                    hideContextMenu();
-                });
-                contextMenu.appendChild(menuItem);
-                if (item.action === 'pin') {
-                    pinMenuItem = menuItem;
-                }
-                if (item.action === 'unpack') {
-                    unpackMenuItem = menuItem;
-                }
-            });
-
-            // New Menu Items (for compact screens)
-            const newMenuItems = [
-                { text: t('actions.newFile'), action: 'new-file' },
-                { text: t('actions.newFolder'), action: 'new-dir' }
-            ];
-            
-            newMenuItems.forEach(item => {
-                const menuItem = document.createElement('div');
-                menuItem.textContent = item.text;
-                menuItem.style.cssText = `
-                    padding: 8px 12px;
-                    cursor: pointer;
-                    font-size: 14px;
-                    color: var(--text);
-                    transition: background-color 0.2s;
-                `;
-                menuItem.addEventListener('mouseenter', () => {
-                    menuItem.style.backgroundColor = 'rgba(77, 182, 172, 0.2)';
-                });
-                menuItem.addEventListener('mouseleave', () => {
-                    menuItem.style.backgroundColor = 'transparent';
-                });
-                menuItem.addEventListener('click', () => {
-                    if (item.action === 'new-file') {
-                        showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
-                    } else {
-                        showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
-                    }
-                    hideNewMenu();
-                });
-                newMenu.appendChild(menuItem);
-            });
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-
-            const PINNED_STORAGE_KEY = 'decky_send_pinned_items';
-
-            function loadPinnedMap() {
-                try {
-                    const raw = localStorage.getItem(PINNED_STORAGE_KEY);
-                    if (!raw) return {};
-                    const parsed = JSON.parse(raw);
-                    return parsed && typeof parsed === 'object' ? parsed : {};
-                } catch (e) {
-                    console.error('读取置顶信息失败:', e);
-                    return {};
-                }
-            }
-
-            function savePinnedMap(map) {
-                try {
-                    localStorage.setItem(PINNED_STORAGE_KEY, JSON.stringify(map));
-                } catch (e) {
-                    console.error('保存置顶信息失败:', e);
-                }
-            }
-
-            function getPinnedSet(path) {
-                const map = loadPinnedMap();
-                const list = Array.isArray(map[path]) ? map[path] : [];
-                return new Set(list);
-            }
-
-            function setPinnedSet(path, set) {
-                const map = loadPinnedMap();
-                map[path] = Array.from(set);
-                savePinnedMap(map);
-            }
-
-            function togglePin(path) {
-                const set = getPinnedSet(currentPath);
-                if (set.has(path)) {
-                    set.delete(path);
-                } else {
-                    set.add(path);
-                }
-                setPinnedSet(currentPath, set);
-            }
-
-            function updatePinMenuLabel() {
-                if (!pinMenuItem) return;
-                const set = getPinnedSet(currentPath);
-<<<<<<< HEAD
-                pinMenuItem.textContent = set.has(contextMenuPath) ? t('menu.unpin') : t('menu.pin');
-=======
-                pinMenuItem.textContent = set.has(contextMenuPath) ? '取消置顶' : '置顶';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-            }
-
-            function isArchiveFile(name) {
-                if (!name) return false;
-                const lower = name.toLowerCase();
-<<<<<<< HEAD
-                const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar', '.exe'];
-=======
-<<<<<<< HEAD
-                const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar', '.exe'];
-=======
-                const exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tgz', '.tbz', '.tbz2', '.txz', '.tar', '.zip', '.7z', '.rar'];
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                return exts.some(ext => lower.endsWith(ext));
-            }
-
-            function updateUnpackMenuVisibility() {
-                if (!unpackMenuItem) return;
-                const fileItem = document.querySelector(`[data-path="${contextMenuPath}"]`);
-                const isDir = fileItem && fileItem.dataset.isDir === 'true';
-                const filename = contextMenuPath ? contextMenuPath.split('/').pop() : '';
-                const canUnpack = !isDir && isArchiveFile(filename);
-                unpackMenuItem.style.display = canUnpack ? 'block' : 'none';
-            }
-            
-<<<<<<< HEAD
-            // Context Menu Functions
-            let copiedPath = null; // Store copied/cut file/folder path
-            let clipboardMode = 'copy';
-=======
-<<<<<<< HEAD
-=======
-=======
-            
->>>>>>> 59ce7365bd91331c34ba7d6af0b0cd651ee0c00f
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
-            // Context Menu Functions
-            let copiedPath = null; // Store copied file/folder path
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-
-            function bindLongPressContextMenu(element, path, beforeShow) {
-                if (!isIOS) {
-                    return;
-                }
-
-                let pressTimer = null;
-                let startX = 0;
-                let startY = 0;
-                let lastX = 0;
-                let lastY = 0;
-                const longPressMs = 550;
-                const moveTolerance = 10;
-
-                const clearPressTimer = () => {
-                    if (pressTimer) {
-                        clearTimeout(pressTimer);
-                        pressTimer = null;
-                    }
-                };
-
-                element.addEventListener('touchstart', (e) => {
-                    if (!e.touches || e.touches.length !== 1) {
-                        return;
-                    }
-                    const touch = e.touches[0];
-                    startX = touch.clientX;
-                    startY = touch.clientY;
-                    lastX = startX;
-                    lastY = startY;
-                    clearPressTimer();
-                    pressTimer = setTimeout(() => {
-                        pressTimer = null;
-                        suppressNextClick = true;
-                        if (beforeShow) {
-                            beforeShow();
-                        }
-                        showContextMenu({ clientX: lastX, clientY: lastY, preventDefault: () => {} }, path);
-                    }, longPressMs);
-                }, { passive: true });
-
-                element.addEventListener('touchmove', (e) => {
-                    if (!pressTimer || !e.touches || e.touches.length !== 1) {
-                        return;
-                    }
-                    const touch = e.touches[0];
-                    lastX = touch.clientX;
-                    lastY = touch.clientY;
-                    if (Math.abs(lastX - startX) > moveTolerance || Math.abs(lastY - startY) > moveTolerance) {
-                        clearPressTimer();
-                    }
-                }, { passive: true });
-
-                element.addEventListener('touchend', clearPressTimer);
-                element.addEventListener('touchcancel', clearPressTimer);
-            }
-            
-            function showContextMenu(e, path) {
-                if (e && e.preventDefault) {
-                    e.preventDefault();
-                }
-                contextMenuPath = path;
-                updatePinMenuLabel();
-                updateUnpackMenuVisibility();
-                contextMenu.style.display = 'block';
-                
-                const padding = 8;
-                const menuRect = contextMenu.getBoundingClientRect();
-                const point = (e && e.touches && e.touches[0]) ||
-                    (e && e.changedTouches && e.changedTouches[0]) ||
-                    e || { clientX: 0, clientY: 0 };
-                let x = point.clientX;
-                let y = point.clientY;
-                const maxX = window.innerWidth - menuRect.width - padding;
-                const maxY = window.innerHeight - menuRect.height - padding;
-                if (maxX < padding) {
-                    x = padding;
-                } else {
-                    x = Math.min(Math.max(x, padding), maxX);
-                }
-                if (maxY < padding) {
-                    y = padding;
-                } else {
-                    y = Math.min(Math.max(y, padding), maxY);
-                }
-                
-                contextMenu.style.left = x + 'px';
-                contextMenu.style.top = y + 'px';
-            }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             function hideContextMenu() {
                 contextMenu.style.display = 'none';
@@ -7535,7 +4406,6 @@ const textInput = document.getElementById('text-input');
                             } catch (error) {
                                 console.error('添加到Steam出错:', error);
                                 alert('添加到Steam失败: ' + error.message);
-<<<<<<< HEAD
                             }
                         }
                         break;
@@ -7605,121 +4475,14 @@ const textInput = document.getElementById('text-input');
                             await cutPath(contextMenuPath);
                         }
                         break;
-=======
-                            }
-                        }
-                        break;
-                    case 'unpack':
-                        if (contextMenuPath) {
-                            try {
-<<<<<<< HEAD
-                                showUnpackProgress(contextMenuPath.split('/').pop());
-=======
-<<<<<<< HEAD
-                                showUnpackProgress(contextMenuPath.split('/').pop());
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                                const response = await fetch('/api/files/unpack', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({ path: contextMenuPath })
-                                });
-                                const result = await response.json();
-                                if (result.status === 'success') {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                                    finishUnpackProgress(true);
-                                    alert(result.message || '解压完成');
-                                    await renderFileList(currentPath);
-                                } else {
-                                    finishUnpackProgress(false);
-<<<<<<< HEAD
-=======
-=======
-                                    alert(result.message || '解压完成');
-                                    await renderFileList(currentPath);
-                                } else {
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                                    alert('解压失败: ' + (result.message || '未知错误'));
-                                }
-                            } catch (error) {
-                                console.error('解压出错:', error);
-<<<<<<< HEAD
-                                finishUnpackProgress(false);
-=======
-<<<<<<< HEAD
-                                finishUnpackProgress(false);
-=======
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                                alert('解压出错');
-                            }
-                        }
-                        break;
-                    case 'unpack':
-                        if (contextMenuPath) {
-                            try {
-                                const response = await fetch('/api/files/unpack', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({ path: contextMenuPath })
-                                });
-                                const result = await response.json();
-                                if (result.status === 'success') {
-                                    alert(result.message || '解压完成');
-                                    await renderFileList(currentPath);
-                                } else {
-                                    alert('解压失败: ' + (result.message || '未知错误'));
-                                }
-                            } catch (error) {
-                                console.error('解压出错:', error);
-                                alert('解压出错');
-                            }
-                        }
-                        break;
-                    case 'pin':
-                        if (contextMenuPath) {
-                            togglePin(contextMenuPath);
-                            await renderFileList(currentPath);
-                        }
-                        break;
-                    case 'copy':
-                        if (contextMenuPath) {
-                            await copyPath(contextMenuPath);
-                        }
-                        break;
-<<<<<<< HEAD
-                    case 'cut':
-                        if (contextMenuPath) {
-                            await cutPath(contextMenuPath);
-                        }
-                        break;
                     case 'paste':
                         await pastePath(currentPath);
                         break;
-=======
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
-                    case 'paste':
-                        await pastePath(currentPath);
-                        break;
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
                     case 'delete':
                         if (contextMenuPath) {
                             // Save the path before showing confirm modal (which hides context menu)
                             const pathToDelete = contextMenuPath;
-<<<<<<< HEAD
                             showConfirmModal(t('modal.deleteConfirm'), async () => {
-=======
-                            showConfirmModal(t('modal.deleteConfirm'), async () => {
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                                 await deletePath(pathToDelete);
                             });
                         }
@@ -7727,7 +4490,6 @@ const textInput = document.getElementById('text-input');
                     case 'rename':
                         if (contextMenuPath) {
                             // Implement rename functionality
-<<<<<<< HEAD
                             const oldName = contextMenuPath.split('/').pop() || '';
                             showInputModal(t('modal.renameTitle'), t('modal.renamePlaceholder'), (newName) => {
                                 // Implement rename API call here
@@ -7771,51 +4533,6 @@ const textInput = document.getElementById('text-input');
             });
             
             window.addEventListener('resize', applyFileManagerLayout);
-=======
-                            const oldName = contextMenuPath.split('/').pop() || '';
-                            showInputModal(t('modal.renameTitle'), t('modal.renamePlaceholder'), (newName) => {
-                                // Implement rename API call here
-                                alert('重命名功能将在后续版本中实现');
-                            }, oldName);
-                        }
-                        break;
-                }
-            }
-            
-            if (newBtn) {
-                newBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    hideContextMenu();
-                    showNewMenu();
-                });
-            }
-            
-            if (newMenu) {
-                newMenu.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            }
-            
-            // Hide menus when clicking elsewhere
-            document.addEventListener('click', (e) => {
-                if (suppressNextClick && e.target.closest('.file-item')) {
-                    suppressNextClick = false;
-                    return;
-                }
-                suppressNextClick = false;
-                hideContextMenu();
-                hideNewMenu();
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    hideContextMenu();
-                    hideNewMenu();
-                }
-            });
-            
-            window.addEventListener('resize', applyFileManagerLayout);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             function showConfirmModal(message, action) {
                 confirmMessage.textContent = message;
@@ -7828,7 +4545,6 @@ const textInput = document.getElementById('text-input');
                 currentConfirmAction = null;
             }
             
-<<<<<<< HEAD
             function showInputModal(title, placeholder, action, defaultValue = '') {
                 inputTitle.textContent = title;
                 inputField.placeholder = placeholder;
@@ -7942,132 +4658,6 @@ const textInput = document.getElementById('text-input');
                     fileOpModal.style.display = 'none';
                 }, 500);
             }
-=======
-            function showInputModal(title, placeholder, action, defaultValue = '') {
-                inputTitle.textContent = title;
-                inputField.placeholder = placeholder;
-                inputField.value = defaultValue || '';
-                currentInputAction = action;
-                inputModal.style.display = 'block';
-                inputField.focus();
-                try {
-                    if (inputField.value) {
-                        inputField.setSelectionRange(0, inputField.value.length);
-                    }
-                } catch (e) {
-                    // ignore
-                }
-            }
-            
-            function hideInputModal() {
-                inputModal.style.display = 'none';
-                currentInputAction = null;
-            }
-
-            function showUnpackProgress(filename) {
-                if (!unpackModal) return;
-                if (unpackFilename) {
-<<<<<<< HEAD
-                    unpackFilename.textContent = filename ? t('modal.unpackingWithName', { name: filename }) : t('modal.unpacking');
-=======
-                    unpackFilename.textContent = filename ? `正在解压：${filename}` : '正在解压...';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                }
-                unpackProgressValue = 0;
-                if (unpackProgressFill) {
-                    unpackProgressFill.style.width = '0%';
-                }
-                if (unpackProgressText) {
-                    unpackProgressText.textContent = '0%';
-                }
-                unpackModal.style.display = 'block';
-                if (unpackTimer) {
-                    clearInterval(unpackTimer);
-                }
-                unpackTimer = setInterval(() => {
-                    const increment = Math.max(1, Math.round(Math.random() * 4));
-                    unpackProgressValue = Math.min(90, unpackProgressValue + increment);
-                    if (unpackProgressFill) {
-                        unpackProgressFill.style.width = `${unpackProgressValue}%`;
-                    }
-                    if (unpackProgressText) {
-                        unpackProgressText.textContent = `${unpackProgressValue}%`;
-                    }
-                }, 200);
-            }
-
-            function finishUnpackProgress(success) {
-                if (!unpackModal) return;
-                if (unpackTimer) {
-                    clearInterval(unpackTimer);
-                    unpackTimer = null;
-                }
-                if (unpackProgressFill) {
-                    unpackProgressFill.style.width = '100%';
-                }
-                if (unpackProgressText) {
-<<<<<<< HEAD
-                    unpackProgressText.textContent = success ? t('status.done') : t('status.failed');
-=======
-                    unpackProgressText.textContent = success ? '完成' : '失败';
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                }
-                setTimeout(() => {
-                    unpackModal.style.display = 'none';
-                }, 500);
-            }
-<<<<<<< HEAD
-
-            function showFileOpProgress(title, filename) {
-                if (!fileOpModal) return;
-                if (fileOpTitle) {
-                    fileOpTitle.textContent = title || t('modal.fileOpCopy');
-                }
-                if (fileOpFilename) {
-                    fileOpFilename.textContent = filename ? t('modal.fileOpTarget', { name: filename }) : '';
-                }
-                fileOpProgressValue = 0;
-                if (fileOpProgressFill) {
-                    fileOpProgressFill.style.width = '0%';
-                }
-                if (fileOpProgressText) {
-                    fileOpProgressText.textContent = '0%';
-                }
-                fileOpModal.style.display = 'block';
-                if (fileOpTimer) {
-                    clearInterval(fileOpTimer);
-                }
-                fileOpTimer = setInterval(() => {
-                    const increment = Math.max(1, Math.round(Math.random() * 4));
-                    fileOpProgressValue = Math.min(90, fileOpProgressValue + increment);
-                    if (fileOpProgressFill) {
-                        fileOpProgressFill.style.width = `${fileOpProgressValue}%`;
-                    }
-                    if (fileOpProgressText) {
-                        fileOpProgressText.textContent = `${fileOpProgressValue}%`;
-                    }
-                }, 200);
-            }
-
-            function finishFileOpProgress(success) {
-                if (!fileOpModal) return;
-                if (fileOpTimer) {
-                    clearInterval(fileOpTimer);
-                    fileOpTimer = null;
-                }
-                if (fileOpProgressFill) {
-                    fileOpProgressFill.style.width = '100%';
-                }
-                if (fileOpProgressText) {
-                    fileOpProgressText.textContent = success ? t('status.done') : t('status.failed');
-                }
-                setTimeout(() => {
-                    fileOpModal.style.display = 'none';
-                }, 500);
-            }
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             function showFileEditor(title, content, filePath) {
                 editorTitle.textContent = title;
@@ -8105,7 +4695,6 @@ const textInput = document.getElementById('text-input');
             inputCancel.addEventListener('click', hideInputModal);
             
             // Close modals when clicking outside
-<<<<<<< HEAD
                 window.addEventListener('click', (e) => {
                     if (e.target.classList.contains('modal')) {
                         hideConfirmModal();
@@ -8116,18 +4705,6 @@ const textInput = document.getElementById('text-input');
                         }
                     }
                 });
-=======
-                window.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('modal')) {
-                        hideConfirmModal();
-                        hideInputModal();
-                        hideFileEditor();
-                        if (unpackModal) {
-                            unpackModal.style.display = 'none';
-                        }
-                    }
-                });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             // Close modal with Escape key
             window.addEventListener('keydown', (e) => {
@@ -8289,7 +4866,6 @@ const textInput = document.getElementById('text-input');
                         body: JSON.stringify({ path })
                     });
                     
-<<<<<<< HEAD
                     const data = await response.json();
                     if (data.status === 'success') {
                         fileManagerList.innerHTML = '';
@@ -8327,45 +4903,6 @@ const textInput = document.getElementById('text-input');
                             if (isPinned) {
                                 fileItem.classList.add('pinned');
                             }
-=======
-                    const data = await response.json();
-                    if (data.status === 'success') {
-                        fileManagerList.innerHTML = '';
-
-                        const pinnedSet = getPinnedSet(data.current_path);
-                        const currentPaths = new Set(data.files.map(item => item.path));
-                        let cleaned = false;
-                        for (const pinnedPath of Array.from(pinnedSet)) {
-                            if (!currentPaths.has(pinnedPath)) {
-                                pinnedSet.delete(pinnedPath);
-                                cleaned = true;
-                            }
-                        }
-                        if (cleaned) {
-                            setPinnedSet(data.current_path, pinnedSet);
-                        }
-
-                        const files = data.files.map((file, index) => ({ ...file, __index: index }));
-                        files.sort((a, b) => {
-                            const aPinned = pinnedSet.has(a.path);
-                            const bPinned = pinnedSet.has(b.path);
-                            if (aPinned !== bPinned) return aPinned ? -1 : 1;
-                            return a.__index - b.__index;
-                        });
-                        
-                        files.forEach(file => {
-                            const fileItem = document.createElement('div');
-                            fileItem.className = 'file-item';
-                            fileItem.dataset.path = file.path;
-                            fileItem.dataset.isDir = file.is_dir;
-                            if (file.is_dir) {
-                                fileItem.classList.add('is-dir');
-                            }
-                            const isPinned = pinnedSet.has(file.path);
-                            if (isPinned) {
-                                fileItem.classList.add('pinned');
-                            }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                             
                             fileItem.style.border = '1px solid var(--border)';
                             fileItem.style.borderRadius = '10px';
@@ -8386,7 +4923,6 @@ const textInput = document.getElementById('text-input');
                                 fileItem.style.boxSizing = 'border-box';
                             
                             // 点击事件：切换选中状态
-<<<<<<< HEAD
                             fileItem.addEventListener('click', (e) => {
                                 if (suppressNextClick) {
                                     suppressNextClick = false;
@@ -8417,38 +4953,6 @@ const textInput = document.getElementById('text-input');
                                     selectedFileManagerFiles = [file.path];
                                 }
                             });
-=======
-                            fileItem.addEventListener('click', (e) => {
-                                if (suppressNextClick) {
-                                    suppressNextClick = false;
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    return;
-                                }
-                                if (fileItem.classList.contains('selected')) {
-                                    // 取消选中
-                                    fileItem.classList.remove('selected');
-                                    fileItem.style.backgroundColor = 'var(--panel)';
-                                    fileItem.style.borderColor = 'var(--border)';
-                                    const index = selectedFileManagerFiles.indexOf(file.path);
-                                    if (index > -1) {
-                                        selectedFileManagerFiles.splice(index, 1);
-                                    }
-                                } else {
-                                    // 取消其他选中项
-                                    document.querySelectorAll('.file-item.selected').forEach(item => {
-                                        item.classList.remove('selected');
-                                        item.style.backgroundColor = 'var(--panel)';
-                                        item.style.borderColor = 'var(--border)';
-                                    });
-                                    // 选中当前文件
-                                    fileItem.classList.add('selected');
-                                    fileItem.style.backgroundColor = 'var(--accent-soft)';
-                                    fileItem.style.borderColor = 'var(--accent)';
-                                    selectedFileManagerFiles = [file.path];
-                                }
-                            });
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                             
                             // 双击事件：打开文件或进入目录
                             fileItem.addEventListener('dblclick', () => {
@@ -8459,7 +4963,6 @@ const textInput = document.getElementById('text-input');
                                 }
                             });
                             
-<<<<<<< HEAD
                             fileItem.addEventListener('contextmenu', (e) => {
                                 e.preventDefault();
                                 // 自动选中当前文件
@@ -8499,62 +5002,6 @@ const textInput = document.getElementById('text-input');
                             icon.className = 'file-icon';
                             icon.textContent = getFileIcon(file.name, file.is_dir);
                             icon.style.fontSize = '24px';
-=======
-                            fileItem.addEventListener('contextmenu', (e) => {
-                                e.preventDefault();
-                                // 自动选中当前文件
-                                document.querySelectorAll('.file-item.selected').forEach(item => {
-                                    item.classList.remove('selected');
-                                    item.style.backgroundColor = 'var(--panel)';
-                                    item.style.borderColor = 'var(--border)';
-                                });
-                                fileItem.classList.add('selected');
-                                fileItem.style.backgroundColor = 'var(--accent-soft)';
-                                fileItem.style.borderColor = 'var(--accent)';
-                                selectedFileManagerFiles = [file.path];
-                                showContextMenu(e, file.path);
-                            });
-
-                            bindLongPressContextMenu(fileItem, file.path, () => {
-                                document.querySelectorAll('.file-item.selected').forEach(item => {
-                                    item.classList.remove('selected');
-                                    item.style.backgroundColor = 'var(--panel)';
-                                    item.style.borderColor = 'var(--border)';
-                                });
-                                fileItem.classList.add('selected');
-                                fileItem.style.backgroundColor = 'var(--accent-soft)';
-                                fileItem.style.borderColor = 'var(--accent)';
-                                selectedFileManagerFiles = [file.path];
-                            });
-                            
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                            const pinBadge = document.createElement('div');
-                            pinBadge.className = 'pin-badge';
-                            pinBadge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#ffffff" d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-9a1 1 0 0 1 1-1h1zm2 0h6V7a3 3 0 0 0-6 0v3zm3 4a2 2 0 0 0-1 3.732V19a1 1 0 0 0 2 0v-1.268A2 2 0 0 0 12 14z"/></svg>';
-                            if (!isPinned) {
-                                pinBadge.style.display = 'none';
-                            }
-
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 59ce7365bd91331c34ba7d6af0b0cd651ee0c00f
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-                            // File Icon
-                            const icon = document.createElement('div');
-                            icon.className = 'file-icon';
-                            icon.textContent = getFileIcon(file.name, file.is_dir);
-                            icon.style.fontSize = '24px';
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                             
                             // File Name
                             const fileName = document.createElement('div');
@@ -8584,13 +5031,8 @@ const textInput = document.getElementById('text-input');
                                 fileDetails.innerHTML = `${formatSize(file.size)}<br>${formatDate(file.mtime)}`;
                             }
                             
-<<<<<<< HEAD
                             fileItem.appendChild(pinBadge);
                             fileItem.appendChild(icon);
-=======
-                            fileItem.appendChild(pinBadge);
-                            fileItem.appendChild(icon);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                             fileItem.appendChild(fileName);
                             fileItem.appendChild(fileDetails);
                             
@@ -8642,11 +5084,7 @@ const textInput = document.getElementById('text-input');
                     
                     const data = await response.json();
                     if (data.status === 'success') {
-<<<<<<< HEAD
                         showFileEditor(t('modal.editorTitleWithName', { name: filePath.split('/').pop() || '' }), data.content, filePath);
-=======
-                        showFileEditor(t('modal.editorTitleWithName', { name: filePath.split('/').pop() || '' }), data.content, filePath);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                     } else {
                         alert('打开文件失败: ' + data.message);
                     }
@@ -8770,7 +5208,6 @@ const textInput = document.getElementById('text-input');
             }
             
             // Copy file or directory path
-<<<<<<< HEAD
             async function copyPath(path) {
                 try {
                     if (!path) {
@@ -8811,48 +5248,6 @@ const textInput = document.getElementById('text-input');
                 try {
                     if (!copiedPath) {
                         alert('粘贴失败: 没有要粘贴的内容');
-=======
-            async function copyPath(path) {
-                try {
-                    if (!path) {
-                        alert('复制失败: 路径不能为空');
-                        return;
-                    }
-                    
-                    copiedPath = path;
-                    clipboardMode = 'copy';
-                    // Show paste button
-                    updatePasteButtonVisibility();
-                    alert('复制成功');
-                } catch (error) {
-                    console.error('复制出错:', error);
-                    alert('复制出错');
-                }
-            }
-
-            async function cutPath(path) {
-                try {
-                    if (!path) {
-                        alert('剪切失败: 路径不能为空');
-                        return;
-                    }
-
-                    copiedPath = path;
-                    clipboardMode = 'cut';
-                    updatePasteButtonVisibility();
-                    alert('剪切成功');
-                } catch (error) {
-                    console.error('剪切出错:', error);
-                    alert('剪切出错');
-                }
-            }
-            
-            // Paste file or directory
-            async function pastePath(destPath) {
-                try {
-                    if (!copiedPath) {
-                        alert('粘贴失败: 没有要粘贴的内容');
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                         return;
                     }
                     
@@ -8861,7 +5256,6 @@ const textInput = document.getElementById('text-input');
                         return;
                     }
                     
-<<<<<<< HEAD
                     // Get filename from copied path
                     const filename = copiedPath.split('/').pop();
                     const targetPath = destPath + '/' + filename;
@@ -8896,42 +5290,6 @@ const textInput = document.getElementById('text-input');
                     alert('粘贴出错: ' + error.message);
                 }
             }
-=======
-                    // Get filename from copied path
-                    const filename = copiedPath.split('/').pop();
-                    const targetPath = destPath + '/' + filename;
-                    const isCut = clipboardMode === 'cut';
-                    const opTitle = isCut ? t('modal.fileOpMove') : t('modal.fileOpCopy');
-                    showFileOpProgress(opTitle, filename);
-                    const endpoint = isCut ? '/api/files/move' : '/api/files/copy';
-                    
-                    const response = await fetch(endpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ source: copiedPath, destination: targetPath })
-                    });
-                    
-                    const data = await response.json();
-                    finishFileOpProgress(data.status === 'success');
-                    if (data.status === 'success') {
-                        await renderFileList(currentPath);
-                        alert(isCut ? '剪切成功' : '粘贴成功');
-                        // Clear copied path and hide paste button
-                        copiedPath = null;
-                        clipboardMode = 'copy';
-                        updatePasteButtonVisibility();
-                    } else {
-                        alert((isCut ? '剪切' : '粘贴') + '失败: ' + data.message);
-                    }
-                } catch (error) {
-                    console.error('粘贴出错:', error);
-                    finishFileOpProgress(false);
-                    alert('粘贴出错: ' + error.message);
-                }
-            }
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             // Update paste button visibility
             function updatePasteButtonVisibility() {
@@ -8974,20 +5332,12 @@ const textInput = document.getElementById('text-input');
             
             // 新建文件按钮事件
             newFileBtn.addEventListener('click', () => {
-<<<<<<< HEAD
                 showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
-=======
-                showInputModal(t('modal.newFileTitle'), t('modal.newFilePlaceholder'), createFile);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             });
             
             // 新建文件夹按钮事件
             newDirBtn.addEventListener('click', () => {
-<<<<<<< HEAD
                 showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
-=======
-                showInputModal(t('modal.newFolderTitle'), t('modal.newFolderPlaceholder'), createDirectory);
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             });
             
             pasteBtn.addEventListener('click', async () => {
@@ -9021,33 +5371,6 @@ async def handle_upload_options(request, plugin):
     except Exception as e:
         decky.logger.error(f"Failed to get upload options: {e}")
         return web.json_response({"status": "error", "message": str(e)}, status=500)
-<<<<<<< HEAD
-
-
-async def handle_language_settings(request, plugin):
-    """Return language preference for the web client"""
-    try:
-        language = getattr(plugin, "language_preference", "auto") or "auto"
-        return web.json_response({"status": "success", "language": language})
-    except Exception as e:
-        decky.logger.error(f"Failed to get language preference: {e}")
-        return web.json_response({"status": "error", "message": str(e), "language": "auto"}, status=500)
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-
-
-<<<<<<< HEAD
-async def handle_upload_options(request, plugin):
-    """Return upload options for the web client"""
-    try:
-        return web.json_response({
-            "status": "success",
-            "prompt_upload_path": bool(getattr(plugin, "prompt_upload_path_enabled", False)),
-            "default_dir": getattr(plugin, "downloads_dir", "")
-        })
-    except Exception as e:
-        decky.logger.error(f"Failed to get upload options: {e}")
-        return web.json_response({"status": "error", "message": str(e)}, status=500)
 
 
 async def handle_language_settings(request, plugin):
@@ -9061,9 +5384,6 @@ async def handle_language_settings(request, plugin):
 
 
 async def handle_upload(request, plugin):
-=======
-async def handle_upload(request, plugin):
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
     """Handle file upload request
     
     Args:
@@ -9071,48 +5391,9 @@ async def handle_upload(request, plugin):
         plugin: Plugin instance to access downloads_dir and text_file_path
     """
     try:
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
         # Parse multipart form data
         reader = await request.multipart()
         field = await reader.next()
-        dest_path = None
-<<<<<<< HEAD
-        relative_path = None
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-        file_field = None
-
-        while field:
-            if field.name == 'dest_path':
-                try:
-                    dest_path = (await field.text()).strip()
-                except Exception:
-                    dest_path = None
-<<<<<<< HEAD
-            elif field.name == 'relative_path':
-                try:
-                    relative_path = (await field.text()).strip()
-                except Exception:
-                    relative_path = None
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-            elif field.name == 'file' and field.filename:
-                file_field = field
-                break
-            field = await reader.next()
-
-        if file_field and file_field.filename:
-            raw_filename = file_field.filename.replace('\x00', '')
-<<<<<<< HEAD
-=======
-=======
-        # Parse multipart form data
-        reader = await request.multipart()
-        field = await reader.next()
-<<<<<<< HEAD
         dest_path = None
         relative_path = None
         file_field = None
@@ -9183,60 +5464,6 @@ async def handle_upload(request, plugin):
                 os.makedirs(os.path.dirname(file_path), exist_ok=True)
             except Exception:
                 return web.json_response({"status": "error", "message": "无法创建目标目录"}, status=400)
-=======
-        
-        if field.name == 'file' and field.filename:
-            raw_filename = field.filename.replace('\x00', '')
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-            safe_filename = os.path.basename(raw_filename.replace('\\', '/')).strip()
-            if safe_filename in ("", ".", ".."):
-                safe_filename = f"upload_{int(time.time())}"
-            filename = safe_filename
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
-            upload_dir = plugin.downloads_dir
-            if dest_path:
-                if "\x00" in dest_path:
-                    return web.json_response({"status": "error", "message": "目录路径包含非法字符"}, status=400)
-                resolved = os.path.realpath(os.path.expanduser(dest_path))
-                if not resolved:
-                    return web.json_response({"status": "error", "message": "无效的目录路径"}, status=400)
-                if os.path.exists(resolved) and not os.path.isdir(resolved):
-                    return web.json_response({"status": "error", "message": "目标路径不是文件夹"}, status=400)
-                try:
-                    os.makedirs(resolved, exist_ok=True)
-                except Exception:
-                    return web.json_response({"status": "error", "message": "无法创建目标目录"}, status=400)
-                upload_dir = resolved
-<<<<<<< HEAD
-            rel_path = None
-            if relative_path:
-                cleaned = relative_path.replace('\\', '/').lstrip('/')
-                normalized = os.path.normpath(cleaned)
-                if normalized.startswith("..") or os.path.isabs(normalized):
-                    return web.json_response({"status": "error", "message": "无效的相对路径"}, status=400)
-                rel_dir = os.path.dirname(normalized)
-                rel_base = os.path.basename(normalized)
-                safe_base = os.path.basename(rel_base.replace('\\', '/')).strip()
-                if safe_base in ("", ".", ".."):
-                    safe_base = safe_filename
-                rel_path = os.path.join(rel_dir, safe_base) if rel_dir else safe_base
-
-            file_path = os.path.join(upload_dir, rel_path or filename)
-            try:
-                os.makedirs(os.path.dirname(file_path), exist_ok=True)
-            except Exception:
-                return web.json_response({"status": "error", "message": "无法创建目标目录"}, status=400)
-=======
-            file_path = os.path.join(upload_dir, filename)
-=======
-            file_path = os.path.join(plugin.downloads_dir, filename)
->>>>>>> c9a66d846909ec3b3dc33aa08b874198dfeab9b7
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
             
             # Get content length from header, but note this includes multipart overhead
             # For more accurate progress, we'll track actual bytes written
@@ -9266,13 +5493,8 @@ async def handle_upload(request, plugin):
             # Save file and track progress
             with open(file_path, 'wb', buffering=1024 * 1024) as f:
                 while True:
-<<<<<<< HEAD
                     try:
                         chunk = await file_field.read_chunk(size=1024 * 1024)  # Read 1MB chunk
-=======
-                    try:
-                        chunk = await file_field.read_chunk()  # Read chunk
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
                         if not chunk:  # EOF
                             break
                         f.write(chunk)
@@ -9702,7 +5924,6 @@ async def handle_text_upload(request, plugin):
             f.write(text)
         decky.logger.info(f"Saved text to file: {plugin.text_file_path}")
         
-<<<<<<< HEAD
         # Emit text received event to frontend with the saved text
         # NOTE: Wrap in list for frontend destructuring
         await _emit_decky(plugin, "text_received", [text])
@@ -9714,19 +5935,6 @@ async def handle_text_upload(request, plugin):
                     decky.logger.warning("Auto copy text failed: clipboard utility not available")
             except Exception as copy_error:
                 decky.logger.warning(f"Auto copy text failed: {copy_error}")
-=======
-        # Emit text received event to frontend with the saved text
-        # NOTE: Wrap in list for frontend destructuring
-        await decky.emit("text_received", [text])
-
-        # Auto-copy text to clipboard if enabled
-        if getattr(plugin, "auto_copy_text_enabled", False):
-            try:
-                if not utils.set_clipboard_text(text):
-                    decky.logger.warning("Auto copy text failed: clipboard utility not available")
-            except Exception as copy_error:
-                decky.logger.warning(f"Auto copy text failed: {copy_error}")
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
         
         # Send notifications (Decky UI + system) so it works even when UI is closed
         notification_title = "文本传输完成"

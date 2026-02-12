@@ -80,18 +80,9 @@ declare module "@decky/ui" {
   export const ButtonItem: any;
   export const ToggleField: any;
   export const TextField: any;
-<<<<<<< HEAD
   export const Dropdown: any;
   export const Field: any;
   export type SingleDropdownOption = { data: any; label: any };
-=======
-<<<<<<< HEAD
-  export const Dropdown: any;
-  export const Field: any;
-  export type SingleDropdownOption = { data: any; label: any };
-=======
->>>>>>> affb7b9d857f412df167949765c23fbc92fe5999
->>>>>>> f0c892c96f959456f58cde721dce3ccca0abe36a
   export const Tabs: any;
   export const gamepadTabbedPageClasses: any;
   export const ProgressBar: any;
