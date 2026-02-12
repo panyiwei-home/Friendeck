@@ -11,6 +11,7 @@
 import os
 import shutil
 import subprocess
+import mimetypes
 from pathlib import Path
 from aiohttp import web
 # NOTE: Direct import - Decky adds py_modules/ to sys.path
@@ -74,6 +75,90 @@ def _find_sdcard_mount():
 
     return candidates[0] if candidates else None
 
+
+IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif"}
+VIDEO_EXTENSIONS = {".mp4", ".webm", ".mkv", ".mov", ".m4v", ".avi"}
+MEDIA_EXTENSIONS = IMAGE_EXTENSIONS | VIDEO_EXTENSIONS
+
+
+def _get_steam_userdata_roots():
+    home = str(Path.home())
+    roots = [
+        os.path.join(home, ".local", "share", "Steam", "userdata"),
+        os.path.join(home, ".steam", "steam", "userdata"),
+        os.path.join(home, ".steam", "root", "userdata"),
+    ]
+    existing = []
+    for root in roots:
+        if os.path.isdir(root):
+            real = os.path.realpath(root)
+            if real not in existing:
+                existing.append(real)
+    return existing
+
+
+def _get_media_scan_dirs():
+    scan_dirs = []
+    for userdata_root in _get_steam_userdata_roots():
+        try:
+            user_ids = os.listdir(userdata_root)
+        except Exception as e:
+            config.logger.debug(f"Failed to list userdata root {userdata_root}: {e}")
+            continue
+
+        for user_id in user_ids:
+            remote_root = os.path.join(userdata_root, user_id, "760", "remote")
+            if not os.path.isdir(remote_root):
+                app_ids = []
+            else:
+                try:
+                    app_ids = os.listdir(remote_root)
+                except Exception as e:
+                    config.logger.debug(f"Failed to list remote root {remote_root}: {e}")
+                    app_ids = []
+
+            for app_id in app_ids:
+                for sub_dir in ("screenshots", "videos"):
+                    media_dir = os.path.join(remote_root, app_id, sub_dir)
+                    if not os.path.isdir(media_dir):
+                        continue
+                    real = os.path.realpath(media_dir)
+                    if real not in scan_dirs:
+                        scan_dirs.append(real)
+
+            # Legacy/alt Steam media locations:
+            # /home/deck/.local/share/Steam/userdata/<steamid>/remote/video
+            plain_remote_root = os.path.join(userdata_root, user_id, "remote")
+            if os.path.isdir(plain_remote_root):
+                for sub_dir in ("video", "videos", "screenshot", "screenshots"):
+                    media_dir = os.path.join(plain_remote_root, sub_dir)
+                    if not os.path.isdir(media_dir):
+                        continue
+                    real = os.path.realpath(media_dir)
+                    if real not in scan_dirs:
+                        scan_dirs.append(real)
+
+            # Steam Game Recording locations (newer Steam clients)
+            for recording_dir in ("gamerecordings", "game_recordings", "recordings"):
+                media_dir = os.path.join(userdata_root, user_id, recording_dir)
+                if not os.path.isdir(media_dir):
+                    continue
+                real = os.path.realpath(media_dir)
+                if real not in scan_dirs:
+                    scan_dirs.append(real)
+    return scan_dirs
+
+
+def _path_in_allowed_dirs(path, allowed_dirs):
+    real_path = os.path.realpath(path)
+    for allowed in allowed_dirs:
+        try:
+            if os.path.commonpath([real_path, allowed]) == allowed:
+                return True
+        except Exception:
+            continue
+    return False
+
 # =============================================================================
 # HTTP API Handlers (for aiohttp routes)
 # =============================================================================
@@ -110,15 +195,18 @@ async def get_file_list(request):
                     continue
                 
                 is_dir = os.path.isdir(item_path)
-                size = os.path.getsize(item_path) if not is_dir else 0
-                mtime = os.path.getmtime(item_path)
+                stat = os.stat(item_path)
+                size = stat.st_size if not is_dir else 0
+                mtime = stat.st_mtime
+                created_at = getattr(stat, 'st_birthtime', stat.st_ctime)
                 
                 files.append({
                     "name": item,
                     "path": item_path,
                     "is_dir": is_dir,
                     "size": size,
-                    "mtime": mtime
+                    "mtime": mtime,
+                    "created_at": created_at
                 })
             except Exception as e:
                 # Skip files that can't be accessed (e.g., permission errors, special files)
@@ -599,6 +687,118 @@ async def get_sdcard_info(request):
         })
     except Exception as e:
         config.logger.error(f"Failed to detect SD card mount: {e}")
+        return web.json_response({"status": "error", "message": str(e)}, status=500)
+
+
+async def get_media_list(request):
+    """List Steam screenshot/video media files for web gallery.
+
+    GET /api/media/list?page=1&page_size=200
+    """
+    try:
+        try:
+            page = int(request.query.get("page", "1"))
+        except Exception:
+            page = 1
+        try:
+            page_size = int(request.query.get("page_size", "200"))
+        except Exception:
+            page_size = 200
+        page = max(1, page)
+        page_size = max(1, min(page_size, 500))
+
+        scan_dirs = _get_media_scan_dirs()
+        media_items = []
+        seen = set()
+
+        for media_dir in scan_dirs:
+            try:
+                for root, _, names in os.walk(media_dir):
+                    for name in names:
+                        file_path = os.path.join(root, name)
+                        try:
+                            if not os.path.isfile(file_path):
+                                continue
+                            ext = os.path.splitext(name)[1].lower()
+                            if ext not in MEDIA_EXTENSIONS:
+                                continue
+                            real_path = os.path.realpath(file_path)
+                            if real_path in seen:
+                                continue
+                            seen.add(real_path)
+
+                            stat = os.stat(real_path)
+                            is_video = ext in VIDEO_EXTENSIONS
+                            media_items.append({
+                                "name": os.path.basename(real_path),
+                                "path": real_path,
+                                "size": stat.st_size,
+                                "mtime": stat.st_mtime,
+                                "media_type": "video" if is_video else "image",
+                                "ext": ext,
+                            })
+                        except Exception as e:
+                            config.logger.debug(f"Skipping media file {file_path}: {e}")
+                            continue
+            except Exception as e:
+                config.logger.debug(f"Failed to walk media dir {media_dir}: {e}")
+                continue
+
+        media_items.sort(key=lambda x: x["mtime"], reverse=True)
+
+        total = len(media_items)
+        start = (page - 1) * page_size
+        end = start + page_size
+        page_items = media_items[start:end]
+
+        return web.json_response({
+            "status": "success",
+            "items": page_items,
+            "total": total,
+            "page": page,
+            "page_size": page_size,
+            "has_more": end < total,
+        })
+    except Exception as e:
+        config.logger.error(f"Failed to list media files: {e}")
+        return web.json_response({"status": "error", "message": str(e)}, status=500)
+
+
+async def get_media_preview(request):
+    """Serve Steam screenshot/video media file for preview.
+
+    GET /api/media/preview?path=/abs/path/to/file
+    """
+    try:
+        media_path = request.query.get("path", "")
+        if not media_path:
+            return web.json_response({"status": "error", "message": "Path is required"}, status=400)
+
+        real_path = os.path.realpath(os.path.abspath(media_path))
+        if not os.path.isfile(real_path):
+            return web.json_response({"status": "error", "message": "File not found"}, status=404)
+
+        ext = os.path.splitext(real_path)[1].lower()
+        if ext not in MEDIA_EXTENSIONS:
+            return web.json_response({"status": "error", "message": "Unsupported media type"}, status=400)
+
+        allowed_dirs = _get_media_scan_dirs()
+        if not _path_in_allowed_dirs(real_path, allowed_dirs):
+            return web.json_response({"status": "error", "message": "Access denied"}, status=403)
+
+        content_type, _ = mimetypes.guess_type(real_path)
+        if not content_type:
+            content_type = "application/octet-stream"
+
+        return web.FileResponse(
+            real_path,
+            headers={
+                "Content-Type": content_type,
+                "Cache-Control": "public, max-age=120",
+            },
+        )
+    except Exception as e:
+        config.logger.error(f"Failed to serve media preview: {e}")
         return web.json_response({"status": "error", "message": str(e)}, status=500)
 
 
