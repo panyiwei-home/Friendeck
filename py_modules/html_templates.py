@@ -2489,6 +2489,7 @@ async def handle_index(request):
             .action-buttons {
                 display: flex;
                 align-items: center;
+<<<<<<< HEAD
                 justify-content: center;
                 gap: 8px;
                 margin: 8px 0;
@@ -2511,12 +2512,31 @@ async def handle_index(request):
             }
             .action-buttons::-webkit-scrollbar-thumb {
                 display: none;
+=======
+                gap: 6px;
+                margin: 10px 0;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(77, 182, 172, 0.55) transparent;
+                padding: 2px 2px 8px 2px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .action-buttons::-webkit-scrollbar {
+                height: 6px;
+            }
+            .action-buttons::-webkit-scrollbar-thumb {
+                background: rgba(77, 182, 172, 0.5);
+                border-radius: 999px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
             }
             .action-buttons button {
                 background: var(--panel-strong);
                 color: var(--text);
                 border: 1px solid var(--border);
                 box-shadow: none;
+<<<<<<< HEAD
                 border-radius: 10px;
                 padding: 0 12px;
                 font-size: 12px;
@@ -2524,6 +2544,12 @@ async def handle_index(request):
                 margin: 0;
                 min-height: 34px;
                 line-height: 1;
+=======
+                padding: 7px 12px;
+                font-size: 12px;
+                margin: 0;
+                min-height: 34px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
                 flex: 0 0 auto;
             }
             .action-buttons button:hover {
@@ -2537,16 +2563,23 @@ async def handle_index(request):
                 color: var(--text);
                 border: 1px solid var(--border);
                 border-radius: 10px;
+<<<<<<< HEAD
                 padding: 0 10px;
+=======
+                padding: 5px 8px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
                 font-size: 11px;
                 white-space: nowrap;
                 flex: 0 0 auto;
                 min-height: 34px;
             }
+<<<<<<< HEAD
             .action-inline-control span {
                 color: var(--muted);
                 font-weight: 600;
             }
+=======
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
             .action-inline-control input[type="checkbox"] {
                 width: 14px;
                 height: 14px;
@@ -2560,8 +2593,12 @@ async def handle_index(request):
                 border-radius: 8px;
                 padding: 3px 6px;
                 font-size: 11px;
+<<<<<<< HEAD
                 min-height: 26px;
                 max-width: 138px;
+=======
+                max-width: 152px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
             }
             .action-buttons,
             .action-buttons * {
@@ -2779,6 +2816,7 @@ async def handle_index(request):
             @media (max-width: 640px) {
                 body {
                     max-width: 100%;
+<<<<<<< HEAD
                     padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px 10px;
                 }
                 .subtitle {
@@ -2793,6 +2831,20 @@ async def handle_index(request):
                 .tab-button {
                     padding: 7px 11px;
                     font-size: 12px;
+=======
+                    padding: 16px;
+                }
+                .subtitle {
+                    display: none;
+                }
+                .tab-buttons {
+                    flex-wrap: wrap;
+                    border-radius: 18px;
+                }
+                .tab-button {
+                    padding: 8px 12px;
+                    font-size: 13px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
                 }
                 .media-grid {
                     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2821,6 +2873,7 @@ async def handle_index(request):
                     gap: 8px;
                 }
                 .action-buttons {
+<<<<<<< HEAD
                     gap: 6px;
                     margin: 6px 0;
                     padding: 4px;
@@ -2829,17 +2882,34 @@ async def handle_index(request):
                     padding: 0 9px;
                     font-size: 11px;
                     min-height: 30px;
+=======
+                    gap: 5px;
+                    margin: 8px 0;
+                    padding: 2px 2px 6px 2px;
+                }
+                .action-buttons button {
+                    padding: 6px 10px;
+                    font-size: 11px;
+                    min-height: 32px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
                 }
                 .action-inline-control {
                     width: auto;
                     justify-content: flex-start;
                     font-size: 10px;
+<<<<<<< HEAD
                     min-height: 30px;
                     gap: 6px;
                     padding: 0 8px;
                 }
                 .action-inline-control select {
                     max-width: 110px;
+=======
+                    min-height: 32px;
+                }
+                .action-inline-control select {
+                    max-width: 130px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
                     font-size: 10px;
                     padding: 2px 5px;
                 }
@@ -3476,7 +3546,10 @@ async def handle_index(request):
                             ensureMediaLoaded();
                         }
                     }
+<<<<<<< HEAD
                     updateTopRailModes();
+=======
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
                 };
                 
                 tabButtons.forEach(button => {
