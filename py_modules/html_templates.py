@@ -539,6 +539,7 @@ def get_file_manager_html():
                     subtitle: '将文件或文本上传到 Steam Deck',
                     tabs: {
                         file: '文件上传',
+                        media: '媒体管理',
                         text: '文本传输',
                         fileManager: '文件管理'
                     },
@@ -553,6 +554,19 @@ def get_file_manager_html():
                         placeholder: '在此输入要传输的文本...',
                         send: '发送文本'
                     },
+                    media: {
+                        refresh: '刷新',
+                        selectAll: '全选',
+                        clearSelection: '取消全选',
+                        downloadLocal: '下载到本地',
+                        selectedSummary: '已选择 {{count}} 项',
+                        empty: '未找到截图或视频',
+                        loading: '加载中...',
+                        noSelection: '请先选择截图或视频',
+                        downloadStarted: '已开始下载 {{count}} 项',
+                        previewUnavailable: '预览不可用',
+                        video: '视频'
+                    },
                     actions: {
                         back: '返回',
                         refresh: '刷新',
@@ -562,7 +576,19 @@ def get_file_manager_html():
                         new: '新建',
                         save: '保存',
                         cancel: '取消',
-                        sdcard: '内存卡'
+                        sdcard: '内存卡',
+                        showHidden: '显示隐藏文件',
+                        sortBy: '排序方式'
+                    },
+                    sort: {
+                        nameAsc: '字母升序',
+                        nameDesc: '字母降序',
+                        mtimeDesc: '修改日期最新',
+                        mtimeAsc: '修改日期最旧',
+                        createdDesc: '创建日期最新',
+                        createdAsc: '创建日期最旧',
+                        sizeDesc: '大小最大',
+                        sizeAsc: '大小最小'
                     },
                     status: {
                         done: '完成',
@@ -617,6 +643,7 @@ def get_file_manager_html():
                     subtitle: 'Upload files or text to Steam Deck',
                     tabs: {
                         file: 'File Upload',
+                        media: 'Media',
                         text: 'Text Transfer',
                         fileManager: 'File Manager'
                     },
@@ -631,6 +658,19 @@ def get_file_manager_html():
                         placeholder: 'Enter text to send...',
                         send: 'Send Text'
                     },
+                    media: {
+                        refresh: 'Refresh',
+                        selectAll: 'Select All',
+                        clearSelection: 'Clear Selection',
+                        downloadLocal: 'Download',
+                        selectedSummary: 'Selected {{count}} item(s)',
+                        empty: 'No screenshots or clips found',
+                        loading: 'Loading...',
+                        noSelection: 'Please select screenshot(s) or clip(s)',
+                        downloadStarted: 'Started download for {{count}} item(s)',
+                        previewUnavailable: 'Preview unavailable',
+                        video: 'VIDEO'
+                    },
                     actions: {
                         back: 'Back',
                         refresh: 'Refresh',
@@ -640,7 +680,19 @@ def get_file_manager_html():
                         new: 'New',
                         save: 'Save',
                         cancel: 'Cancel',
-                        sdcard: 'SD Card'
+                        sdcard: 'SD Card',
+                        showHidden: 'Show hidden files',
+                        sortBy: 'Sort by'
+                    },
+                    sort: {
+                        nameAsc: 'Name A-Z',
+                        nameDesc: 'Name Z-A',
+                        mtimeDesc: 'Modified: newest',
+                        mtimeAsc: 'Modified: oldest',
+                        createdDesc: 'Created: newest',
+                        createdAsc: 'Created: oldest',
+                        sizeDesc: 'Size: largest',
+                        sizeAsc: 'Size: smallest'
                     },
                     status: {
                         done: 'Done',
@@ -738,6 +790,12 @@ def get_file_manager_html():
                         el.setAttribute('placeholder', t(key));
                     }
                 });
+                if (typeof updateMediaSelectionSummary === 'function') {
+                    updateMediaSelectionSummary();
+                }
+                if (typeof refreshMediaActionState === 'function') {
+                    refreshMediaActionState();
+                }
             }
 
             const ALERT_FULL_MAP = {
@@ -2414,17 +2472,68 @@ async def handle_index(request):
             .breadcrumb-item:hover {
                 color: var(--accent);
             }
+            .action-buttons {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin: 10px 0;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(77, 182, 172, 0.55) transparent;
+                padding: 2px 2px 8px 2px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .action-buttons::-webkit-scrollbar {
+                height: 6px;
+            }
+            .action-buttons::-webkit-scrollbar-thumb {
+                background: rgba(77, 182, 172, 0.5);
+                border-radius: 999px;
+            }
             .action-buttons button {
                 background: var(--panel-strong);
                 color: var(--text);
                 border: 1px solid var(--border);
                 box-shadow: none;
-                padding: 8px 14px;
-                font-size: 13px;
+                padding: 7px 12px;
+                font-size: 12px;
                 margin: 0;
+                min-height: 34px;
+                flex: 0 0 auto;
             }
             .action-buttons button:hover {
                 border-color: rgba(77, 182, 172, 0.5);
+            }
+            .action-inline-control {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--panel-strong);
+                color: var(--text);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 5px 8px;
+                font-size: 11px;
+                white-space: nowrap;
+                flex: 0 0 auto;
+                min-height: 34px;
+            }
+            .action-inline-control input[type="checkbox"] {
+                width: 14px;
+                height: 14px;
+                margin: 0;
+                accent-color: var(--accent);
+            }
+            .action-inline-control select {
+                background: var(--bg-elev);
+                color: var(--text);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 3px 6px;
+                font-size: 11px;
+                max-width: 152px;
             }
             .action-buttons,
             .action-buttons * {
@@ -2507,6 +2616,137 @@ async def handle_index(request):
                 margin-top: 14px;
                 flex-wrap: wrap;
             }
+            .media-toolbar {
+                display: flex;
+                gap: 8px;
+                margin: 10px 0 8px 0;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .media-toolbar button {
+                margin: 0;
+                background: var(--panel-strong);
+                color: var(--text);
+                border: 1px solid var(--border);
+                box-shadow: none;
+            }
+            #media-download-btn {
+                background: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
+                color: #0c1416;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                box-shadow: 0 8px 18px rgba(47, 166, 154, 0.25);
+            }
+            .media-summary {
+                text-align: left;
+                font-size: 12px;
+                color: var(--muted);
+                margin: 0 0 10px 0;
+            }
+            .media-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+                text-align: left;
+                max-height: min(62vh, 520px);
+                overflow-y: auto;
+                padding-top: 2px;
+                padding-right: 2px;
+            }
+            .media-card {
+                background: var(--panel);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                cursor: pointer;
+                transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            }
+            .media-card:hover {
+                border-color: rgba(77, 182, 172, 0.6);
+                box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.25);
+            }
+            .media-card.selected {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.35), inset 0 0 0 1px rgba(77, 182, 172, 0.25);
+            }
+            .media-card.queued {
+                border-color: rgba(124, 197, 255, 0.8);
+            }
+            .media-thumb-wrap {
+                position: relative;
+                aspect-ratio: 16 / 10;
+                background: rgba(255, 255, 255, 0.06);
+                overflow: hidden;
+            }
+            .media-thumb {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+                background: rgba(255, 255, 255, 0.04);
+            }
+            .media-thumb.loaded {
+                opacity: 1;
+            }
+            .media-thumb-placeholder {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                color: var(--muted);
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+            }
+            .media-thumb-wrap.loaded .media-thumb-placeholder {
+                display: none;
+            }
+            .media-video-tag {
+                position: absolute;
+                right: 6px;
+                bottom: 6px;
+                font-size: 10px;
+                color: #fff;
+                background: rgba(0, 0, 0, 0.78);
+                border-radius: 999px;
+                padding: 3px 7px;
+                pointer-events: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                line-height: 1;
+            }
+            .media-video-kind {
+                font-weight: 700;
+                letter-spacing: 0.2px;
+            }
+            .media-video-duration {
+                opacity: 0.9;
+            }
+            .media-meta {
+                padding: 8px;
+            }
+            .media-name {
+                font-size: 12px;
+                color: var(--text);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .media-size {
+                font-size: 11px;
+                color: var(--muted);
+                margin-top: 4px;
+            }
+            .media-empty {
+                grid-column: 1 / -1;
+                border: 1px dashed var(--border);
+                border-radius: 10px;
+                padding: 18px;
+                color: var(--muted);
+                text-align: center;
+            }
 
             @media (max-width: 640px) {
                 body {
@@ -2523,6 +2763,9 @@ async def handle_index(request):
                 .tab-button {
                     padding: 8px 12px;
                     font-size: 13px;
+                }
+                .media-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
                 }
                 .upload-area {
                     padding: 26px 18px;
@@ -2547,6 +2790,27 @@ async def handle_index(request):
                     padding: 8px 10px;
                     gap: 8px;
                 }
+                .action-buttons {
+                    gap: 5px;
+                    margin: 8px 0;
+                    padding: 2px 2px 6px 2px;
+                }
+                .action-buttons button {
+                    padding: 6px 10px;
+                    font-size: 11px;
+                    min-height: 32px;
+                }
+                .action-inline-control {
+                    width: auto;
+                    justify-content: flex-start;
+                    font-size: 10px;
+                    min-height: 32px;
+                }
+                .action-inline-control select {
+                    max-width: 130px;
+                    font-size: 10px;
+                    padding: 2px 5px;
+                }
             }
         </style>
     </head>
@@ -2561,6 +2825,7 @@ async def handle_index(request):
                 <button class="tab-button active" data-tab="file" data-i18n="tabs.file">文件上传</button>
                 <button class="tab-button" data-tab="text" data-i18n="tabs.text">文本传输</button>
                 <button class="tab-button" data-tab="file-manager" data-i18n="tabs.fileManager">文件管理</button>
+                <button class="tab-button" data-tab="media" data-i18n="tabs.media">媒体管理</button>
             </div>
             
             <!-- File Upload Tab -->
@@ -2575,6 +2840,17 @@ async def handle_index(request):
                 <div style="margin: 10px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                     <button id="upload-btn" data-i18n="upload.sendFile">发送文件</button>
                 </div>
+            </div>
+
+            <!-- Media Tab -->
+            <div id="media" class="tab-panel">
+                <div class="media-toolbar">
+                    <button id="media-refresh-btn" data-i18n="media.refresh">刷新</button>
+                    <button id="media-select-all-btn" data-i18n="media.selectAll">全选</button>
+                    <button id="media-download-btn" data-i18n="media.downloadLocal">下载到本地</button>
+                </div>
+                <p id="media-summary" class="media-summary" data-i18n="media.selectedSummary">已选择 0 项</p>
+                <div id="media-grid" class="media-grid"></div>
             </div>
             
             <!-- Text Transfer Tab -->
@@ -2611,7 +2887,7 @@ async def handle_index(request):
                     </div>
                     
                     <!-- Action Buttons -->
-            <div class="action-buttons" style="display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap;">
+            <div class="action-buttons">
                 <button id="refresh-btn" data-i18n="actions.refresh" style="margin: 0;">
                     刷新
                 </button>
@@ -2630,6 +2906,23 @@ async def handle_index(request):
                 <button id="copy-btn" data-i18n="menu.copy" style="margin: 0;">
                     复制
                 </button>
+                <label class="action-inline-control" for="show-hidden-toggle">
+                    <input type="checkbox" id="show-hidden-toggle">
+                    <span data-i18n="actions.showHidden">显示隐藏文件</span>
+                </label>
+                <label class="action-inline-control" for="sort-mode-select">
+                    <span data-i18n="actions.sortBy">排序</span>
+                    <select id="sort-mode-select">
+                        <option value="name-asc" data-i18n="sort.nameAsc">字母升序</option>
+                        <option value="name-desc" data-i18n="sort.nameDesc">字母降序</option>
+                        <option value="mtime-desc" data-i18n="sort.mtimeDesc">修改日期最新</option>
+                        <option value="mtime-asc" data-i18n="sort.mtimeAsc">修改日期最旧</option>
+                        <option value="created-desc" data-i18n="sort.createdDesc">创建日期最新</option>
+                        <option value="created-asc" data-i18n="sort.createdAsc">创建日期最旧</option>
+                        <option value="size-desc" data-i18n="sort.sizeDesc">大小最大</option>
+                        <option value="size-asc" data-i18n="sort.sizeAsc">大小最小</option>
+                    </select>
+                </label>
             </div>
                     
                     <!-- File List -->
@@ -2752,6 +3045,7 @@ async def handle_index(request):
                     subtitle: '将文件或文本上传到 Steam Deck',
                     tabs: {
                         file: '文件上传',
+                        media: '媒体管理',
                         text: '文本传输',
                         fileManager: '文件管理'
                     },
@@ -2766,6 +3060,19 @@ async def handle_index(request):
                         placeholder: '在此输入要传输的文本...',
                         send: '发送文本'
                     },
+                    media: {
+                        refresh: '刷新',
+                        selectAll: '全选',
+                        clearSelection: '取消全选',
+                        downloadLocal: '下载到本地',
+                        selectedSummary: '已选择 {{count}} 项',
+                        empty: '未找到截图或视频',
+                        loading: '加载中...',
+                        noSelection: '请先选择截图或视频',
+                        downloadStarted: '已开始下载 {{count}} 项',
+                        video: '视频',
+                        previewUnavailable: '预览不可用'
+                    },
                     actions: {
                         back: '返回',
                         refresh: '刷新',
@@ -2775,7 +3082,19 @@ async def handle_index(request):
                         new: '新建',
                         save: '保存',
                         cancel: '取消',
-                        sdcard: '内存卡'
+                        sdcard: '内存卡',
+                        showHidden: '显示隐藏文件',
+                        sortBy: '排序方式'
+                    },
+                    sort: {
+                        nameAsc: '字母升序',
+                        nameDesc: '字母降序',
+                        mtimeDesc: '修改日期最新',
+                        mtimeAsc: '修改日期最旧',
+                        createdDesc: '创建日期最新',
+                        createdAsc: '创建日期最旧',
+                        sizeDesc: '大小最大',
+                        sizeAsc: '大小最小'
                     },
                     status: {
                         done: '完成',
@@ -2830,6 +3149,7 @@ async def handle_index(request):
                     subtitle: 'Upload files or text to Steam Deck',
                     tabs: {
                         file: 'File Upload',
+                        media: 'Media',
                         text: 'Text Transfer',
                         fileManager: 'File Manager'
                     },
@@ -2844,6 +3164,19 @@ async def handle_index(request):
                         placeholder: 'Enter text to send...',
                         send: 'Send Text'
                     },
+                    media: {
+                        refresh: 'Refresh',
+                        selectAll: 'Select All',
+                        clearSelection: 'Clear Selection',
+                        downloadLocal: 'Download',
+                        selectedSummary: 'Selected {{count}} item(s)',
+                        empty: 'No screenshots or clips found',
+                        loading: 'Loading...',
+                        noSelection: 'Please select screenshot(s) or clip(s)',
+                        downloadStarted: 'Started download for {{count}} item(s)',
+                        video: 'VIDEO',
+                        previewUnavailable: 'Preview unavailable'
+                    },
                     actions: {
                         back: 'Back',
                         refresh: 'Refresh',
@@ -2853,7 +3186,19 @@ async def handle_index(request):
                         new: 'New',
                         save: 'Save',
                         cancel: 'Cancel',
-                        sdcard: 'SD Card'
+                        sdcard: 'SD Card',
+                        showHidden: 'Show hidden files',
+                        sortBy: 'Sort by'
+                    },
+                    sort: {
+                        nameAsc: 'Name A-Z',
+                        nameDesc: 'Name Z-A',
+                        mtimeDesc: 'Modified: newest',
+                        mtimeAsc: 'Modified: oldest',
+                        createdDesc: 'Created: newest',
+                        createdAsc: 'Created: oldest',
+                        sizeDesc: 'Size: largest',
+                        sizeAsc: 'Size: smallest'
                     },
                     status: {
                         done: 'Done',
@@ -3076,6 +3421,10 @@ async def handle_index(request):
                             applyFileManagerLayout();
                             renderFileList(currentPath);
                         }
+                    } else if (targetTab === 'media') {
+                        if (typeof ensureMediaLoaded === 'function') {
+                            ensureMediaLoaded();
+                        }
                     }
                 };
                 
@@ -3138,9 +3487,19 @@ async def handle_index(request):
             const fileInput = document.getElementById('file-input');
             const fileList = document.getElementById('file-list');
             const uploadBtn = document.getElementById('upload-btn');
+            const mediaGrid = document.getElementById('media-grid');
+            const mediaSummary = document.getElementById('media-summary');
+            const mediaRefreshBtn = document.getElementById('media-refresh-btn');
+            const mediaSelectAllBtn = document.getElementById('media-select-all-btn');
+            const mediaDownloadBtn = document.getElementById('media-download-btn');
             
             let selectedFiles = [];
             const folderDisplayMap = new Map();
+            let mediaItems = [];
+            const selectedMediaPaths = new Set();
+            let mediaLoaded = false;
+            let mediaLoading = false;
+            let mediaObserver = null;
             let uploadPromptEnabled = false;
             let defaultUploadDir = '';
             const uploadPathModal = document.getElementById('upload-path-modal');
@@ -3283,7 +3642,18 @@ async def handle_index(request):
             refreshUploadOptions();
 
             function getFileKey(file) {
-                return file._relativePath || file.webkitRelativePath || file.name;
+                if (file._displayKey) return file._displayKey;
+                if (file._relativePath) return file._relativePath;
+                if (file.webkitRelativePath) return file.webkitRelativePath;
+                if (file.name) return file.name;
+                if (!file._fallbackKey) {
+                    try {
+                        file._fallbackKey = `blob_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+                    } catch (e) {
+                        return `blob_${Date.now()}`;
+                    }
+                }
+                return file._fallbackKey;
             }
 
             function getFileRelativePath(file) {
@@ -3297,6 +3667,289 @@ async def handle_index(request):
                 if (parts.length <= 1) return '';
                 return parts[0] || '';
             }
+
+            function formatMediaSize(size) {
+                if (size < 1024) return `${size} B`;
+                if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+                if (size < 1024 * 1024 * 1024) return `${(size / 1024 / 1024).toFixed(1)} MB`;
+                return `${(size / 1024 / 1024 / 1024).toFixed(2)} GB`;
+            }
+
+            function formatVideoDuration(seconds) {
+                const total = Math.max(0, Math.floor(Number(seconds) || 0));
+                const h = Math.floor(total / 3600);
+                const m = Math.floor((total % 3600) / 60);
+                const s = total % 60;
+                if (h > 0) {
+                    return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                }
+                return `${m}:${String(s).padStart(2, '0')}`;
+            }
+
+            function updateMediaSelectionSummary() {
+                if (!mediaSummary) return;
+                mediaSummary.textContent = t('media.selectedSummary', { count: selectedMediaPaths.size });
+            }
+
+            function refreshMediaActionState() {
+                if (mediaSelectAllBtn) {
+                    const hasItems = mediaItems.length > 0;
+                    const allSelected = hasItems && selectedMediaPaths.size === mediaItems.length;
+                    mediaSelectAllBtn.textContent = t(allSelected ? 'media.clearSelection' : 'media.selectAll');
+                    mediaSelectAllBtn.disabled = !hasItems;
+                }
+                if (mediaDownloadBtn) {
+                    mediaDownloadBtn.disabled = selectedMediaPaths.size === 0;
+                }
+                updateMediaSelectionSummary();
+            }
+
+            function createMediaObserver() {
+                if (mediaObserver || !('IntersectionObserver' in window)) {
+                    return mediaObserver;
+                }
+                mediaObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) return;
+                        const el = entry.target;
+                        const src = el.dataset.src;
+                        if (!src || el.dataset.loaded === '1') {
+                            mediaObserver.unobserve(el);
+                            return;
+                        }
+                        el.dataset.loaded = '1';
+                        if (el.tagName === 'VIDEO') {
+                            el.src = src;
+                            el.load();
+                        } else {
+                            el.src = src;
+                        }
+                        mediaObserver.unobserve(el);
+                    });
+                }, {
+                    root: null,
+                    rootMargin: '150px 0px',
+                    threshold: 0.01,
+                });
+                return mediaObserver;
+            }
+
+            function toggleMediaSelection(path) {
+                if (!path) return;
+                if (selectedMediaPaths.has(path)) {
+                    selectedMediaPaths.delete(path);
+                } else {
+                    selectedMediaPaths.add(path);
+                }
+                const card = mediaGrid
+                    ? Array.from(mediaGrid.querySelectorAll('.media-card')).find((el) => el.dataset.path === path)
+                    : null;
+                if (card) {
+                    card.classList.toggle('selected', selectedMediaPaths.has(path));
+                }
+                refreshMediaActionState();
+            }
+
+            function createMediaCard(item) {
+                const card = document.createElement('div');
+                card.className = 'media-card';
+                card.dataset.path = item.path;
+                if (selectedMediaPaths.has(item.path)) {
+                    card.classList.add('selected');
+                }
+
+                const thumbWrap = document.createElement('div');
+                thumbWrap.className = 'media-thumb-wrap';
+
+                const placeholder = document.createElement('div');
+                placeholder.className = 'media-thumb-placeholder';
+                placeholder.textContent = t('media.loading');
+
+                const isVideo = item.media_type === 'video';
+                const thumb = document.createElement(isVideo ? 'video' : 'img');
+                thumb.className = 'media-thumb';
+                thumb.dataset.src = `/api/media/preview?path=${encodeURIComponent(item.path)}`;
+                let videoDuration = null;
+                if (isVideo) {
+                    thumb.muted = true;
+                    thumb.preload = 'metadata';
+                    thumb.playsInline = true;
+                } else {
+                    thumb.alt = item.name || '';
+                    thumb.loading = 'lazy';
+                }
+
+                const onLoaded = () => {
+                    thumb.classList.add('loaded');
+                    thumbWrap.classList.add('loaded');
+                };
+                const onError = () => {
+                    placeholder.textContent = t('media.previewUnavailable');
+                    thumb.classList.remove('loaded');
+                };
+                if (isVideo) {
+                    thumb.addEventListener('loadeddata', onLoaded, { once: true });
+                    thumb.addEventListener('loadedmetadata', () => {
+                        if (!videoDuration) return;
+                        const duration = Number(thumb.duration);
+                        if (Number.isFinite(duration) && duration > 0) {
+                            videoDuration.textContent = formatVideoDuration(duration);
+                        } else {
+                            videoDuration.textContent = '--:--';
+                        }
+                    }, { once: true });
+                } else {
+                    thumb.addEventListener('load', onLoaded, { once: true });
+                }
+                thumb.addEventListener('error', onError, { once: true });
+
+                thumbWrap.appendChild(thumb);
+                thumbWrap.appendChild(placeholder);
+
+                if (isVideo) {
+                    const videoTag = document.createElement('div');
+                    videoTag.className = 'media-video-tag';
+                    const videoKind = document.createElement('span');
+                    videoKind.className = 'media-video-kind';
+                    videoKind.textContent = t('media.video');
+                    videoDuration = document.createElement('span');
+                    videoDuration.className = 'media-video-duration';
+                    videoDuration.textContent = '--:--';
+                    videoTag.appendChild(videoKind);
+                    videoTag.appendChild(videoDuration);
+                    thumbWrap.appendChild(videoTag);
+                }
+
+                const meta = document.createElement('div');
+                meta.className = 'media-meta';
+                const name = document.createElement('div');
+                name.className = 'media-name';
+                name.textContent = item.name || '';
+                name.title = item.name || '';
+                const size = document.createElement('div');
+                size.className = 'media-size';
+                size.textContent = formatMediaSize(item.size || 0);
+                meta.appendChild(name);
+                meta.appendChild(size);
+
+                card.appendChild(thumbWrap);
+                card.appendChild(meta);
+
+                card.addEventListener('click', () => toggleMediaSelection(item.path));
+
+                const observer = createMediaObserver();
+                if (observer) {
+                    observer.observe(thumb);
+                } else {
+                    const src = thumb.dataset.src;
+                    if (src) {
+                        if (isVideo) {
+                            thumb.src = src;
+                            thumb.load();
+                        } else {
+                            thumb.src = src;
+                        }
+                    }
+                }
+
+                return card;
+            }
+
+            function renderMediaGrid() {
+                if (!mediaGrid) return;
+                mediaGrid.innerHTML = '';
+
+                if (!mediaItems.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'media-empty';
+                    empty.textContent = mediaLoading ? t('media.loading') : t('media.empty');
+                    mediaGrid.appendChild(empty);
+                    refreshMediaActionState();
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+                mediaItems.forEach((item) => {
+                    fragment.appendChild(createMediaCard(item));
+                });
+                mediaGrid.appendChild(fragment);
+                refreshMediaActionState();
+            }
+
+            async function loadMediaList(force = false) {
+                if (!mediaGrid) return;
+                if (mediaLoading) return;
+                if (mediaLoaded && !force) return;
+
+                mediaLoading = true;
+                renderMediaGrid();
+                try {
+                    const response = await fetch('/api/media/list?page=1&page_size=500');
+                    const data = await response.json();
+                    if (!response.ok || data.status !== 'success') {
+                        throw new Error(data.message || 'Failed to load media');
+                    }
+                    mediaItems = Array.isArray(data.items) ? data.items : [];
+                    mediaItems.sort((a, b) => Number(b.mtime || 0) - Number(a.mtime || 0));
+                    mediaLoaded = true;
+                    selectedMediaPaths.forEach((path) => {
+                        if (!mediaItems.some((item) => item.path === path)) {
+                            selectedMediaPaths.delete(path);
+                        }
+                    });
+                } catch (error) {
+                    console.error('加载媒体列表失败:', error);
+                    mediaItems = [];
+                    mediaLoaded = true;
+                } finally {
+                    mediaLoading = false;
+                    renderMediaGrid();
+                }
+            }
+
+            async function ensureMediaLoaded() {
+                await loadMediaList(false);
+            }
+
+            function triggerLocalDownload(path) {
+                const anchor = document.createElement('a');
+                anchor.href = `/api/files/download?path=${encodeURIComponent(path)}`;
+                anchor.style.display = 'none';
+                anchor.rel = 'noopener';
+                document.body.appendChild(anchor);
+                anchor.click();
+                document.body.removeChild(anchor);
+            }
+
+            function downloadSelectedMediaToLocal() {
+                const picked = mediaItems.filter((item) => selectedMediaPaths.has(item.path));
+                if (!picked.length) {
+                    alert(t('media.noSelection'));
+                    return;
+                }
+
+                picked.forEach((item) => triggerLocalDownload(item.path));
+                alert(t('media.downloadStarted', { count: picked.length }));
+            }
+
+            if (mediaRefreshBtn) {
+                mediaRefreshBtn.addEventListener('click', () => loadMediaList(true));
+            }
+            if (mediaSelectAllBtn) {
+                mediaSelectAllBtn.addEventListener('click', () => {
+                    const allSelected = mediaItems.length > 0 && selectedMediaPaths.size === mediaItems.length;
+                    if (allSelected) {
+                        selectedMediaPaths.clear();
+                    } else {
+                        mediaItems.forEach((item) => selectedMediaPaths.add(item.path));
+                    }
+                    renderMediaGrid();
+                });
+            }
+            if (mediaDownloadBtn) {
+                mediaDownloadBtn.addEventListener('click', downloadSelectedMediaToLocal);
+            }
+            refreshMediaActionState();
 
 
             async function getFilesFromDataTransfer(dt) {
@@ -3421,7 +4074,7 @@ function addFiles(files, options = {}) {
         // Create file info element
         const fileInfo = document.createElement('span');
         fileInfo.className = 'file-item-info';
-        fileInfo.textContent = `${fileKey} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+        fileInfo.textContent = file._displayName || `${fileKey} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
 
         // Create cancel button
         const cancelBtn = document.createElement('button');
@@ -3463,6 +4116,7 @@ function addFiles(files, options = {}) {
 
         fileList.appendChild(fileItem);
     }
+    refreshMediaActionState();
 }
 
 function cancelFile(file) {
@@ -3479,6 +4133,7 @@ function cancelFile(file) {
                             item.remove();
                         }
                     });
+                    refreshMediaActionState();
                 }
             }
             
@@ -3637,7 +4292,7 @@ function uploadFileSimple(file, chosenPath, fileHash) {
             formData.append('file_hash', fileHash);
             formData.append('hash_algo', HASH_ALGO);
         }
-        formData.append('file', file);
+        formData.append('file', file, file.name || 'upload.bin');
 
         let lastUpdateTime = Date.now();
         let lastUploadedBytes = 0;
@@ -3875,7 +4530,8 @@ uploadBtn.addEventListener('click', async () => {
                 setTimeout(() => {
                     selectedFiles = [];
                     fileList.innerHTML = '';
-                                    folderDisplayMap.clear();
+                    folderDisplayMap.clear();
+                    refreshMediaActionState();
                 }, 2000);
             }, 500);
         } else {
@@ -3926,6 +4582,8 @@ const textInput = document.getElementById('text-input');
             let selectedFileManagerFiles = [];
             let editingFile = null;
             let contextMenuPath = '';
+            let showHiddenFiles = false;
+            let fileSortMode = 'name-asc';
 
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -3942,6 +4600,8 @@ const textInput = document.getElementById('text-input');
             const newBtn = document.getElementById('new-btn');
             const deleteBtn = document.getElementById('delete-btn');
             const sdcardBtn = document.getElementById('sdcard-btn');
+            const showHiddenToggle = document.getElementById('show-hidden-toggle');
+            const sortModeSelect = document.getElementById('sort-mode-select');
             let sdcardPath = '';
             
             // Modal Elements
@@ -3983,6 +4643,20 @@ const textInput = document.getElementById('text-input');
                     if (sdcardPath) {
                         navigateTo(sdcardPath);
                     }
+                });
+            }
+            if (showHiddenToggle) {
+                showHiddenToggle.checked = showHiddenFiles;
+                showHiddenToggle.addEventListener('change', () => {
+                    showHiddenFiles = !!showHiddenToggle.checked;
+                    renderFileList(currentPath);
+                });
+            }
+            if (sortModeSelect) {
+                sortModeSelect.value = fileSortMode;
+                sortModeSelect.addEventListener('change', () => {
+                    fileSortMode = sortModeSelect.value || 'name-asc';
+                    renderFileList(currentPath);
                 });
             }
             
@@ -4796,7 +5470,46 @@ const textInput = document.getElementById('text-input');
             function formatDate(timestamp) {
                 return new Date(timestamp * 1000).toLocaleString();
             }
-            
+
+            function isHiddenFile(file) {
+                const name = String(file?.name || '');
+                return name.startsWith('.');
+            }
+
+            function fileNameCompare(a, b) {
+                return String(a?.name || '').localeCompare(String(b?.name || ''), undefined, {
+                    numeric: true,
+                    sensitivity: 'base',
+                });
+            }
+
+            function getCreatedTime(file) {
+                const value = Number(file?.created_at ?? file?.ctime ?? file?.mtime ?? 0);
+                return Number.isFinite(value) ? value : 0;
+            }
+
+            function getFileSortComparator(mode) {
+                switch (mode) {
+                    case 'name-desc':
+                        return (a, b) => fileNameCompare(b, a);
+                    case 'mtime-desc':
+                        return (a, b) => (Number(b.mtime || 0) - Number(a.mtime || 0)) || fileNameCompare(a, b);
+                    case 'mtime-asc':
+                        return (a, b) => (Number(a.mtime || 0) - Number(b.mtime || 0)) || fileNameCompare(a, b);
+                    case 'created-desc':
+                        return (a, b) => (getCreatedTime(b) - getCreatedTime(a)) || fileNameCompare(a, b);
+                    case 'created-asc':
+                        return (a, b) => (getCreatedTime(a) - getCreatedTime(b)) || fileNameCompare(a, b);
+                    case 'size-desc':
+                        return (a, b) => (Number(b.size || 0) - Number(a.size || 0)) || fileNameCompare(a, b);
+                    case 'size-asc':
+                        return (a, b) => (Number(a.size || 0) - Number(b.size || 0)) || fileNameCompare(a, b);
+                    case 'name-asc':
+                    default:
+                        return (a, b) => fileNameCompare(a, b);
+                }
+            }
+             
             // Get file icon based on file extension
             function getFileIcon(filename, isDir) {
                 if (isDir) {
@@ -4869,6 +5582,7 @@ const textInput = document.getElementById('text-input');
                     const data = await response.json();
                     if (data.status === 'success') {
                         fileManagerList.innerHTML = '';
+                        selectedFileManagerFiles = [];
 
                         const pinnedSet = getPinnedSet(data.current_path);
                         const currentPaths = new Set(data.files.map(item => item.path));
@@ -4883,12 +5597,26 @@ const textInput = document.getElementById('text-input');
                             setPinnedSet(data.current_path, pinnedSet);
                         }
 
-                        const files = data.files.map((file, index) => ({ ...file, __index: index }));
+                        const visibleFiles = data.files
+                            .filter(file => showHiddenFiles || !isHiddenFile(file))
+                            .map((file) => ({ ...file }));
+
+                        const sortComparator = getFileSortComparator(fileSortMode);
+                        const dirs = visibleFiles.filter(file => file.is_dir);
+                        const regularFiles = visibleFiles.filter(file => !file.is_dir);
+                        dirs.sort(sortComparator);
+                        regularFiles.sort(sortComparator);
+
+                        const files = [...dirs, ...regularFiles];
+                        files.forEach((file, index) => {
+                            file.__sort_index = index;
+                        });
+
                         files.sort((a, b) => {
                             const aPinned = pinnedSet.has(a.path);
                             const bPinned = pinnedSet.has(b.path);
                             if (aPinned !== bPinned) return aPinned ? -1 : 1;
-                            return a.__index - b.__index;
+                            return a.__sort_index - b.__sort_index;
                         });
                         
                         files.forEach(file => {

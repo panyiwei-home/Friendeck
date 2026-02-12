@@ -8,6 +8,7 @@
 # - Settings persistence
 
 import os
+import json
 import threading
 import asyncio
 import time
@@ -587,21 +588,95 @@ async def get_server_status(plugin):
 # Settings Management
 # =============================================================================
 
+def _get_settings_store(plugin):
+    """Resolve the preferred settings store exposed by Decky."""
+    plugin_store = getattr(plugin, "settings", None)
+    if plugin_store and hasattr(plugin_store, "getSetting") and hasattr(plugin_store, "setSetting"):
+        return plugin_store, "plugin.settings"
+
+    decky_store = getattr(decky, "settings", None)
+    if decky_store and hasattr(decky_store, "getSetting") and hasattr(decky_store, "setSetting"):
+        return decky_store, "decky.settings"
+
+    return None, "none"
+
+
+def _get_settings_backup_path(plugin):
+    settings_dir = getattr(decky, "DECKY_PLUGIN_SETTINGS_DIR", None)
+    if not settings_dir:
+        settings_dir = getattr(plugin, "decky_send_dir", config.DECKY_SEND_DIR)
+    return os.path.join(settings_dir, "settings.json")
+
+
+def _load_settings_backup(plugin):
+    path = _get_settings_backup_path(plugin)
+    if not os.path.exists(path):
+        return {}
+
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if isinstance(data, dict):
+        return data
+
+    config.logger.warning(f"Ignoring invalid backup settings format at {path}")
+    return {}
+
+
+def _save_settings_backup(plugin, settings):
+    path = _get_settings_backup_path(plugin)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    temp_path = f"{path}.tmp"
+    with open(temp_path, "w", encoding="utf-8") as f:
+        json.dump(settings, f, ensure_ascii=False, indent=2)
+    os.replace(temp_path, path)
+    return path
+
 async def load_settings(plugin):
-    """Load server settings from decky settings
+    """Load server settings from Decky settings, with file backup fallback.
     
     Args:
         plugin: Plugin instance containing server state
     """
     try:
-        # Get all settings
-        settings = decky.settings.getSetting(plugin.SETTINGS_KEY, {})
+        settings = {}
+        store, store_name = _get_settings_store(plugin)
+
+        if store:
+            try:
+                value = store.getSetting(plugin.SETTINGS_KEY, {})
+                if isinstance(value, dict):
+                    settings = value
+                elif value is not None:
+                    config.logger.warning(f"Unexpected settings value type from {store_name}: {type(value)}")
+            except Exception as e:
+                config.logger.error(f"Failed to read settings from {store_name}: {e}")
+        else:
+            config.logger.warning("No Decky settings store available, trying backup file only")
+
+        if not settings:
+            try:
+                settings = _load_settings_backup(plugin)
+                if settings:
+                    config.logger.info("Loaded settings from backup file")
+                    if store:
+                        try:
+                            store.setSetting(plugin.SETTINGS_KEY, settings)
+                            config.logger.info(f"Restored backup settings into {store_name}")
+                        except Exception as restore_error:
+                            config.logger.error(f"Failed to restore backup into {store_name}: {restore_error}")
+            except Exception as backup_error:
+                config.logger.error(f"Failed to load backup settings: {backup_error}")
+                settings = {}
         
         # Load server running state
-        plugin.server_running = settings.get(plugin.SETTING_RUNNING, False)
+        plugin.server_running = bool(settings.get(plugin.SETTING_RUNNING, False))
         
         # Load server port
-        plugin.server_port = settings.get(plugin.SETTING_PORT, config.DEFAULT_SERVER_PORT)
+        try:
+            plugin.server_port = int(settings.get(plugin.SETTING_PORT, config.DEFAULT_SERVER_PORT))
+        except Exception:
+            plugin.server_port = config.DEFAULT_SERVER_PORT
 
         # Load download directory
         downloads_dir = settings.get(plugin.SETTING_DOWNLOAD_DIR, config.DOWNLOADS_DIR)
@@ -636,29 +711,53 @@ async def load_settings(plugin):
 
 
 async def save_settings(plugin):
-    """Save server settings to decky settings
+    """Save server settings to Decky settings and backup file.
     
     Args:
         plugin: Plugin instance containing server state
     """
+    settings = {
+        plugin.SETTING_RUNNING: bool(plugin.server_running),
+        plugin.SETTING_PORT: int(plugin.server_port),
+        plugin.SETTING_DOWNLOAD_DIR: plugin.downloads_dir,
+        plugin.SETTING_AUTO_COPY_TEXT: bool(plugin.auto_copy_text_enabled),
+        plugin.SETTING_PROMPT_UPLOAD_PATH: bool(plugin.prompt_upload_path_enabled),
+        plugin.SETTING_LANGUAGE: getattr(plugin, "language_preference", "auto"),
+    }
+
+    persisted = False
+    store_error = None
+    store, store_name = _get_settings_store(plugin)
+    if store:
+        try:
+            store.setSetting(plugin.SETTINGS_KEY, settings)
+            persisted = True
+        except Exception as e:
+            store_error = f"{store_name} save failed: {e}"
+    else:
+        store_error = "Decky settings store unavailable"
+
+    backup_path = None
+    backup_error = None
     try:
-        # Create settings dictionary
-        settings = {
-            plugin.SETTING_RUNNING: plugin.server_running,
-            plugin.SETTING_PORT: plugin.server_port,
-            plugin.SETTING_DOWNLOAD_DIR: plugin.downloads_dir,
-            plugin.SETTING_AUTO_COPY_TEXT: bool(plugin.auto_copy_text_enabled),
-            plugin.SETTING_PROMPT_UPLOAD_PATH: bool(plugin.prompt_upload_path_enabled),
-            plugin.SETTING_LANGUAGE: getattr(plugin, "language_preference", "auto"),
-        }
-        
-        # Save settings
-        decky.settings.setSetting(plugin.SETTINGS_KEY, settings)
-        
-        config.logger.info(f"Saved settings: {settings}")
-        
+        backup_path = _save_settings_backup(plugin, settings)
+        persisted = True
     except Exception as e:
-        config.logger.error(f"Failed to save settings: {e}")
+        backup_error = f"backup save failed: {e}"
+
+    if not persisted:
+        message = "; ".join([msg for msg in (store_error, backup_error) if msg]) or "unknown settings save failure"
+        config.logger.error(f"Failed to save settings: {message}")
+        raise RuntimeError(message)
+
+    if store_error:
+        config.logger.warning(store_error)
+    if backup_error:
+        config.logger.warning(backup_error)
+
+    config.logger.info(
+        f"Saved settings via {store_name} and backup file {backup_path}: {settings}"
+    )
 
 
 # =============================================================================
@@ -721,6 +820,8 @@ def setup_main_server_routes(app, plugin):
     app.router.add_post('/api/files/unpack', file_operations.unpack_archive)
     app.router.add_post('/api/files/add-to-steam', file_operations.add_file_to_steam)
     app.router.add_get('/api/system/sdcard', file_operations.get_sdcard_info)
+    app.router.add_get('/api/media/list', file_operations.get_media_list)
+    app.router.add_get('/api/media/preview', file_operations.get_media_preview)
     app.router.add_get('/api/settings/language', lambda request: html_templates.handle_language_settings(request, plugin))
     
     # Add OPTIONS handler for CORS preflight
