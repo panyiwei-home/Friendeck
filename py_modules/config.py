@@ -87,7 +87,8 @@ THREAD_SHUTDOWN_TIMEOUT = 5.0
 PORT_RELEASE_TIMEOUT = 5.0
 
 # Watchdog health check interval (seconds)
-WATCHDOG_CHECK_INTERVAL = 3.0
+# Use a longer interval to reduce background wakeups and power use.
+WATCHDOG_CHECK_INTERVAL = 10.0
 
 # Port check retry configuration
 PORT_CHECK_RETRIES = 5

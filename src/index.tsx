@@ -113,32 +113,85 @@ const saveUiSettings = (settings: UiSettings) => {
   window.dispatchEvent(new Event("decky-send-settings-updated"));
 };
 
-// Background toast polling so notifications appear even when UI is closed
-let toastPoller: ReturnType<typeof setInterval> | null = null;
+// Background toast polling so notifications appear even when UI is closed.
+// Use adaptive backoff to reduce wakeups when the queue is usually empty.
+const TOAST_POLL_VISIBLE_MS = 2500;
+const TOAST_POLL_HIDDEN_MS = 15000;
+const TOAST_POLL_MAX_MS = 60000;
+let toastPollTimer: ReturnType<typeof setTimeout> | null = null;
+let toastPollingActive = false;
+let toastPollInFlight = false;
+let toastIdleRounds = 0;
+
+function getToastPollInterval() {
+  const base = document.visibilityState === "hidden" ? TOAST_POLL_HIDDEN_MS : TOAST_POLL_VISIBLE_MS;
+  const backoff = toastIdleRounds >= 6 ? 4 : (toastIdleRounds >= 2 ? 2 : 1);
+  return Math.min(TOAST_POLL_MAX_MS, base * backoff);
+}
+
+function scheduleToastPoll(delayMs: number) {
+  if (!toastPollingActive) return;
+  if (toastPollTimer) {
+    clearTimeout(toastPollTimer);
+  }
+  toastPollTimer = setTimeout(runToastPoll, delayMs);
+}
+
+async function runToastPoll() {
+  if (!toastPollingActive) return;
+  if (toastPollInFlight) {
+    scheduleToastPoll(getToastPollInterval());
+    return;
+  }
+
+  toastPollInFlight = true;
+  try {
+    const response = await getPendingNotifications();
+    const notifications = response.status === "success" ? (response.notifications || []) : [];
+    if (notifications.length > 0) {
+      toastIdleRounds = 0;
+      notifications.forEach((toast) => {
+        toaster.toast({
+          title: toast.title,
+          body: toast.body
+        });
+      });
+    } else {
+      toastIdleRounds += 1;
+    }
+  } catch (error) {
+    toastIdleRounds += 1;
+    console.error("Toast polling failed:", error);
+  } finally {
+    toastPollInFlight = false;
+    scheduleToastPoll(getToastPollInterval());
+  }
+}
+
+function handleToastVisibilityChange() {
+  if (!toastPollingActive) return;
+  if (document.visibilityState === "visible") {
+    toastIdleRounds = 0;
+    scheduleToastPoll(0);
+  }
+}
 
 function startToastPolling() {
-  if (toastPoller) return;
-  toastPoller = setInterval(async () => {
-    try {
-      const response = await getPendingNotifications();
-      if (response.status === "success" && response.notifications && response.notifications.length > 0) {
-        response.notifications.forEach((toast) => {
-          toaster.toast({
-            title: toast.title,
-            body: toast.body
-          });
-        });
-      }
-    } catch (error) {
-      console.error("Toast polling failed:", error);
-    }
-  }, 2500);
+  if (toastPollingActive) return;
+  toastPollingActive = true;
+  toastIdleRounds = 0;
+  document.addEventListener("visibilitychange", handleToastVisibilityChange);
+  scheduleToastPoll(0);
 }
 
 function stopToastPolling() {
-  if (!toastPoller) return;
-  clearInterval(toastPoller);
-  toastPoller = null;
+  toastPollingActive = false;
+  toastPollInFlight = false;
+  document.removeEventListener("visibilitychange", handleToastVisibilityChange);
+  if (toastPollTimer) {
+    clearTimeout(toastPollTimer);
+    toastPollTimer = null;
+  }
 }
 
 // Define types for server and transfer status
@@ -511,39 +564,51 @@ function ContentBody() {
   const checkServerStatus = async () => {
     try {
       const statusResponse = await getServerStatus();
-      const currentStatus = serverStatusRef.current;
-      
+      const running = Boolean(statusResponse.running);
+      const nextPort = statusResponse.port || DEFAULT_PORT;
+      const nextIp = running ? (statusResponse.ip_address || "127.0.0.1") : "";
+      const nextUrl = running ? `http://${nextIp}:${nextPort}` : "";
+
       // Update global cache
-      serverRunningGlobal = statusResponse.running;
-      serverPortGlobal = statusResponse.port || DEFAULT_PORT;
-      
-      // Only update UI if status actually changed
-      if (statusResponse.running !== currentStatus.running) {
-        if (statusResponse.running) {
-          // Server is running, get URL info
-          const ipAddress = statusResponse.ip_address || '127.0.0.1';
-          serverIpGlobal = ipAddress;
-          serverUrlGlobal = `http://${ipAddress}:${statusResponse.port}`;
-          
-          setServerStatus((prev: ServerStatusState) => ({
-            ...prev,
-            running: true,
-            url: serverUrlGlobal,
-            ip_address: ipAddress,
-            port: statusResponse.port || DEFAULT_PORT,
-            loading: false
-          }));
-        } else {
-          // Server stopped
-          serverIpGlobal = '';
-          serverUrlGlobal = '';
-          
-          setServerStatus((prev: ServerStatusState) => ({
-            ...prev,
-            running: false,
-            loading: false
-          }));
+      serverRunningGlobal = running;
+      serverPortGlobal = nextPort;
+      serverIpGlobal = nextIp;
+      serverUrlGlobal = nextUrl;
+
+      setServerStatus((prev: ServerStatusState) => {
+        if (
+          prev.running === running &&
+          prev.port === nextPort &&
+          prev.ip_address === nextIp &&
+          prev.url === nextUrl &&
+          !prev.loading
+        ) {
+          return prev;
         }
+        return {
+          ...prev,
+          running,
+          port: nextPort,
+          ip_address: nextIp,
+          url: nextUrl,
+          loading: false,
+        };
+      });
+
+      if (!running) {
+        setTransferStatus((prev: TransferStatus) => {
+          if (!prev.running && !prev.filename && prev.size === 0 && prev.transferred === 0) {
+            return prev;
+          }
+          return {
+            running: false,
+            filename: "",
+            size: 0,
+            transferred: 0,
+            speed: 0,
+            eta: 0,
+          };
+        });
       }
     } catch (error) {
       console.error('Failed to check server status:', error);
@@ -555,6 +620,44 @@ function ContentBody() {
   
   // Initialize: fetch server status on component mount (runs once)
   useEffect(() => {
+    let disposed = false;
+    let statusPollTimer: ReturnType<typeof setTimeout> | null = null;
+    let statusPollInFlight = false;
+
+    const getStatusPollInterval = () => {
+      const running = serverStatusRef.current.running;
+      if (document.visibilityState === "hidden") {
+        return running ? 8000 : 20000;
+      }
+      return running ? 2000 : 8000;
+    };
+
+    const clearStatusPollTimer = () => {
+      if (statusPollTimer) {
+        clearTimeout(statusPollTimer);
+        statusPollTimer = null;
+      }
+    };
+
+    const scheduleStatusPoll = (delayMs: number) => {
+      if (disposed) return;
+      clearStatusPollTimer();
+      statusPollTimer = setTimeout(async () => {
+        if (disposed) return;
+        if (statusPollInFlight) {
+          scheduleStatusPoll(getStatusPollInterval());
+          return;
+        }
+        statusPollInFlight = true;
+        try {
+          await checkServerStatus();
+        } finally {
+          statusPollInFlight = false;
+          scheduleStatusPoll(getStatusPollInterval());
+        }
+      }, delayMs);
+    };
+
     const syncServerStatus = async () => {
       try {
         // Get current server status from backend
@@ -611,17 +714,23 @@ function ContentBody() {
 
     const handlePortUpdate = () => {
       syncServerStatus();
+      scheduleStatusPoll(1000);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        scheduleStatusPoll(0);
+      }
     };
     window.addEventListener("decky-send-port-updated", handlePortUpdate);
-    
-    // Set up interval to periodically sync server status (every 5 seconds)
-    const statusInterval = setInterval(() => {
-      checkServerStatus();
-    }, 5000);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    scheduleStatusPoll(5000);
     
     return () => {
-      clearInterval(statusInterval);
+      disposed = true;
+      clearStatusPollTimer();
       window.removeEventListener("decky-send-port-updated", handlePortUpdate);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []); // Empty dependency array - only run on mount
   
@@ -1399,7 +1508,7 @@ export default definePlugin(() => {
 
   return {
     // The name shown in various decky menus
-    name: "Decky-send",
+    name: "Friendeck",
     // The content of your plugin's menu
     content: <Content />,
     alwaysRender: true,

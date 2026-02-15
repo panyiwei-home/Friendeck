@@ -172,7 +172,7 @@ class Plugin:
         # This pattern is used by ToMoon and other stable Decky plugins.
         decky.logger.info("decky-send plugin entering keep-alive loop")
         while True:
-            await asyncio.sleep(1)
+            await asyncio.sleep(60)
     
     async def _unload(self):
         """Plugin unload handler with complete resource cleanup"""

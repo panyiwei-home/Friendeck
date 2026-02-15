@@ -12,6 +12,7 @@ import os
 import time
 import asyncio
 import hashlib
+import subprocess
 from aiohttp import web
 
 # Import decky for logging and event emission
@@ -84,8 +85,43 @@ def get_file_manager_html():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>decky-send 文件管理器</title>
+        <title>Friendeck 文件管理器</title>
         <style>
+            :root {
+                --md-sys-color-primary: #8fd8cc;
+                --md-sys-color-on-primary: #00201d;
+                --md-sys-color-primary-container: #244b45;
+                --md-sys-color-on-primary-container: #b2f2e7;
+                --md-sys-color-surface: #111418;
+                --md-sys-color-surface-container: #171c21;
+                --md-sys-color-surface-container-high: #1d2329;
+                --md-sys-color-surface-container-highest: #262d35;
+                --md-sys-color-on-surface: #e2e8ef;
+                --md-sys-color-on-surface-variant: #bac4cf;
+                --md-sys-color-outline: #3f4752;
+                --md-sys-color-error: #ffb4ab;
+                --md-sys-color-error-container: #5b201d;
+                --md-shape-small: 8px;
+                --md-shape-medium: 12px;
+                --md-shape-large: 16px;
+                --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.25);
+                --md-elevation-2: 0 8px 18px rgba(0, 0, 0, 0.3);
+                --md-typescale-title-large-size: 1.375rem;
+                --md-typescale-title-large-line-height: 1.75rem;
+                --md-typescale-title-large-weight: 650;
+                --md-typescale-body-medium-size: 0.875rem;
+                --md-typescale-body-medium-line-height: 1.25rem;
+                --md-typescale-label-large-size: 0.875rem;
+                --md-typescale-label-large-line-height: 1.25rem;
+                --md-typescale-label-large-weight: 600;
+                --md-space-1: 5px;
+                --md-space-2: 8px;
+                --md-space-3: 10px;
+                --md-space-4: 12px;
+                --md-space-5: 16px;
+                --md-space-6: 20px;
+                --md-motion-duration-short: 180ms;
+            }
             * {
                 box-sizing: border-box;
                 margin: 0;
@@ -93,9 +129,10 @@ def get_file_manager_html():
             }
             
             html, body {
-                font-family: Arial, sans-serif;
-                background-color: #121212;
-                color: white;
+                font-family: "Plus Jakarta Sans", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+                background-color: var(--md-sys-color-surface);
+                background-image: linear-gradient(180deg, #111418 0%, #131920 55%, #141b22 100%);
+                color: var(--md-sys-color-on-surface);
                 height: 100%;
                 overflow: hidden;
             }
@@ -103,25 +140,32 @@ def get_file_manager_html():
             body {
                 display: flex;
                 flex-direction: column;
-                padding: 10px;
+                padding: var(--md-space-3);
+                line-height: var(--md-typescale-body-medium-line-height);
             }
             h1 {
-                color: #1b73e8;
+                color: var(--md-sys-color-on-surface);
                 text-align: center;
+                font-size: var(--md-typescale-title-large-size);
+                line-height: var(--md-typescale-title-large-line-height);
+                font-weight: var(--md-typescale-title-large-weight);
             }
             
             /* Breadcrumb Navigation */
             .breadcrumb {
-                margin: 10px 0;
-                padding: 8px 12px;
-                background-color: rgba(255, 255, 255, 0.1);
-                border-radius: 6px;
+                margin: var(--md-space-3) 0;
+                padding: var(--md-space-2) var(--md-space-4);
+                background-color: var(--md-sys-color-surface-container);
+                border: 1px solid var(--md-sys-color-outline);
+                border-radius: var(--md-shape-medium);
                 overflow-x: auto;
+                box-shadow: var(--md-elevation-1);
             }
             .breadcrumb-item {
-                margin-right: 8px;
+                margin-right: var(--md-space-2);
                 cursor: pointer;
-                color: #1b73e8;
+                color: var(--md-sys-color-primary);
+                font-size: var(--md-typescale-body-medium-size);
             }
             .breadcrumb,
             .breadcrumb * {
@@ -133,18 +177,22 @@ def get_file_manager_html():
             /* Action Buttons */
             .action-buttons {
                 display: flex;
-                gap: 8px;
-                margin: 10px 0;
+                gap: var(--md-space-2);
+                margin: var(--md-space-3) 0;
                 flex-wrap: wrap;
             }
             .action-buttons button {
-                padding: 8px 16px;
-                background-color: #1b73e8;
-                color: white;
-                border: none;
-                border-radius: 4px;
+                padding: var(--md-space-2) var(--md-space-5);
+                background-color: var(--md-sys-color-primary-container);
+                color: var(--md-sys-color-on-primary-container);
+                border: 1px solid transparent;
+                border-radius: var(--md-shape-medium);
                 cursor: pointer;
-                font-size: 14px;
+                font-size: var(--md-typescale-label-large-size);
+                line-height: var(--md-typescale-label-large-line-height);
+                font-weight: var(--md-typescale-label-large-weight);
+                box-shadow: var(--md-elevation-1);
+                transition: background-color var(--md-motion-duration-short) ease, border-color var(--md-motion-duration-short) ease, filter var(--md-motion-duration-short) ease;
             }
             .action-buttons,
             .action-buttons * {
@@ -153,37 +201,41 @@ def get_file_manager_html():
                 -ms-user-select: none;
             }
             .action-buttons button:hover {
-                background-color: #1557b0;
+                filter: brightness(1.08);
+                border-color: rgba(143, 216, 204, 0.45);
             }
             #new-file-btn, #new-dir-btn {
-                background-color: #34a853;
+                background-color: var(--md-sys-color-primary);
+                color: var(--md-sys-color-on-primary);
             }
             #new-file-btn:hover, #new-dir-btn:hover {
-                background-color: #2d884d;
+                filter: brightness(1.04);
             }
             #delete-btn {
-                background-color: #ea4335;
+                background-color: var(--md-sys-color-error-container);
+                color: var(--md-sys-color-error);
             }
             #delete-btn:hover {
-                background-color: #d93025;
+                filter: brightness(1.06);
             }
             
             /* File List */
             .file-list-container {
-                border: 1px solid #333;
-                border-radius: 6px;
-                padding: 10px;
+                border: 1px solid var(--md-sys-color-outline);
+                border-radius: var(--md-shape-large);
+                padding: var(--md-space-3);
                 flex: 1 1 auto;
                 overflow: auto;
-                background-color: rgba(255, 255, 255, 0.05);
+                background-color: var(--md-sys-color-surface-container);
                 min-height: 0; /* Prevent overflow in flex container */
                 display: flex;
+                box-shadow: var(--md-elevation-1);
             }
             .file-grid {
                 display: flex;
                 flex-wrap: wrap;
                 align-content: flex-start;
-                gap: 12px;
+                gap: var(--md-space-4);
                 width: 100%;
             }
             .file-grid.list-mode {
@@ -196,7 +248,7 @@ def get_file_manager_html():
                 flex-direction: row;
                 align-items: center;
                 justify-content: flex-start;
-                gap: 10px;
+                gap: var(--md-space-3);
                 min-height: 56px;
             }
             .file-grid.list-mode .file-icon {
@@ -240,7 +292,7 @@ def get_file_manager_html():
                 flex-direction: row;
                 align-items: center;
                 justify-content: flex-start;
-                gap: 10px;
+                gap: var(--md-space-3);
                 min-height: 56px;
             }
             .file-grid.list-mode .file-icon {
@@ -265,9 +317,9 @@ def get_file_manager_html():
                 display: none;
             }
             .file-item {
-                border: 1px solid #333;
-                border-radius: 6px;
-                padding: 10px;
+                border: 1px solid var(--md-sys-color-outline);
+                border-radius: var(--md-shape-medium);
+                padding: var(--md-space-3);
                 cursor: pointer;
                 transition: all 0.2s ease;
                 display: flex;
@@ -275,10 +327,12 @@ def get_file_manager_html():
                 align-items: center;
                 min-height: 100px;
                 justify-content: center;
-                gap: 5px;
+                gap: var(--md-space-1);
                 flex: 1 1 120px;
                 max-width: 200px;
                 -webkit-touch-callout: none;
+                background-color: var(--md-sys-color-surface-container-high);
+                box-shadow: var(--md-elevation-1);
             }
             .file-item,
             .file-item * {
@@ -287,8 +341,12 @@ def get_file_manager_html():
                 -ms-user-select: none;
             }
             .file-item:hover {
-                background-color: rgba(27, 115, 232, 0.2);
-                border-color: #1b73e8;
+                background-color: var(--md-sys-color-surface-container-highest);
+                border-color: var(--md-sys-color-primary);
+            }
+            .file-item.selected {
+                background-color: rgba(143, 216, 204, 0.16);
+                border-color: var(--md-sys-color-primary);
             }
             
             /* Modal Styles */
@@ -300,34 +358,42 @@ def get_file_manager_html():
                 top: 0;
                 width: 100%;
                 height: 100%;
-                background-color: rgba(0, 0, 0, 0.7);
-                padding: 20px;
+                background-color: rgba(8, 10, 13, 0.62);
+                backdrop-filter: blur(6px);
+                padding: var(--md-space-6);
             }
             .modal-content {
-                background-color: #121212;
-                border-radius: 10px;
-                padding: 20px;
+                background-color: var(--md-sys-color-surface-container-high);
+                border: 1px solid var(--md-sys-color-outline);
+                border-radius: var(--md-shape-large);
+                padding: var(--md-space-6);
                 max-width: 800px;
                 margin: 50px auto;
                 max-height: 80vh;
                 overflow-y: auto;
+                box-shadow: var(--md-elevation-2);
             }
             .modal-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 15px;
+                margin-bottom: var(--md-space-5);
             }
             .modal-header h3 {
                 margin: 0;
-                color: #1b73e8;
+                color: var(--md-sys-color-on-surface);
+                font-size: var(--md-typescale-title-large-size);
+                line-height: var(--md-typescale-title-large-line-height);
             }
             .modal-header button {
                 background: none;
-                border: none;
-                color: white;
+                border: 1px solid transparent;
+                color: var(--md-sys-color-on-surface-variant);
                 font-size: 20px;
                 cursor: pointer;
+                border-radius: 999px;
+                width: 34px;
+                height: 34px;
             }
             .unpack-progress-bar {
                 width: 100%;
@@ -340,12 +406,12 @@ def get_file_manager_html():
             .unpack-progress-fill {
                 height: 100%;
                 width: 0%;
-                background: #1b73e8;
+                background: var(--md-sys-color-primary);
                 transition: width 0.2s ease;
             }
             .unpack-progress-text {
                 font-size: 12px;
-                color: #bdbdbd;
+                color: var(--md-sys-color-on-surface-variant);
                 margin-top: 8px;
                 text-align: right;
             }
@@ -383,12 +449,12 @@ def get_file_manager_html():
             textarea {
                 width: 100%;
                 height: 300px;
-                padding: 10px;
-                border: 1px solid #333;
-                border-radius: 6px;
-                background-color: rgba(255, 255, 255, 0.1);
-                color: white;
-                font-size: 14px;
+                padding: var(--md-space-3);
+                border: 1px solid var(--md-sys-color-outline);
+                border-radius: var(--md-shape-medium);
+                background-color: var(--md-sys-color-surface-container);
+                color: var(--md-sys-color-on-surface);
+                font-size: var(--md-typescale-body-medium-size);
                 resize: vertical;
                 font-family: monospace;
             }
@@ -396,36 +462,47 @@ def get_file_manager_html():
             /* Input */
             input[type="text"] {
                 width: 100%;
-                padding: 10px;
-                border: 1px solid #333;
-                border-radius: 6px;
-                background-color: rgba(255, 255, 255, 0.1);
-                color: white;
-                font-size: 14px;
-                margin-bottom: 15px;
+                padding: var(--md-space-3);
+                border: 1px solid var(--md-sys-color-outline);
+                border-radius: var(--md-shape-medium);
+                background-color: var(--md-sys-color-surface-container);
+                color: var(--md-sys-color-on-surface);
+                font-size: var(--md-typescale-body-medium-size);
+                margin-bottom: var(--md-space-5);
             }
             
             /* Context Menu */
             .context-menu {
                 position: fixed;
-                background-color: #121212;
-                border: 1px solid #333;
-                border-radius: 6px;
-                padding: 5px 0;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+                background-color: var(--md-sys-color-surface-container-high);
+                border: 1px solid var(--md-sys-color-outline);
+                border-radius: var(--md-shape-medium);
+                padding: var(--md-space-1) 0;
+                box-shadow: var(--md-elevation-2);
                 z-index: 10000;
                 display: none;
                 min-width: 150px;
             }
             .context-menu-item {
-                padding: 8px 12px;
+                padding: var(--md-space-2) var(--md-space-4);
                 cursor: pointer;
-                font-size: 14px;
-                color: white;
-                transition: background-color 0.2s;
+                font-size: var(--md-typescale-body-medium-size);
+                color: var(--md-sys-color-on-surface);
+                transition: background-color var(--md-motion-duration-short);
             }
             .context-menu-item:hover {
-                background-color: rgba(27, 115, 232, 0.2);
+                background-color: rgba(143, 216, 204, 0.16);
+            }
+            button:focus-visible,
+            input:focus-visible,
+            textarea:focus-visible {
+                outline: 2px solid var(--md-sys-color-primary);
+                outline-offset: 2px;
+            }
+            #sdcard-btn {
+                background-color: var(--md-sys-color-primary) !important;
+                color: var(--md-sys-color-on-primary) !important;
+                border: 1px solid transparent !important;
             }
         </style>
     </head>
@@ -435,7 +512,7 @@ def get_file_manager_html():
             <div class="breadcrumb" id="breadcrumb" style="flex: 1; overflow-x: auto; white-space: nowrap;">
                 <span class="breadcrumb-item" data-path="" data-i18n="breadcrumb.home">主页</span>
             </div>
-            <button id="sdcard-btn" data-i18n="actions.sdcard" style="padding: 6px 12px; background-color: #1b73e8; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; margin: 0; display: none; white-space: nowrap;">
+            <button id="sdcard-btn" data-i18n="actions.sdcard" style="padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; margin: 0; display: none; white-space: nowrap;">
                 内存卡
             </button>
         </div>
@@ -501,7 +578,7 @@ def get_file_manager_html():
                     <h3 data-i18n="modal.unpackTitle">正在解压</h3>
                     <button id="unpack-close" style="visibility: hidden;">×</button>
                 </div>
-                <div id="unpack-filename" style="font-size: 13px; color: #bdbdbd;"></div>
+                <div id="unpack-filename" style="font-size: 13px; color: var(--md-sys-color-on-surface-variant);"></div>
                 <div class="unpack-progress-bar">
                     <div id="unpack-progress-fill" class="unpack-progress-fill"></div>
                 </div>
@@ -516,7 +593,7 @@ def get_file_manager_html():
                     <h3 id="fileop-title" data-i18n="modal.fileOpCopy">正在复制</h3>
                     <button id="fileop-close" style="visibility: hidden;">×</button>
                 </div>
-                <div id="fileop-filename" style="font-size: 13px; color: #bdbdbd;"></div>
+                <div id="fileop-filename" style="font-size: 13px; color: var(--md-sys-color-on-surface-variant);"></div>
                 <div class="unpack-progress-bar">
                     <div id="fileop-progress-fill" class="unpack-progress-fill"></div>
                 </div>
@@ -533,12 +610,13 @@ def get_file_manager_html():
             const I18N = {
                 'zh-CN': {
                     title: {
-                        fileManager: 'decky-send 文件管理器',
-                        upload: 'decky-send 文件上传'
+                        fileManager: 'Friendeck 文件管理器',
+                        upload: 'Friendeck 文件上传'
                     },
                     subtitle: '将文件或文本上传到 Steam Deck',
                     tabs: {
                         file: '文件上传',
+                        media: '媒体管理',
                         text: '文本传输',
                         fileManager: '文件管理'
                     },
@@ -553,6 +631,19 @@ def get_file_manager_html():
                         placeholder: '在此输入要传输的文本...',
                         send: '发送文本'
                     },
+                    media: {
+                        refresh: '刷新',
+                        selectAll: '全选',
+                        clearSelection: '取消全选',
+                        downloadLocal: '下载到本地',
+                        selectedSummary: '已选择 {{count}} 项',
+                        empty: '未找到截图或视频',
+                        loading: '加载中...',
+                        noSelection: '请先选择截图或视频',
+                        downloadStarted: '已开始下载 {{count}} 项',
+                        previewUnavailable: '预览不可用',
+                        video: '视频'
+                    },
                     actions: {
                         back: '返回',
                         refresh: '刷新',
@@ -562,7 +653,19 @@ def get_file_manager_html():
                         new: '新建',
                         save: '保存',
                         cancel: '取消',
-                        sdcard: '内存卡'
+                        sdcard: '内存卡',
+                        showHidden: '显示隐藏文件',
+                        sortBy: '排序方式'
+                    },
+                    sort: {
+                        nameAsc: '字母升序',
+                        nameDesc: '字母降序',
+                        mtimeDesc: '修改日期最新',
+                        mtimeAsc: '修改日期最旧',
+                        createdDesc: '创建日期最新',
+                        createdAsc: '创建日期最旧',
+                        sizeDesc: '大小最大',
+                        sizeAsc: '大小最小'
                     },
                     status: {
                         done: '完成',
@@ -611,12 +714,13 @@ def get_file_manager_html():
                 },
                 'en-US': {
                     title: {
-                        fileManager: 'decky-send File Manager',
-                        upload: 'decky-send File Transfer'
+                        fileManager: 'Friendeck File Manager',
+                        upload: 'Friendeck File Transfer'
                     },
                     subtitle: 'Upload files or text to Steam Deck',
                     tabs: {
                         file: 'File Upload',
+                        media: 'Media',
                         text: 'Text Transfer',
                         fileManager: 'File Manager'
                     },
@@ -631,6 +735,19 @@ def get_file_manager_html():
                         placeholder: 'Enter text to send...',
                         send: 'Send Text'
                     },
+                    media: {
+                        refresh: 'Refresh',
+                        selectAll: 'Select All',
+                        clearSelection: 'Clear Selection',
+                        downloadLocal: 'Download',
+                        selectedSummary: 'Selected {{count}} item(s)',
+                        empty: 'No screenshots or clips found',
+                        loading: 'Loading...',
+                        noSelection: 'Please select screenshot(s) or clip(s)',
+                        downloadStarted: 'Started download for {{count}} item(s)',
+                        previewUnavailable: 'Preview unavailable',
+                        video: 'VIDEO'
+                    },
                     actions: {
                         back: 'Back',
                         refresh: 'Refresh',
@@ -640,7 +757,19 @@ def get_file_manager_html():
                         new: 'New',
                         save: 'Save',
                         cancel: 'Cancel',
-                        sdcard: 'SD Card'
+                        sdcard: 'SD Card',
+                        showHidden: 'Show hidden files',
+                        sortBy: 'Sort by'
+                    },
+                    sort: {
+                        nameAsc: 'Name A-Z',
+                        nameDesc: 'Name Z-A',
+                        mtimeDesc: 'Modified: newest',
+                        mtimeAsc: 'Modified: oldest',
+                        createdDesc: 'Created: newest',
+                        createdAsc: 'Created: oldest',
+                        sizeDesc: 'Size: largest',
+                        sizeAsc: 'Size: smallest'
                     },
                     status: {
                         done: 'Done',
@@ -738,6 +867,12 @@ def get_file_manager_html():
                         el.setAttribute('placeholder', t(key));
                     }
                 });
+                if (typeof updateMediaSelectionSummary === 'function') {
+                    updateMediaSelectionSummary();
+                }
+                if (typeof refreshMediaActionState === 'function') {
+                    refreshMediaActionState();
+                }
             }
 
             const ALERT_FULL_MAP = {
@@ -779,6 +914,8 @@ def get_file_manager_html():
                 '文本传输出错': 'Text transfer error',
                 '解压完成': 'Extraction complete',
                 '解压出错': 'Extraction error',
+                '粘贴失败: 部分项目失败': 'Paste failed: some items failed',
+                '剪切失败: 部分项目失败': 'Move failed: some items failed',
                 '请先选择一个文件或文件夹': 'Please select a file or folder'
             };
 
@@ -2101,21 +2238,42 @@ async def handle_index(request):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>decky-send 文件上传</title>
+        <title>Friendeck 文件上传</title>
         <style>
             :root {
-                --bg: #0f1216;
-                --bg-elev: #141a20;
-                --panel: rgba(255, 255, 255, 0.06);
-                --panel-strong: rgba(255, 255, 255, 0.12);
-                --border: rgba(255, 255, 255, 0.12);
-                --text: #e7edf3;
-                --muted: #9aa6b2;
-                --accent: #4db6ac;
-                --accent-strong: #2fa69a;
-                --accent-soft: rgba(77, 182, 172, 0.18);
-                --danger: #ff6b6b;
-                --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+                --bg: #0f1419;
+                --bg-elev: #151b22;
+                --panel: #1a2027;
+                --panel-strong: #212934;
+                --border: #3e4856;
+                --text: #e4e9f1;
+                --muted: #b7c1cd;
+                --accent: #8fd8cc;
+                --accent-strong: #74c2b5;
+                --accent-soft: rgba(143, 216, 204, 0.18);
+                --on-accent: #00211d;
+                --danger: #ffb4ab;
+                --danger-container: #5f211d;
+                --shape-small: 8px;
+                --shape-medium: 12px;
+                --shape-large: 16px;
+                --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.25);
+                --shadow-raised: 0 8px 18px rgba(0, 0, 0, 0.3);
+                --type-title-large-size: 1.375rem;
+                --type-title-large-line-height: 1.75rem;
+                --type-title-large-weight: 650;
+                --type-body-medium-size: 0.875rem;
+                --type-body-medium-line-height: 1.25rem;
+                --type-label-large-size: 0.875rem;
+                --type-label-large-line-height: 1.25rem;
+                --type-label-large-weight: 600;
+                --space-1: 5px;
+                --space-2: 8px;
+                --space-3: 10px;
+                --space-4: 12px;
+                --space-5: 16px;
+                --space-6: 20px;
+                --motion-short: 180ms;
             }
             * {
                 box-sizing: border-box;
@@ -2124,9 +2282,9 @@ async def handle_index(request):
                 height: 100%;
                 background-color: var(--bg);
                 background-image:
-                    radial-gradient(900px 500px at 20% -10%, rgba(77, 182, 172, 0.16), transparent 60%),
-                    radial-gradient(800px 400px at 120% 20%, rgba(94, 156, 255, 0.12), transparent 60%),
-                    linear-gradient(180deg, #0f1216 0%, #10161b 100%);
+                    radial-gradient(900px 460px at 12% -10%, rgba(143, 216, 204, 0.12), transparent 60%),
+                    radial-gradient(700px 320px at 118% 16%, rgba(126, 157, 217, 0.09), transparent 62%),
+                    linear-gradient(180deg, #0f1419 0%, #111821 100%);
                 background-repeat: no-repeat;
                 background-attachment: fixed;
                 background-size: cover;
@@ -2136,14 +2294,15 @@ async def handle_index(request):
                 overflow: hidden;
             }
             body {
-                font-family: "IBM Plex Sans", "Noto Sans", "Ubuntu", "Segoe UI", sans-serif;
-                max-width: 600px;
+                font-family: "Plus Jakarta Sans", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+                max-width: min(960px, 100%);
                 margin: 0 auto;
-                padding: 24px;
+                padding: calc(env(safe-area-inset-top, 0px) + 18px) 16px 16px;
                 text-align: center;
                 background: transparent;
                 color: var(--text);
                 min-height: 100vh;
+                line-height: var(--type-body-medium-line-height);
             }
             body::after {
                 content: "";
@@ -2162,13 +2321,16 @@ async def handle_index(request):
             }
             h1 {
                 color: var(--text);
-                font-weight: 700;
-                letter-spacing: 0.5px;
-                margin-bottom: 6px;
+                font-size: var(--type-title-large-size);
+                line-height: var(--type-title-large-line-height);
+                font-weight: var(--type-title-large-weight);
+                letter-spacing: 0.2px;
+                margin: 0 0 6px;
             }
             p {
                 color: var(--muted);
                 margin-top: 0;
+                font-size: var(--type-body-medium-size);
             }
             .subtitle {
                 margin-bottom: 0;
@@ -2176,18 +2338,30 @@ async def handle_index(request):
             
             /* Tab styles */
             .tab-container {
-                margin: 20px 0;
+                margin: var(--space-4) 0;
             }
             .tab-buttons {
                 display: flex;
                 justify-content: center;
-                gap: 6px;
-                margin-bottom: 18px;
-                padding: 6px;
+                gap: var(--space-1);
+                margin-bottom: var(--space-4);
+                padding: var(--space-1);
                 background: var(--panel);
                 border: 1px solid var(--border);
-                border-radius: 999px;
+                border-radius: var(--shape-large);
                 box-shadow: var(--shadow);
+                overflow-x: hidden;
+                overflow-y: hidden;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .tab-buttons.is-scrollable {
+                justify-content: flex-start;
+                overflow-x: auto;
+            }
+            .tab-buttons::-webkit-scrollbar {
+                display: none;
             }
             .tab-buttons,
             .tab-buttons * {
@@ -2199,22 +2373,26 @@ async def handle_index(request):
                 background: transparent;
                 border: 1px solid transparent;
                 color: var(--muted);
-                padding: 10px 16px;
-                font-size: 14px;
+                padding: var(--space-3) var(--space-5);
+                font-size: var(--type-label-large-size);
+                line-height: var(--type-label-large-line-height);
                 cursor: pointer;
-                transition: all 0.2s ease;
+                transition: all var(--motion-short) ease;
                 border-radius: 999px;
                 margin: 0;
+                flex: 0 0 auto;
+                white-space: nowrap;
+                font-weight: var(--type-label-large-weight);
             }
             .tab-button.active {
-                color: var(--text);
-                background: var(--accent-soft);
-                border-color: rgba(77, 182, 172, 0.45);
-                box-shadow: inset 0 0 0 1px rgba(77, 182, 172, 0.15);
+                color: var(--on-accent);
+                background: var(--accent);
+                border-color: transparent;
+                box-shadow: var(--shadow);
             }
             .tab-button:hover {
                 color: var(--text);
-                background-color: rgba(255, 255, 255, 0.06);
+                background-color: rgba(143, 216, 204, 0.12);
             }
             
             .tab-panel {
@@ -2231,43 +2409,45 @@ async def handle_index(request):
             
             .upload-area {
                 border: 1.5px dashed var(--border);
-                border-radius: 16px;
+                border-radius: var(--shape-large);
                 padding: 36px;
                 margin: 18px 0;
                 cursor: pointer;
                 background: var(--panel);
                 box-shadow: var(--shadow);
-                transition: all 0.25s ease;
+                transition: all var(--motion-short) ease;
             }
             .upload-area:hover {
-                border-color: rgba(77, 182, 172, 0.6);
-                background-color: rgba(77, 182, 172, 0.08);
+                border-color: rgba(143, 216, 204, 0.58);
+                background-color: rgba(143, 216, 204, 0.08);
             }
             .upload-area.dragover {
-                background-color: rgba(77, 182, 172, 0.16);
+                background-color: rgba(143, 216, 204, 0.16);
                 border-color: var(--accent);
             }
             #file-input {
                 display: none;
             }
             button {
-                background: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
-                color: #0c1416;
-                border: 1px solid rgba(0, 0, 0, 0.1);
-                padding: 11px 20px;
-                border-radius: 10px;
+                background: var(--accent);
+                color: var(--on-accent);
+                border: 1px solid transparent;
+                padding: calc(var(--space-2) + 3px) var(--space-6);
+                border-radius: var(--shape-medium);
                 cursor: pointer;
-                font-size: 14px;
+                font-size: var(--type-label-large-size);
+                line-height: var(--type-label-large-line-height);
+                font-weight: var(--type-label-large-weight);
                 margin: 8px;
-                box-shadow: 0 8px 18px rgba(47, 166, 154, 0.25);
-                transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+                box-shadow: var(--shadow);
+                transition: background-color var(--motion-short) ease, box-shadow var(--motion-short) ease, filter var(--motion-short) ease, border-color var(--motion-short) ease;
             }
             button:hover {
-                filter: brightness(1.05);
-                box-shadow: 0 10px 24px rgba(47, 166, 154, 0.3);
+                filter: brightness(1.04);
+                box-shadow: var(--shadow-raised);
             }
             button:active {
-                transform: translateY(1px);
+                filter: brightness(0.98);
             }
             button:disabled {
                 opacity: 0.6;
@@ -2277,12 +2457,19 @@ async def handle_index(request):
             textarea,
             input[type="text"] {
                 width: 100%;
-                padding: 12px;
+                padding: var(--space-4);
                 border: 1px solid var(--border);
-                border-radius: 10px;
+                border-radius: var(--shape-medium);
                 background-color: var(--panel);
                 color: var(--text);
-                font-size: 14px;
+                font-size: var(--type-body-medium-size);
+            }
+            button:focus-visible,
+            input:focus-visible,
+            textarea:focus-visible,
+            select:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
             }
             .file-list {
                 margin: 18px 0;
@@ -2321,13 +2508,14 @@ async def handle_index(request):
             .file-item {
                 background-color: var(--panel);
                 border: 1px solid var(--border);
-                padding: 10px;
-                margin: 6px 0;
-                border-radius: 10px;
+                padding: var(--space-3);
+                margin: var(--space-1) 0;
+                border-radius: var(--shape-medium);
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
+                gap: var(--space-2);
                 -webkit-touch-callout: none;
+                box-shadow: var(--shadow);
             }
             .file-item,
             .file-item * {
@@ -2372,20 +2560,20 @@ async def handle_index(request):
             .file-progress-text {
                 display: flex;
                 justify-content: space-between;
-                font-size: 11px;
+                font-size: 0.75rem;
                 color: var(--muted);
             }
             .file-progress-text .speed {
                 color: var(--accent);
             }
             .cancel-btn {
-                background-color: var(--danger);
-                color: #1a0b0b;
-                border: 1px solid rgba(0, 0, 0, 0.1);
-                padding: 5px 10px;
-                border-radius: 8px;
+                background-color: var(--danger-container);
+                color: var(--danger);
+                border: 1px solid transparent;
+                padding: var(--space-1) var(--space-3);
+                border-radius: var(--shape-small);
                 cursor: pointer;
-                font-size: 12px;
+                font-size: 0.75rem;
                 margin: 0;
                 transition: filter 0.2s ease;
                 flex-shrink: 0;
@@ -2397,7 +2585,8 @@ async def handle_index(request):
             .breadcrumb-bar {
                 background: var(--panel);
                 border: 1px solid var(--border);
-                border-radius: 12px;
+                border-radius: var(--shape-medium);
+                box-shadow: var(--shadow);
             }
             .breadcrumb-bar,
             .breadcrumb-bar * {
@@ -2414,17 +2603,84 @@ async def handle_index(request):
             .breadcrumb-item:hover {
                 color: var(--accent);
             }
+            .action-buttons {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-1);
+                margin: 6px 0;
+                flex-wrap: nowrap;
+                overflow-x: hidden;
+                overflow-y: hidden;
+                scrollbar-width: none;
+                padding: 3px 4px;
+                -webkit-overflow-scrolling: touch;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: var(--shape-medium);
+                background: var(--panel);
+                box-shadow: var(--shadow);
+            }
+            .action-buttons.is-scrollable {
+                justify-content: flex-start;
+                overflow-x: auto;
+            }
+            .action-buttons::-webkit-scrollbar {
+                display: none;
+            }
+            .action-buttons::-webkit-scrollbar-thumb {
+                display: none;
+            }
             .action-buttons button {
                 background: var(--panel-strong);
                 color: var(--text);
                 border: 1px solid var(--border);
                 box-shadow: none;
-                padding: 8px 14px;
-                font-size: 13px;
+                border-radius: var(--shape-medium);
+                padding: 0 10px;
+                font-size: 0.75rem;
+                font-weight: var(--type-label-large-weight);
                 margin: 0;
+                min-height: 32px;
+                line-height: 1;
+                flex: 0 0 auto;
             }
             .action-buttons button:hover {
-                border-color: rgba(77, 182, 172, 0.5);
+                border-color: rgba(143, 216, 204, 0.55);
+                background: rgba(143, 216, 204, 0.12);
+            }
+            .action-inline-control {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: var(--panel-strong);
+                color: var(--text);
+                border: 1px solid var(--border);
+                border-radius: var(--shape-medium);
+                padding: 0 10px;
+                font-size: 0.75rem;
+                white-space: nowrap;
+                flex: 0 0 auto;
+                min-height: 32px;
+            }
+            .action-inline-control span {
+                color: var(--muted);
+                font-weight: 600;
+            }
+            .action-inline-control input[type="checkbox"] {
+                width: 13px;
+                height: 13px;
+                margin: 0;
+                accent-color: var(--accent);
+            }
+            .action-inline-control select {
+                background: var(--bg-elev);
+                color: var(--text);
+                border: 1px solid var(--border);
+                border-radius: var(--shape-small);
+                padding: 2px var(--space-2);
+                font-size: 0.75rem;
+                min-height: 24px;
+                max-width: 130px;
             }
             .action-buttons,
             .action-buttons * {
@@ -2434,8 +2690,9 @@ async def handle_index(request):
             }
             .file-list-container {
                 border: 1px solid var(--border);
-                border-radius: 12px;
+                border-radius: var(--shape-large);
                 background-color: var(--panel);
+                box-shadow: var(--shadow);
             }
             #sdcard-btn {
                 background: var(--panel-strong);
@@ -2449,8 +2706,8 @@ async def handle_index(request):
             .modal-content {
                 background-color: var(--bg-elev);
                 border: 1px solid var(--border);
-                box-shadow: var(--shadow);
-                border-radius: 14px;
+                box-shadow: var(--shadow-raised);
+                border-radius: var(--shape-large);
             }
             .unpack-progress-bar {
                 width: 100%;
@@ -2473,56 +2730,192 @@ async def handle_index(request):
                 text-align: right;
             }
             .upload-path-current {
-                font-size: 12px;
+                font-size: var(--type-body-medium-size);
                 color: var(--muted);
-                margin-bottom: 10px;
+                margin-bottom: var(--space-3);
                 word-break: break-all;
             }
             .upload-path-list {
                 border: 1px solid var(--border);
-                border-radius: 10px;
+                border-radius: var(--shape-medium);
                 background: var(--panel);
                 max-height: 260px;
                 overflow-y: auto;
-                padding: 6px;
+                padding: var(--space-1);
                 text-align: left;
             }
             .upload-path-item {
-                padding: 8px 10px;
-                border-radius: 8px;
+                padding: var(--space-2) var(--space-3);
+                border-radius: var(--shape-small);
                 cursor: pointer;
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: var(--space-2);
                 color: var(--text);
-                transition: background-color 0.15s ease;
+                transition: background-color var(--motion-short) ease;
             }
             .upload-path-item:hover {
-                background: rgba(77, 182, 172, 0.12);
+                background: rgba(143, 216, 204, 0.14);
             }
             .upload-path-actions {
                 display: flex;
-                gap: 10px;
+                gap: var(--space-3);
                 justify-content: flex-end;
-                margin-top: 14px;
+                margin-top: var(--space-4);
                 flex-wrap: wrap;
+            }
+            .media-toolbar {
+                display: flex;
+                gap: var(--space-2);
+                margin: var(--space-3) 0 var(--space-2) 0;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .media-toolbar button {
+                margin: 0;
+                background: var(--panel-strong);
+                color: var(--text);
+                border: 1px solid var(--border);
+                box-shadow: none;
+            }
+            #media-download-btn {
+                background: var(--accent);
+                color: var(--on-accent);
+                border: 1px solid transparent;
+                box-shadow: var(--shadow);
+            }
+            .media-summary {
+                text-align: left;
+                font-size: var(--type-body-medium-size);
+                color: var(--muted);
+                margin: 0 0 var(--space-3) 0;
+            }
+            .media-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: var(--space-3);
+                text-align: left;
+                max-height: min(62vh, 520px);
+                overflow-y: auto;
+                padding-top: 2px;
+                padding-right: 2px;
+            }
+            .media-card {
+                background: var(--panel);
+                border: 1px solid var(--border);
+                border-radius: var(--shape-medium);
+                overflow: hidden;
+                cursor: pointer;
+                transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            }
+            .media-card:hover {
+                border-color: rgba(143, 216, 204, 0.6);
+                box-shadow: 0 0 0 1px rgba(143, 216, 204, 0.28);
+            }
+            .media-card.selected {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 1px rgba(143, 216, 204, 0.35), inset 0 0 0 1px rgba(143, 216, 204, 0.25);
+            }
+            .media-card.queued {
+                border-color: rgba(124, 197, 255, 0.8);
+            }
+            .media-thumb-wrap {
+                position: relative;
+                aspect-ratio: 16 / 10;
+                background: rgba(255, 255, 255, 0.06);
+                overflow: hidden;
+            }
+            .media-thumb {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+                background: rgba(255, 255, 255, 0.04);
+            }
+            .media-thumb.loaded {
+                opacity: 1;
+            }
+            .media-thumb-placeholder {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                color: var(--muted);
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+            }
+            .media-thumb-wrap.loaded .media-thumb-placeholder {
+                display: none;
+            }
+            .media-video-tag {
+                position: absolute;
+                right: 6px;
+                bottom: 6px;
+                font-size: 10px;
+                color: #fff;
+                background: rgba(0, 0, 0, 0.78);
+                border-radius: 999px;
+                padding: 3px 7px;
+                pointer-events: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                line-height: 1;
+            }
+            .media-video-kind {
+                font-weight: 700;
+                letter-spacing: 0.2px;
+            }
+            .media-video-duration {
+                opacity: 0.9;
+            }
+            .media-meta {
+                padding: 8px;
+            }
+            .media-name {
+                font-size: 12px;
+                color: var(--text);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .media-size {
+                font-size: 11px;
+                color: var(--muted);
+                margin-top: 4px;
+            }
+            .media-empty {
+                grid-column: 1 / -1;
+                border: 1px dashed var(--border);
+                border-radius: 10px;
+                padding: 18px;
+                color: var(--muted);
+                text-align: center;
             }
 
             @media (max-width: 640px) {
                 body {
                     max-width: 100%;
-                    padding: 16px;
+                    padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px 10px;
                 }
                 .subtitle {
                     display: none;
                 }
                 .tab-buttons {
-                    flex-wrap: wrap;
-                    border-radius: 18px;
+                    border-radius: 12px;
+                    gap: 5px;
+                    margin-bottom: 8px;
+                    padding: 5px;
                 }
                 .tab-button {
-                    padding: 8px 12px;
-                    font-size: 13px;
+                    padding: 7px 11px;
+                    font-size: 12px;
+                }
+                .media-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
                 }
                 .upload-area {
                     padding: 26px 18px;
@@ -2547,11 +2940,34 @@ async def handle_index(request):
                     padding: 8px 10px;
                     gap: 8px;
                 }
+                .action-buttons {
+                    gap: 5px;
+                    margin: 5px 0;
+                    padding: 3px;
+                }
+                .action-buttons button {
+                    padding: 0 8px;
+                    font-size: 11px;
+                    min-height: 30px;
+                }
+                .action-inline-control {
+                    width: auto;
+                    justify-content: flex-start;
+                    font-size: 10px;
+                    min-height: 30px;
+                    gap: 5px;
+                    padding: 0 7px;
+                }
+                .action-inline-control select {
+                    max-width: 104px;
+                    font-size: 10px;
+                    padding: 1px 4px;
+                }
             }
         </style>
     </head>
     <body>
-        <h1>decky-send</h1>
+        <h1>Friendeck</h1>
         <p class="subtitle" data-i18n="subtitle">将文件或文本上传到 Steam Deck</p>
         
         <!-- Tab Container -->
@@ -2561,6 +2977,7 @@ async def handle_index(request):
                 <button class="tab-button active" data-tab="file" data-i18n="tabs.file">文件上传</button>
                 <button class="tab-button" data-tab="text" data-i18n="tabs.text">文本传输</button>
                 <button class="tab-button" data-tab="file-manager" data-i18n="tabs.fileManager">文件管理</button>
+                <button class="tab-button" data-tab="media" data-i18n="tabs.media">媒体管理</button>
             </div>
             
             <!-- File Upload Tab -->
@@ -2575,6 +2992,17 @@ async def handle_index(request):
                 <div style="margin: 10px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                     <button id="upload-btn" data-i18n="upload.sendFile">发送文件</button>
                 </div>
+            </div>
+
+            <!-- Media Tab -->
+            <div id="media" class="tab-panel">
+                <div class="media-toolbar">
+                    <button id="media-refresh-btn" data-i18n="media.refresh">刷新</button>
+                    <button id="media-select-all-btn" data-i18n="media.selectAll">全选</button>
+                    <button id="media-download-btn" data-i18n="media.downloadLocal">下载到本地</button>
+                </div>
+                <p id="media-summary" class="media-summary" data-i18n="media.selectedSummary">已选择 0 项</p>
+                <div id="media-grid" class="media-grid"></div>
             </div>
             
             <!-- Text Transfer Tab -->
@@ -2598,9 +3026,9 @@ async def handle_index(request):
             <!-- File Manager Tab -->
             <div id="file-manager" class="tab-panel">
                 <!-- File Manager UI -->
-                <div id="file-manager-wrap" style="margin: 15px 0; display: flex; flex-direction: column; height: 100%; min-height: 0;">
+                <div id="file-manager-wrap" style="margin: 8px 0 0; display: flex; flex-direction: column; height: 100%; min-height: 0;">
                     <!-- Breadcrumb Navigation -->
-                    <div class="breadcrumb-bar" style="margin: 10px 0; padding: 8px 12px; display: flex; align-items: center; gap: 8px;">
+                    <div class="breadcrumb-bar" style="margin: 6px 0; padding: 6px 10px; display: flex; align-items: center; gap: 8px;">
                         <button id="back-btn" data-i18n="actions.back" style="margin: 0; padding: 6px 10px; font-size: 12px;">
                             返回
                         </button>
@@ -2611,7 +3039,7 @@ async def handle_index(request):
                     </div>
                     
                     <!-- Action Buttons -->
-            <div class="action-buttons" style="display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap;">
+            <div class="action-buttons">
                 <button id="refresh-btn" data-i18n="actions.refresh" style="margin: 0;">
                     刷新
                 </button>
@@ -2630,10 +3058,27 @@ async def handle_index(request):
                 <button id="copy-btn" data-i18n="menu.copy" style="margin: 0;">
                     复制
                 </button>
+                <label class="action-inline-control" for="show-hidden-toggle">
+                    <input type="checkbox" id="show-hidden-toggle">
+                    <span data-i18n="actions.showHidden">显示隐藏文件</span>
+                </label>
+                <label class="action-inline-control" for="sort-mode-select">
+                    <span data-i18n="actions.sortBy">排序</span>
+                    <select id="sort-mode-select">
+                        <option value="name-asc" data-i18n="sort.nameAsc">字母升序</option>
+                        <option value="name-desc" data-i18n="sort.nameDesc">字母降序</option>
+                        <option value="mtime-desc" data-i18n="sort.mtimeDesc">修改日期最新</option>
+                        <option value="mtime-asc" data-i18n="sort.mtimeAsc">修改日期最旧</option>
+                        <option value="created-desc" data-i18n="sort.createdDesc">创建日期最新</option>
+                        <option value="created-asc" data-i18n="sort.createdAsc">创建日期最旧</option>
+                        <option value="size-desc" data-i18n="sort.sizeDesc">大小最大</option>
+                        <option value="size-asc" data-i18n="sort.sizeAsc">大小最小</option>
+                    </select>
+                </label>
             </div>
                     
                     <!-- File List -->
-                    <div class="file-list-container" style="padding: 10px; flex: 1 1 auto; overflow: auto; min-height: 0; display: flex;">
+                    <div class="file-list-container" style="padding: 8px; flex: 1 1 auto; overflow: auto; min-height: 0; display: flex;">
                         <div id="file-manager-list" class="file-grid" style="display: flex; flex-wrap: wrap; align-content: flex-start; gap: 12px; width: 100%;"></div>
                     </div>
                 </div>
@@ -2746,12 +3191,13 @@ async def handle_index(request):
             const I18N = {
                 'zh-CN': {
                     title: {
-                        fileManager: 'decky-send 文件管理器',
-                        upload: 'decky-send 文件上传'
+                        fileManager: 'Friendeck 文件管理器',
+                        upload: 'Friendeck 文件上传'
                     },
                     subtitle: '将文件或文本上传到 Steam Deck',
                     tabs: {
                         file: '文件上传',
+                        media: '媒体管理',
                         text: '文本传输',
                         fileManager: '文件管理'
                     },
@@ -2766,6 +3212,19 @@ async def handle_index(request):
                         placeholder: '在此输入要传输的文本...',
                         send: '发送文本'
                     },
+                    media: {
+                        refresh: '刷新',
+                        selectAll: '全选',
+                        clearSelection: '取消全选',
+                        downloadLocal: '下载到本地',
+                        selectedSummary: '已选择 {{count}} 项',
+                        empty: '未找到截图或视频',
+                        loading: '加载中...',
+                        noSelection: '请先选择截图或视频',
+                        downloadStarted: '已开始下载 {{count}} 项',
+                        video: '视频',
+                        previewUnavailable: '预览不可用'
+                    },
                     actions: {
                         back: '返回',
                         refresh: '刷新',
@@ -2775,7 +3234,19 @@ async def handle_index(request):
                         new: '新建',
                         save: '保存',
                         cancel: '取消',
-                        sdcard: '内存卡'
+                        sdcard: '内存卡',
+                        showHidden: '显示隐藏文件',
+                        sortBy: '排序方式'
+                    },
+                    sort: {
+                        nameAsc: '字母升序',
+                        nameDesc: '字母降序',
+                        mtimeDesc: '修改日期最新',
+                        mtimeAsc: '修改日期最旧',
+                        createdDesc: '创建日期最新',
+                        createdAsc: '创建日期最旧',
+                        sizeDesc: '大小最大',
+                        sizeAsc: '大小最小'
                     },
                     status: {
                         done: '完成',
@@ -2824,12 +3295,13 @@ async def handle_index(request):
                 },
                 'en-US': {
                     title: {
-                        fileManager: 'decky-send File Manager',
-                        upload: 'decky-send File Transfer'
+                        fileManager: 'Friendeck File Manager',
+                        upload: 'Friendeck File Transfer'
                     },
                     subtitle: 'Upload files or text to Steam Deck',
                     tabs: {
                         file: 'File Upload',
+                        media: 'Media',
                         text: 'Text Transfer',
                         fileManager: 'File Manager'
                     },
@@ -2844,6 +3316,19 @@ async def handle_index(request):
                         placeholder: 'Enter text to send...',
                         send: 'Send Text'
                     },
+                    media: {
+                        refresh: 'Refresh',
+                        selectAll: 'Select All',
+                        clearSelection: 'Clear Selection',
+                        downloadLocal: 'Download',
+                        selectedSummary: 'Selected {{count}} item(s)',
+                        empty: 'No screenshots or clips found',
+                        loading: 'Loading...',
+                        noSelection: 'Please select screenshot(s) or clip(s)',
+                        downloadStarted: 'Started download for {{count}} item(s)',
+                        video: 'VIDEO',
+                        previewUnavailable: 'Preview unavailable'
+                    },
                     actions: {
                         back: 'Back',
                         refresh: 'Refresh',
@@ -2853,7 +3338,19 @@ async def handle_index(request):
                         new: 'New',
                         save: 'Save',
                         cancel: 'Cancel',
-                        sdcard: 'SD Card'
+                        sdcard: 'SD Card',
+                        showHidden: 'Show hidden files',
+                        sortBy: 'Sort by'
+                    },
+                    sort: {
+                        nameAsc: 'Name A-Z',
+                        nameDesc: 'Name Z-A',
+                        mtimeDesc: 'Modified: newest',
+                        mtimeAsc: 'Modified: oldest',
+                        createdDesc: 'Created: newest',
+                        createdAsc: 'Created: oldest',
+                        sizeDesc: 'Size: largest',
+                        sizeAsc: 'Size: smallest'
                     },
                     status: {
                         done: 'Done',
@@ -2992,6 +3489,8 @@ async def handle_index(request):
                 '文本传输出错': 'Text transfer error',
                 '解压完成': 'Extraction complete',
                 '解压出错': 'Extraction error',
+                '粘贴失败: 部分项目失败': 'Paste failed: some items failed',
+                '剪切失败: 部分项目失败': 'Move failed: some items failed',
                 '请先选择一个文件或文件夹': 'Please select a file or folder'
             };
 
@@ -3049,6 +3548,24 @@ async def handle_index(request):
                 // Tab functionality
                 const tabButtons = document.querySelectorAll('.tab-button');
                 const tabPanels = document.querySelectorAll('.tab-panel');
+                const tabButtonRail = document.querySelector('.tab-buttons');
+                const actionButtonRail = document.querySelector('#file-manager .action-buttons');
+
+                const updateHorizontalRailMode = (rail) => {
+                    if (!rail) return;
+                    requestAnimationFrame(() => {
+                        const canFullyShow = rail.scrollWidth <= (rail.clientWidth + 2);
+                        rail.classList.toggle('is-scrollable', !canFullyShow);
+                        if (canFullyShow && rail.scrollLeft !== 0) {
+                            rail.scrollLeft = 0;
+                        }
+                    });
+                };
+
+                const updateTopRailModes = () => {
+                    updateHorizontalRailMode(tabButtonRail);
+                    updateHorizontalRailMode(actionButtonRail);
+                };
                 
                 const activateTab = (targetTab) => {
                     if (!targetTab) return;
@@ -3076,7 +3593,12 @@ async def handle_index(request):
                             applyFileManagerLayout();
                             renderFileList(currentPath);
                         }
+                    } else if (targetTab === 'media') {
+                        if (typeof ensureMediaLoaded === 'function') {
+                            ensureMediaLoaded();
+                        }
                     }
+                    updateTopRailModes();
                 };
                 
                 tabButtons.forEach(button => {
@@ -3127,20 +3649,43 @@ async def handle_index(request):
                 window.addEventListener('drop', handleFileDrag, true);
 
                 window.addEventListener('resize', () => {
+                    updateTopRailModes();
                     const panel = document.getElementById('file-manager');
                     if (panel && panel.classList.contains('active')) {
                         resizeFileManagerPanel();
                     }
                 });
+
+                if (actionButtonRail && typeof MutationObserver !== 'undefined') {
+                    const actionRailObserver = new MutationObserver(() => updateTopRailModes());
+                    actionRailObserver.observe(actionButtonRail, {
+                        attributes: true,
+                        childList: true,
+                        subtree: true,
+                        attributeFilter: ['style', 'class']
+                    });
+                }
+                updateTopRailModes();
+                setTimeout(updateTopRailModes, 80);
             
             // 文件上传功能
             const uploadArea = document.getElementById('upload-area');
             const fileInput = document.getElementById('file-input');
             const fileList = document.getElementById('file-list');
             const uploadBtn = document.getElementById('upload-btn');
+            const mediaGrid = document.getElementById('media-grid');
+            const mediaSummary = document.getElementById('media-summary');
+            const mediaRefreshBtn = document.getElementById('media-refresh-btn');
+            const mediaSelectAllBtn = document.getElementById('media-select-all-btn');
+            const mediaDownloadBtn = document.getElementById('media-download-btn');
             
             let selectedFiles = [];
             const folderDisplayMap = new Map();
+            let mediaItems = [];
+            const selectedMediaPaths = new Set();
+            let mediaLoaded = false;
+            let mediaLoading = false;
+            let mediaObserver = null;
             let uploadPromptEnabled = false;
             let defaultUploadDir = '';
             const uploadPathModal = document.getElementById('upload-path-modal');
@@ -3283,7 +3828,18 @@ async def handle_index(request):
             refreshUploadOptions();
 
             function getFileKey(file) {
-                return file._relativePath || file.webkitRelativePath || file.name;
+                if (file._displayKey) return file._displayKey;
+                if (file._relativePath) return file._relativePath;
+                if (file.webkitRelativePath) return file.webkitRelativePath;
+                if (file.name) return file.name;
+                if (!file._fallbackKey) {
+                    try {
+                        file._fallbackKey = `blob_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+                    } catch (e) {
+                        return `blob_${Date.now()}`;
+                    }
+                }
+                return file._fallbackKey;
             }
 
             function getFileRelativePath(file) {
@@ -3297,6 +3853,289 @@ async def handle_index(request):
                 if (parts.length <= 1) return '';
                 return parts[0] || '';
             }
+
+            function formatMediaSize(size) {
+                if (size < 1024) return `${size} B`;
+                if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+                if (size < 1024 * 1024 * 1024) return `${(size / 1024 / 1024).toFixed(1)} MB`;
+                return `${(size / 1024 / 1024 / 1024).toFixed(2)} GB`;
+            }
+
+            function formatVideoDuration(seconds) {
+                const total = Math.max(0, Math.floor(Number(seconds) || 0));
+                const h = Math.floor(total / 3600);
+                const m = Math.floor((total % 3600) / 60);
+                const s = total % 60;
+                if (h > 0) {
+                    return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                }
+                return `${m}:${String(s).padStart(2, '0')}`;
+            }
+
+            function updateMediaSelectionSummary() {
+                if (!mediaSummary) return;
+                mediaSummary.textContent = t('media.selectedSummary', { count: selectedMediaPaths.size });
+            }
+
+            function refreshMediaActionState() {
+                if (mediaSelectAllBtn) {
+                    const hasItems = mediaItems.length > 0;
+                    const allSelected = hasItems && selectedMediaPaths.size === mediaItems.length;
+                    mediaSelectAllBtn.textContent = t(allSelected ? 'media.clearSelection' : 'media.selectAll');
+                    mediaSelectAllBtn.disabled = !hasItems;
+                }
+                if (mediaDownloadBtn) {
+                    mediaDownloadBtn.disabled = selectedMediaPaths.size === 0;
+                }
+                updateMediaSelectionSummary();
+            }
+
+            function createMediaObserver() {
+                if (mediaObserver || !('IntersectionObserver' in window)) {
+                    return mediaObserver;
+                }
+                mediaObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) return;
+                        const el = entry.target;
+                        const src = el.dataset.src;
+                        if (!src || el.dataset.loaded === '1') {
+                            mediaObserver.unobserve(el);
+                            return;
+                        }
+                        el.dataset.loaded = '1';
+                        if (el.tagName === 'VIDEO') {
+                            el.src = src;
+                            el.load();
+                        } else {
+                            el.src = src;
+                        }
+                        mediaObserver.unobserve(el);
+                    });
+                }, {
+                    root: null,
+                    rootMargin: '150px 0px',
+                    threshold: 0.01,
+                });
+                return mediaObserver;
+            }
+
+            function toggleMediaSelection(path) {
+                if (!path) return;
+                if (selectedMediaPaths.has(path)) {
+                    selectedMediaPaths.delete(path);
+                } else {
+                    selectedMediaPaths.add(path);
+                }
+                const card = mediaGrid
+                    ? Array.from(mediaGrid.querySelectorAll('.media-card')).find((el) => el.dataset.path === path)
+                    : null;
+                if (card) {
+                    card.classList.toggle('selected', selectedMediaPaths.has(path));
+                }
+                refreshMediaActionState();
+            }
+
+            function createMediaCard(item) {
+                const card = document.createElement('div');
+                card.className = 'media-card';
+                card.dataset.path = item.path;
+                if (selectedMediaPaths.has(item.path)) {
+                    card.classList.add('selected');
+                }
+
+                const thumbWrap = document.createElement('div');
+                thumbWrap.className = 'media-thumb-wrap';
+
+                const placeholder = document.createElement('div');
+                placeholder.className = 'media-thumb-placeholder';
+                placeholder.textContent = t('media.loading');
+
+                const isVideo = item.media_type === 'video';
+                const thumb = document.createElement(isVideo ? 'video' : 'img');
+                thumb.className = 'media-thumb';
+                thumb.dataset.src = `/api/media/preview?path=${encodeURIComponent(item.path)}`;
+                let videoDuration = null;
+                if (isVideo) {
+                    thumb.muted = true;
+                    thumb.preload = 'metadata';
+                    thumb.playsInline = true;
+                } else {
+                    thumb.alt = item.name || '';
+                    thumb.loading = 'lazy';
+                }
+
+                const onLoaded = () => {
+                    thumb.classList.add('loaded');
+                    thumbWrap.classList.add('loaded');
+                };
+                const onError = () => {
+                    placeholder.textContent = t('media.previewUnavailable');
+                    thumb.classList.remove('loaded');
+                };
+                if (isVideo) {
+                    thumb.addEventListener('loadeddata', onLoaded, { once: true });
+                    thumb.addEventListener('loadedmetadata', () => {
+                        if (!videoDuration) return;
+                        const duration = Number(thumb.duration);
+                        if (Number.isFinite(duration) && duration > 0) {
+                            videoDuration.textContent = formatVideoDuration(duration);
+                        } else {
+                            videoDuration.textContent = '--:--';
+                        }
+                    }, { once: true });
+                } else {
+                    thumb.addEventListener('load', onLoaded, { once: true });
+                }
+                thumb.addEventListener('error', onError, { once: true });
+
+                thumbWrap.appendChild(thumb);
+                thumbWrap.appendChild(placeholder);
+
+                if (isVideo) {
+                    const videoTag = document.createElement('div');
+                    videoTag.className = 'media-video-tag';
+                    const videoKind = document.createElement('span');
+                    videoKind.className = 'media-video-kind';
+                    videoKind.textContent = t('media.video');
+                    videoDuration = document.createElement('span');
+                    videoDuration.className = 'media-video-duration';
+                    videoDuration.textContent = '--:--';
+                    videoTag.appendChild(videoKind);
+                    videoTag.appendChild(videoDuration);
+                    thumbWrap.appendChild(videoTag);
+                }
+
+                const meta = document.createElement('div');
+                meta.className = 'media-meta';
+                const name = document.createElement('div');
+                name.className = 'media-name';
+                name.textContent = item.name || '';
+                name.title = item.name || '';
+                const size = document.createElement('div');
+                size.className = 'media-size';
+                size.textContent = formatMediaSize(item.size || 0);
+                meta.appendChild(name);
+                meta.appendChild(size);
+
+                card.appendChild(thumbWrap);
+                card.appendChild(meta);
+
+                card.addEventListener('click', () => toggleMediaSelection(item.path));
+
+                const observer = createMediaObserver();
+                if (observer) {
+                    observer.observe(thumb);
+                } else {
+                    const src = thumb.dataset.src;
+                    if (src) {
+                        if (isVideo) {
+                            thumb.src = src;
+                            thumb.load();
+                        } else {
+                            thumb.src = src;
+                        }
+                    }
+                }
+
+                return card;
+            }
+
+            function renderMediaGrid() {
+                if (!mediaGrid) return;
+                mediaGrid.innerHTML = '';
+
+                if (!mediaItems.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'media-empty';
+                    empty.textContent = mediaLoading ? t('media.loading') : t('media.empty');
+                    mediaGrid.appendChild(empty);
+                    refreshMediaActionState();
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+                mediaItems.forEach((item) => {
+                    fragment.appendChild(createMediaCard(item));
+                });
+                mediaGrid.appendChild(fragment);
+                refreshMediaActionState();
+            }
+
+            async function loadMediaList(force = false) {
+                if (!mediaGrid) return;
+                if (mediaLoading) return;
+                if (mediaLoaded && !force) return;
+
+                mediaLoading = true;
+                renderMediaGrid();
+                try {
+                    const response = await fetch('/api/media/list?page=1&page_size=500');
+                    const data = await response.json();
+                    if (!response.ok || data.status !== 'success') {
+                        throw new Error(data.message || 'Failed to load media');
+                    }
+                    mediaItems = Array.isArray(data.items) ? data.items : [];
+                    mediaItems.sort((a, b) => Number(b.mtime || 0) - Number(a.mtime || 0));
+                    mediaLoaded = true;
+                    selectedMediaPaths.forEach((path) => {
+                        if (!mediaItems.some((item) => item.path === path)) {
+                            selectedMediaPaths.delete(path);
+                        }
+                    });
+                } catch (error) {
+                    console.error('加载媒体列表失败:', error);
+                    mediaItems = [];
+                    mediaLoaded = true;
+                } finally {
+                    mediaLoading = false;
+                    renderMediaGrid();
+                }
+            }
+
+            async function ensureMediaLoaded() {
+                await loadMediaList(false);
+            }
+
+            function triggerLocalDownload(path) {
+                const anchor = document.createElement('a');
+                anchor.href = `/api/files/download?path=${encodeURIComponent(path)}`;
+                anchor.style.display = 'none';
+                anchor.rel = 'noopener';
+                document.body.appendChild(anchor);
+                anchor.click();
+                document.body.removeChild(anchor);
+            }
+
+            function downloadSelectedMediaToLocal() {
+                const picked = mediaItems.filter((item) => selectedMediaPaths.has(item.path));
+                if (!picked.length) {
+                    alert(t('media.noSelection'));
+                    return;
+                }
+
+                picked.forEach((item) => triggerLocalDownload(item.path));
+                alert(t('media.downloadStarted', { count: picked.length }));
+            }
+
+            if (mediaRefreshBtn) {
+                mediaRefreshBtn.addEventListener('click', () => loadMediaList(true));
+            }
+            if (mediaSelectAllBtn) {
+                mediaSelectAllBtn.addEventListener('click', () => {
+                    const allSelected = mediaItems.length > 0 && selectedMediaPaths.size === mediaItems.length;
+                    if (allSelected) {
+                        selectedMediaPaths.clear();
+                    } else {
+                        mediaItems.forEach((item) => selectedMediaPaths.add(item.path));
+                    }
+                    renderMediaGrid();
+                });
+            }
+            if (mediaDownloadBtn) {
+                mediaDownloadBtn.addEventListener('click', downloadSelectedMediaToLocal);
+            }
+            refreshMediaActionState();
 
 
             async function getFilesFromDataTransfer(dt) {
@@ -3421,7 +4260,7 @@ function addFiles(files, options = {}) {
         // Create file info element
         const fileInfo = document.createElement('span');
         fileInfo.className = 'file-item-info';
-        fileInfo.textContent = `${fileKey} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+        fileInfo.textContent = file._displayName || `${fileKey} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
 
         // Create cancel button
         const cancelBtn = document.createElement('button');
@@ -3463,6 +4302,7 @@ function addFiles(files, options = {}) {
 
         fileList.appendChild(fileItem);
     }
+    refreshMediaActionState();
 }
 
 function cancelFile(file) {
@@ -3479,6 +4319,7 @@ function cancelFile(file) {
                             item.remove();
                         }
                     });
+                    refreshMediaActionState();
                 }
             }
             
@@ -3637,7 +4478,7 @@ function uploadFileSimple(file, chosenPath, fileHash) {
             formData.append('file_hash', fileHash);
             formData.append('hash_algo', HASH_ALGO);
         }
-        formData.append('file', file);
+        formData.append('file', file, file.name || 'upload.bin');
 
         let lastUpdateTime = Date.now();
         let lastUploadedBytes = 0;
@@ -3875,7 +4716,8 @@ uploadBtn.addEventListener('click', async () => {
                 setTimeout(() => {
                     selectedFiles = [];
                     fileList.innerHTML = '';
-                                    folderDisplayMap.clear();
+                    folderDisplayMap.clear();
+                    refreshMediaActionState();
                 }, 2000);
             }, 500);
         } else {
@@ -3926,6 +4768,8 @@ const textInput = document.getElementById('text-input');
             let selectedFileManagerFiles = [];
             let editingFile = null;
             let contextMenuPath = '';
+            let showHiddenFiles = false;
+            let fileSortMode = 'name-asc';
 
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -3942,6 +4786,8 @@ const textInput = document.getElementById('text-input');
             const newBtn = document.getElementById('new-btn');
             const deleteBtn = document.getElementById('delete-btn');
             const sdcardBtn = document.getElementById('sdcard-btn');
+            const showHiddenToggle = document.getElementById('show-hidden-toggle');
+            const sortModeSelect = document.getElementById('sort-mode-select');
             let sdcardPath = '';
             
             // Modal Elements
@@ -3983,6 +4829,20 @@ const textInput = document.getElementById('text-input');
                     if (sdcardPath) {
                         navigateTo(sdcardPath);
                     }
+                });
+            }
+            if (showHiddenToggle) {
+                showHiddenToggle.checked = showHiddenFiles;
+                showHiddenToggle.addEventListener('change', () => {
+                    showHiddenFiles = !!showHiddenToggle.checked;
+                    renderFileList(currentPath);
+                });
+            }
+            if (sortModeSelect) {
+                sortModeSelect.value = fileSortMode;
+                sortModeSelect.addEventListener('change', () => {
+                    fileSortMode = sortModeSelect.value || 'name-asc';
+                    renderFileList(currentPath);
                 });
             }
             
@@ -4159,8 +5019,45 @@ const textInput = document.getElementById('text-input');
             }
             
             // Context Menu Functions
-            let copiedPath = null; // Store copied/cut file/folder path
+            let copiedPaths = []; // Store copied/cut file/folder paths
             let clipboardMode = 'copy';
+
+            function clearAllSelectedFileItems() {
+                fileManagerList.querySelectorAll('.file-item.selected').forEach(item => {
+                    item.classList.remove('selected');
+                    item.style.backgroundColor = 'var(--panel)';
+                    item.style.borderColor = 'var(--border)';
+                });
+            }
+
+            function setFileItemSelected(fileItem, selected) {
+                if (!fileItem) return;
+                const filePath = fileItem.dataset.path;
+                if (!filePath) return;
+                if (selected) {
+                    fileItem.classList.add('selected');
+                    fileItem.style.backgroundColor = 'var(--accent-soft)';
+                    fileItem.style.borderColor = 'var(--accent)';
+                    if (!selectedFileManagerFiles.includes(filePath)) {
+                        selectedFileManagerFiles.push(filePath);
+                    }
+                } else {
+                    fileItem.classList.remove('selected');
+                    fileItem.style.backgroundColor = 'var(--panel)';
+                    fileItem.style.borderColor = 'var(--border)';
+                    selectedFileManagerFiles = selectedFileManagerFiles.filter(path => path !== filePath);
+                }
+            }
+
+            function getClipboardSourcePaths(preferredPath) {
+                if (preferredPath && selectedFileManagerFiles.includes(preferredPath) && selectedFileManagerFiles.length > 0) {
+                    return [...selectedFileManagerFiles];
+                }
+                if (preferredPath) {
+                    return [preferredPath];
+                }
+                return [...selectedFileManagerFiles];
+            }
 
             function bindLongPressContextMenu(element, path, beforeShow) {
                 if (!isIOS) {
@@ -4467,12 +5364,12 @@ const textInput = document.getElementById('text-input');
                         break;
                     case 'copy':
                         if (contextMenuPath) {
-                            await copyPath(contextMenuPath);
+                            await copyPath(getClipboardSourcePaths(contextMenuPath));
                         }
                         break;
                     case 'cut':
                         if (contextMenuPath) {
-                            await cutPath(contextMenuPath);
+                            await cutPath(getClipboardSourcePaths(contextMenuPath));
                         }
                         break;
                     case 'paste':
@@ -4796,7 +5693,46 @@ const textInput = document.getElementById('text-input');
             function formatDate(timestamp) {
                 return new Date(timestamp * 1000).toLocaleString();
             }
-            
+
+            function isHiddenFile(file) {
+                const name = String(file?.name || '');
+                return name.startsWith('.');
+            }
+
+            function fileNameCompare(a, b) {
+                return String(a?.name || '').localeCompare(String(b?.name || ''), undefined, {
+                    numeric: true,
+                    sensitivity: 'base',
+                });
+            }
+
+            function getCreatedTime(file) {
+                const value = Number(file?.created_at ?? file?.ctime ?? file?.mtime ?? 0);
+                return Number.isFinite(value) ? value : 0;
+            }
+
+            function getFileSortComparator(mode) {
+                switch (mode) {
+                    case 'name-desc':
+                        return (a, b) => fileNameCompare(b, a);
+                    case 'mtime-desc':
+                        return (a, b) => (Number(b.mtime || 0) - Number(a.mtime || 0)) || fileNameCompare(a, b);
+                    case 'mtime-asc':
+                        return (a, b) => (Number(a.mtime || 0) - Number(b.mtime || 0)) || fileNameCompare(a, b);
+                    case 'created-desc':
+                        return (a, b) => (getCreatedTime(b) - getCreatedTime(a)) || fileNameCompare(a, b);
+                    case 'created-asc':
+                        return (a, b) => (getCreatedTime(a) - getCreatedTime(b)) || fileNameCompare(a, b);
+                    case 'size-desc':
+                        return (a, b) => (Number(b.size || 0) - Number(a.size || 0)) || fileNameCompare(a, b);
+                    case 'size-asc':
+                        return (a, b) => (Number(a.size || 0) - Number(b.size || 0)) || fileNameCompare(a, b);
+                    case 'name-asc':
+                    default:
+                        return (a, b) => fileNameCompare(a, b);
+                }
+            }
+             
             // Get file icon based on file extension
             function getFileIcon(filename, isDir) {
                 if (isDir) {
@@ -4869,6 +5805,7 @@ const textInput = document.getElementById('text-input');
                     const data = await response.json();
                     if (data.status === 'success') {
                         fileManagerList.innerHTML = '';
+                        selectedFileManagerFiles = [];
 
                         const pinnedSet = getPinnedSet(data.current_path);
                         const currentPaths = new Set(data.files.map(item => item.path));
@@ -4883,12 +5820,26 @@ const textInput = document.getElementById('text-input');
                             setPinnedSet(data.current_path, pinnedSet);
                         }
 
-                        const files = data.files.map((file, index) => ({ ...file, __index: index }));
+                        const visibleFiles = data.files
+                            .filter(file => showHiddenFiles || !isHiddenFile(file))
+                            .map((file) => ({ ...file }));
+
+                        const sortComparator = getFileSortComparator(fileSortMode);
+                        const dirs = visibleFiles.filter(file => file.is_dir);
+                        const regularFiles = visibleFiles.filter(file => !file.is_dir);
+                        dirs.sort(sortComparator);
+                        regularFiles.sort(sortComparator);
+
+                        const files = [...dirs, ...regularFiles];
+                        files.forEach((file, index) => {
+                            file.__sort_index = index;
+                        });
+
                         files.sort((a, b) => {
                             const aPinned = pinnedSet.has(a.path);
                             const bPinned = pinnedSet.has(b.path);
                             if (aPinned !== bPinned) return aPinned ? -1 : 1;
-                            return a.__index - b.__index;
+                            return a.__sort_index - b.__sort_index;
                         });
                         
                         files.forEach(file => {
@@ -4922,7 +5873,7 @@ const textInput = document.getElementById('text-input');
                                 fileItem.style.minWidth = '0';
                                 fileItem.style.boxSizing = 'border-box';
                             
-                            // 点击事件：切换选中状态
+                            // 点击事件：切换选中状态（支持多选）
                             fileItem.addEventListener('click', (e) => {
                                 if (suppressNextClick) {
                                     suppressNextClick = false;
@@ -4930,28 +5881,7 @@ const textInput = document.getElementById('text-input');
                                     e.stopPropagation();
                                     return;
                                 }
-                                if (fileItem.classList.contains('selected')) {
-                                    // 取消选中
-                                    fileItem.classList.remove('selected');
-                                    fileItem.style.backgroundColor = 'var(--panel)';
-                                    fileItem.style.borderColor = 'var(--border)';
-                                    const index = selectedFileManagerFiles.indexOf(file.path);
-                                    if (index > -1) {
-                                        selectedFileManagerFiles.splice(index, 1);
-                                    }
-                                } else {
-                                    // 取消其他选中项
-                                    document.querySelectorAll('.file-item.selected').forEach(item => {
-                                        item.classList.remove('selected');
-                                        item.style.backgroundColor = 'var(--panel)';
-                                        item.style.borderColor = 'var(--border)';
-                                    });
-                                    // 选中当前文件
-                                    fileItem.classList.add('selected');
-                                    fileItem.style.backgroundColor = 'var(--accent-soft)';
-                                    fileItem.style.borderColor = 'var(--accent)';
-                                    selectedFileManagerFiles = [file.path];
-                                }
+                                setFileItemSelected(fileItem, !fileItem.classList.contains('selected'));
                             });
                             
                             // 双击事件：打开文件或进入目录
@@ -4965,29 +5895,21 @@ const textInput = document.getElementById('text-input');
                             
                             fileItem.addEventListener('contextmenu', (e) => {
                                 e.preventDefault();
-                                // 自动选中当前文件
-                                document.querySelectorAll('.file-item.selected').forEach(item => {
-                                    item.classList.remove('selected');
-                                    item.style.backgroundColor = 'var(--panel)';
-                                    item.style.borderColor = 'var(--border)';
-                                });
-                                fileItem.classList.add('selected');
-                                fileItem.style.backgroundColor = 'var(--accent-soft)';
-                                fileItem.style.borderColor = 'var(--accent)';
-                                selectedFileManagerFiles = [file.path];
+                                // 右键未选中项时切换焦点到该项；右键已选中项保留多选
+                                if (!fileItem.classList.contains('selected')) {
+                                    clearAllSelectedFileItems();
+                                    selectedFileManagerFiles = [];
+                                    setFileItemSelected(fileItem, true);
+                                }
                                 showContextMenu(e, file.path);
                             });
 
                             bindLongPressContextMenu(fileItem, file.path, () => {
-                                document.querySelectorAll('.file-item.selected').forEach(item => {
-                                    item.classList.remove('selected');
-                                    item.style.backgroundColor = 'var(--panel)';
-                                    item.style.borderColor = 'var(--border)';
-                                });
-                                fileItem.classList.add('selected');
-                                fileItem.style.backgroundColor = 'var(--accent-soft)';
-                                fileItem.style.borderColor = 'var(--accent)';
-                                selectedFileManagerFiles = [file.path];
+                                if (!fileItem.classList.contains('selected')) {
+                                    clearAllSelectedFileItems();
+                                    selectedFileManagerFiles = [];
+                                    setFileItemSelected(fileItem, true);
+                                }
                             });
                             
                             const pinBadge = document.createElement('div');
@@ -5208,14 +6130,15 @@ const textInput = document.getElementById('text-input');
             }
             
             // Copy file or directory path
-            async function copyPath(path) {
+            async function copyPath(paths) {
                 try {
-                    if (!path) {
+                    const sourcePaths = Array.isArray(paths) ? paths.filter(Boolean) : [paths].filter(Boolean);
+                    if (sourcePaths.length === 0) {
                         alert('复制失败: 路径不能为空');
                         return;
                     }
                     
-                    copiedPath = path;
+                    copiedPaths = Array.from(new Set(sourcePaths));
                     clipboardMode = 'copy';
                     // Show paste button
                     updatePasteButtonVisibility();
@@ -5226,14 +6149,15 @@ const textInput = document.getElementById('text-input');
                 }
             }
 
-            async function cutPath(path) {
+            async function cutPath(paths) {
                 try {
-                    if (!path) {
+                    const sourcePaths = Array.isArray(paths) ? paths.filter(Boolean) : [paths].filter(Boolean);
+                    if (sourcePaths.length === 0) {
                         alert('剪切失败: 路径不能为空');
                         return;
                     }
 
-                    copiedPath = path;
+                    copiedPaths = Array.from(new Set(sourcePaths));
                     clipboardMode = 'cut';
                     updatePasteButtonVisibility();
                     alert('剪切成功');
@@ -5246,7 +6170,7 @@ const textInput = document.getElementById('text-input');
             // Paste file or directory
             async function pastePath(destPath) {
                 try {
-                    if (!copiedPath) {
+                    if (!copiedPaths || copiedPaths.length === 0) {
                         alert('粘贴失败: 没有要粘贴的内容');
                         return;
                     }
@@ -5256,33 +6180,43 @@ const textInput = document.getElementById('text-input');
                         return;
                     }
                     
-                    // Get filename from copied path
-                    const filename = copiedPath.split('/').pop();
-                    const targetPath = destPath + '/' + filename;
                     const isCut = clipboardMode === 'cut';
                     const opTitle = isCut ? t('modal.fileOpMove') : t('modal.fileOpCopy');
-                    showFileOpProgress(opTitle, filename);
                     const endpoint = isCut ? '/api/files/move' : '/api/files/copy';
-                    
-                    const response = await fetch(endpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ source: copiedPath, destination: targetPath })
-                    });
-                    
-                    const data = await response.json();
-                    finishFileOpProgress(data.status === 'success');
-                    if (data.status === 'success') {
+
+                    const failedItems = [];
+                    const failedPaths = [];
+                    for (const sourcePath of copiedPaths) {
+                        const filename = sourcePath.split('/').pop();
+                        const targetPath = destPath + '/' + filename;
+                        showFileOpProgress(opTitle, filename);
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ source: sourcePath, destination: targetPath })
+                        });
+                        const data = await response.json();
+                        finishFileOpProgress(data.status === 'success');
+                        if (data.status !== 'success') {
+                            failedItems.push(filename);
+                            failedPaths.push(sourcePath);
+                        }
+                    }
+
+                    if (failedItems.length === 0) {
                         await renderFileList(currentPath);
                         alert(isCut ? '剪切成功' : '粘贴成功');
-                        // Clear copied path and hide paste button
-                        copiedPath = null;
+                        // Clear copied paths and hide paste button
+                        copiedPaths = [];
                         clipboardMode = 'copy';
                         updatePasteButtonVisibility();
                     } else {
-                        alert((isCut ? '剪切' : '粘贴') + '失败: ' + data.message);
+                        await renderFileList(currentPath);
+                        copiedPaths = failedPaths;
+                        updatePasteButtonVisibility();
+                        alert((isCut ? '剪切' : '粘贴') + '失败: 部分项目失败');
                     }
                 } catch (error) {
                     console.error('粘贴出错:', error);
@@ -5295,7 +6229,7 @@ const textInput = document.getElementById('text-input');
             function updatePasteButtonVisibility() {
                 const pasteBtn = document.getElementById('paste-btn');
                 if (pasteBtn) {
-                    if (copiedPath) {
+                    if (copiedPaths && copiedPaths.length > 0) {
                         pasteBtn.style.display = 'block';
                     } else {
                         pasteBtn.style.display = 'none';
@@ -5321,9 +6255,9 @@ const textInput = document.getElementById('text-input');
             const copyBtn = document.getElementById('copy-btn');
             if (copyBtn) {
                 copyBtn.addEventListener('click', async () => {
-                    // 如果有选中的文件，复制该文件
+                    // 如果有选中的文件，复制所有选中项
                     if (selectedFileManagerFiles.length > 0) {
-                        await copyPath(selectedFileManagerFiles[0]);
+                        await copyPath(selectedFileManagerFiles);
                     } else {
                         alert('请先选择一个文件或文件夹');
                     }
@@ -5898,6 +6832,232 @@ async def handle_upload_status(request, plugin):
             })
     except Exception as e:
         decky.logger.error(f"Upload status error: {e}")
+        return web.json_response({"status": "error", "message": str(e)}, status=500)
+
+
+def _safe_read_text(path):
+    try:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            return f.read().strip()
+    except Exception:
+        return ""
+
+
+def _collect_battery_info():
+    power_root = "/sys/class/power_supply"
+    if not os.path.isdir(power_root):
+        return {"available": False, "percent": None, "status": "Unknown", "is_charging": False}
+
+    for name in sorted(os.listdir(power_root)):
+        device_path = os.path.join(power_root, name)
+        if not os.path.isdir(device_path):
+            continue
+        device_type = _safe_read_text(os.path.join(device_path, "type")).lower()
+        if device_type and device_type != "battery":
+            continue
+
+        capacity_raw = _safe_read_text(os.path.join(device_path, "capacity"))
+        status_raw = _safe_read_text(os.path.join(device_path, "status")) or "Unknown"
+        percent = None
+        try:
+            if capacity_raw:
+                percent = max(0, min(100, int(float(capacity_raw))))
+        except Exception:
+            percent = None
+        status_lower = status_raw.lower()
+        return {
+            "available": True,
+            "name": name,
+            "percent": percent,
+            "status": status_raw,
+            "is_charging": status_lower in ("charging", "full", "not charging"),
+        }
+
+    return {"available": False, "percent": None, "status": "Unknown", "is_charging": False}
+
+
+def _iter_steamapps_dirs():
+    home = os.path.expanduser("~")
+    candidates = [
+        os.path.join(home, ".steam", "steam", "steamapps"),
+        os.path.join(home, ".steam", "root", "steamapps"),
+        os.path.join(home, ".local", "share", "Steam", "steamapps"),
+    ]
+
+    media_root = "/run/media/deck"
+    if os.path.isdir(media_root):
+        try:
+            for name in os.listdir(media_root):
+                base = os.path.join(media_root, name)
+                candidates.append(os.path.join(base, "steamapps"))
+                candidates.append(os.path.join(base, "SteamLibrary", "steamapps"))
+        except Exception:
+            pass
+
+    seen = set()
+    for path in candidates:
+        real_path = os.path.realpath(path)
+        if real_path in seen:
+            continue
+        seen.add(real_path)
+        if os.path.isdir(real_path):
+            yield real_path
+
+
+def _read_manifest_name(app_id):
+    target = f"appmanifest_{app_id}.acf"
+    for steamapps_dir in _iter_steamapps_dirs():
+        manifest_path = os.path.join(steamapps_dir, target)
+        if not os.path.isfile(manifest_path):
+            continue
+        try:
+            with open(manifest_path, "r", encoding="utf-8", errors="ignore") as f:
+                for line in f:
+                    raw = line.strip()
+                    if not raw.startswith('"name"'):
+                        continue
+                    parts = raw.split('"')
+                    if len(parts) >= 4 and parts[3].strip():
+                        return parts[3].strip()
+        except Exception:
+            continue
+    return ""
+
+
+def _collect_running_game():
+    proc_root = "/proc"
+    if not os.path.isdir(proc_root):
+        return {"running": False, "app_id": None, "name": ""}
+
+    # Filter obvious non-game IDs seen in Steam client helper processes.
+    app_id_blacklist = {7, 10, 20, 40, 240, 250, 769}
+    app_id_hits = {}
+
+    for entry in os.listdir(proc_root):
+        if not entry.isdigit():
+            continue
+        environ_path = os.path.join(proc_root, entry, "environ")
+        try:
+            with open(environ_path, "rb") as f:
+                payload = f.read()
+        except Exception:
+            continue
+        if not payload:
+            continue
+
+        app_id = None
+        for item in payload.split(b"\x00"):
+            if item.startswith(b"SteamAppId=") or item.startswith(b"SteamGameId="):
+                raw_value = item.split(b"=", 1)[1].decode("utf-8", errors="ignore").strip()
+                if raw_value.isdigit():
+                    parsed = int(raw_value)
+                    if parsed > 0:
+                        app_id = parsed
+                        break
+        if not app_id or app_id in app_id_blacklist:
+            continue
+        app_id_hits[app_id] = app_id_hits.get(app_id, 0) + 1
+
+    if not app_id_hits:
+        return {"running": False, "app_id": None, "name": ""}
+
+    app_id = max(app_id_hits.items(), key=lambda kv: kv[1])[0]
+    game_name = _read_manifest_name(app_id) or f"AppID {app_id}"
+    return {"running": True, "app_id": app_id, "name": game_name}
+
+
+def _collect_system_overview(plugin):
+    hostname = ""
+    try:
+        hostname = os.uname().nodename
+    except Exception:
+        hostname = os.getenv("HOSTNAME", "") or "SteamDeck"
+
+    battery = _collect_battery_info()
+    game = _collect_running_game()
+    return {
+        "status": "success",
+        "timestamp": int(time.time()),
+        "device": {
+            "online": True,
+            "hostname": hostname,
+        },
+        "service": {
+            "running": bool(getattr(plugin, "server_running", False)),
+            "port": int(getattr(plugin, "server_port", 0) or 0),
+        },
+        "battery": battery,
+        "game": game,
+    }
+
+
+def _request_suspend():
+    commands = [
+        ["systemctl", "suspend"],
+        ["loginctl", "suspend"],
+    ]
+    last_error = ""
+    for cmd in commands:
+        try:
+            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return True, "Sleep requested"
+        except FileNotFoundError:
+            continue
+        except Exception as exc:
+            last_error = str(exc)
+    return False, last_error or "Suspend command unavailable"
+
+
+async def _deferred_stop_server(plugin):
+    await asyncio.sleep(0.2)
+    try:
+        await plugin.stop_server()
+    except Exception as stop_error:
+        decky.logger.error(f"Deferred stop server failed: {stop_error}")
+
+
+async def handle_system_overview(request, plugin):
+    """Expose Steam Deck runtime status for remote clients."""
+    try:
+        payload = await asyncio.to_thread(_collect_system_overview, plugin)
+        return web.json_response(payload)
+    except Exception as e:
+        decky.logger.error(f"System overview error: {e}")
+        return web.json_response({"status": "error", "message": str(e)}, status=500)
+
+
+async def handle_system_control(request, plugin):
+    """Handle safe control actions triggered from remote clients."""
+    try:
+        data = await request.json()
+        action = str(data.get("action", "")).strip().lower()
+        if action == "start_service":
+            port = int(getattr(plugin, "server_port", 0) or 0)
+            result = await plugin.start_server(port)
+            status = result.get("status", "error")
+            if status == "success":
+                return web.json_response({"status": "success", "action": action, "message": result.get("message", "Service started")})
+            return web.json_response({"status": "error", "message": result.get("message", "Failed to start service")}, status=500)
+
+        if action == "stop_service":
+            try:
+                plugin.server_running = False
+                with open(plugin.switch_file_path, 'w') as f:
+                    f.write('0')
+            except Exception as sync_error:
+                decky.logger.warning(f"Failed to pre-sync stop_service state: {sync_error}")
+            asyncio.create_task(_deferred_stop_server(plugin))
+            return web.json_response({"status": "success", "action": action, "message": "Service stop requested"})
+
+        if action == "sleep":
+            ok, message = await asyncio.to_thread(_request_suspend)
+            if ok:
+                return web.json_response({"status": "success", "action": action, "message": message})
+            return web.json_response({"status": "error", "message": message}, status=500)
+
+        return web.json_response({"status": "error", "message": "Unsupported action"}, status=400)
+    except Exception as e:
+        decky.logger.error(f"System control error: {e}")
         return web.json_response({"status": "error", "message": str(e)}, status=500)
 
 
