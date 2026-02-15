@@ -2294,7 +2294,11 @@ async def handle_index(request):
                 overflow: hidden;
             }
             body {
+<<<<<<< HEAD
                 font-family: "Plus Jakarta Sans", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+=======
+                font-family: "IBM Plex Sans", "Noto Sans", "Ubuntu", "Segoe UI", sans-serif;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 max-width: min(960px, 100%);
                 margin: 0 auto;
                 padding: calc(env(safe-area-inset-top, 0px) + 18px) 16px 16px;
@@ -2302,7 +2306,10 @@ async def handle_index(request):
                 background: transparent;
                 color: var(--text);
                 min-height: 100vh;
+<<<<<<< HEAD
                 line-height: var(--type-body-medium-line-height);
+=======
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             }
             body::after {
                 content: "";
@@ -2321,6 +2328,7 @@ async def handle_index(request):
             }
             h1 {
                 color: var(--text);
+<<<<<<< HEAD
                 font-size: var(--type-title-large-size);
                 line-height: var(--type-title-large-line-height);
                 font-weight: var(--type-title-large-weight);
@@ -2332,23 +2340,46 @@ async def handle_index(request):
                 margin-top: 0;
                 font-size: var(--type-body-medium-size);
             }
+=======
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                margin: 0 0 6px;
+            }
+            p {
+                color: var(--muted);
+                margin-top: 0;
+            }
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             .subtitle {
                 margin-bottom: 0;
             }
             
             /* Tab styles */
             .tab-container {
+<<<<<<< HEAD
                 margin: var(--space-4) 0;
+=======
+                margin: 12px 0;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             }
             .tab-buttons {
                 display: flex;
                 justify-content: center;
+<<<<<<< HEAD
                 gap: var(--space-1);
                 margin-bottom: var(--space-4);
                 padding: var(--space-1);
                 background: var(--panel);
                 border: 1px solid var(--border);
                 border-radius: var(--shape-large);
+=======
+                gap: 6px;
+                margin-bottom: 12px;
+                padding: 6px;
+                background: var(--panel);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 box-shadow: var(--shadow);
                 overflow-x: hidden;
                 overflow-y: hidden;
@@ -2369,6 +2400,7 @@ async def handle_index(request):
                 -webkit-user-select: none;
                 -ms-user-select: none;
             }
+<<<<<<< HEAD
             .tab-button {
                 background: transparent;
                 border: 1px solid transparent;
@@ -2378,10 +2410,21 @@ async def handle_index(request):
                 line-height: var(--type-label-large-line-height);
                 cursor: pointer;
                 transition: all var(--motion-short) ease;
+=======
+            .tab-button {
+                background: transparent;
+                border: 1px solid transparent;
+                color: var(--muted);
+                padding: 10px 16px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 border-radius: 999px;
                 margin: 0;
                 flex: 0 0 auto;
                 white-space: nowrap;
+<<<<<<< HEAD
                 font-weight: var(--type-label-large-weight);
             }
             .tab-button.active {
@@ -2394,6 +2437,19 @@ async def handle_index(request):
                 color: var(--text);
                 background-color: rgba(143, 216, 204, 0.12);
             }
+=======
+            }
+            .tab-button.active {
+                color: var(--text);
+                background: var(--accent-soft);
+                border-color: rgba(77, 182, 172, 0.45);
+                box-shadow: inset 0 0 0 1px rgba(77, 182, 172, 0.15);
+            }
+            .tab-button:hover {
+                color: var(--text);
+                background-color: rgba(255, 255, 255, 0.06);
+            }
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             
             .tab-panel {
                 display: none;
@@ -2606,19 +2662,34 @@ async def handle_index(request):
             .action-buttons {
                 display: flex;
                 align-items: center;
+<<<<<<< HEAD
                 justify-content: center;
                 gap: var(--space-1);
                 margin: 6px 0;
+=======
+<<<<<<< HEAD
+                justify-content: center;
+                gap: 8px;
+                margin: 8px 0;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 flex-wrap: nowrap;
                 overflow-x: hidden;
                 overflow-y: hidden;
                 scrollbar-width: none;
+<<<<<<< HEAD
                 padding: 3px 4px;
                 -webkit-overflow-scrolling: touch;
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 border-radius: var(--shape-medium);
                 background: var(--panel);
                 box-shadow: var(--shadow);
+=======
+                padding: 6px;
+                -webkit-overflow-scrolling: touch;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.03);
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             }
             .action-buttons.is-scrollable {
                 justify-content: flex-start;
@@ -2629,12 +2700,34 @@ async def handle_index(request):
             }
             .action-buttons::-webkit-scrollbar-thumb {
                 display: none;
+<<<<<<< HEAD
+=======
+=======
+                gap: 6px;
+                margin: 10px 0;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(77, 182, 172, 0.55) transparent;
+                padding: 2px 2px 8px 2px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .action-buttons::-webkit-scrollbar {
+                height: 6px;
+            }
+            .action-buttons::-webkit-scrollbar-thumb {
+                background: rgba(77, 182, 172, 0.5);
+                border-radius: 999px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             }
             .action-buttons button {
                 background: var(--panel-strong);
                 color: var(--text);
                 border: 1px solid var(--border);
                 box-shadow: none;
+<<<<<<< HEAD
                 border-radius: var(--shape-medium);
                 padding: 0 10px;
                 font-size: 0.75rem;
@@ -2647,10 +2740,31 @@ async def handle_index(request):
             .action-buttons button:hover {
                 border-color: rgba(143, 216, 204, 0.55);
                 background: rgba(143, 216, 204, 0.12);
+=======
+<<<<<<< HEAD
+                border-radius: 10px;
+                padding: 0 12px;
+                font-size: 12px;
+                font-weight: 600;
+                margin: 0;
+                min-height: 34px;
+                line-height: 1;
+=======
+                padding: 7px 12px;
+                font-size: 12px;
+                margin: 0;
+                min-height: 34px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
+                flex: 0 0 auto;
+            }
+            .action-buttons button:hover {
+                border-color: rgba(77, 182, 172, 0.5);
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             }
             .action-inline-control {
                 display: inline-flex;
                 align-items: center;
+<<<<<<< HEAD
                 gap: 6px;
                 background: var(--panel-strong);
                 color: var(--text);
@@ -2662,13 +2776,39 @@ async def handle_index(request):
                 flex: 0 0 auto;
                 min-height: 32px;
             }
+=======
+                gap: 8px;
+                background: var(--panel-strong);
+                color: var(--text);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+<<<<<<< HEAD
+                padding: 0 10px;
+=======
+                padding: 5px 8px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
+                font-size: 11px;
+                white-space: nowrap;
+                flex: 0 0 auto;
+                min-height: 34px;
+            }
+<<<<<<< HEAD
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             .action-inline-control span {
                 color: var(--muted);
                 font-weight: 600;
             }
+<<<<<<< HEAD
             .action-inline-control input[type="checkbox"] {
                 width: 13px;
                 height: 13px;
+=======
+=======
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
+            .action-inline-control input[type="checkbox"] {
+                width: 14px;
+                height: 14px;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 margin: 0;
                 accent-color: var(--accent);
             }
@@ -2676,17 +2816,37 @@ async def handle_index(request):
                 background: var(--bg-elev);
                 color: var(--text);
                 border: 1px solid var(--border);
+<<<<<<< HEAD
                 border-radius: var(--shape-small);
                 padding: 2px var(--space-2);
                 font-size: 0.75rem;
                 min-height: 24px;
                 max-width: 130px;
+=======
+                border-radius: 8px;
+                padding: 3px 6px;
+                font-size: 11px;
+<<<<<<< HEAD
+                min-height: 26px;
+                max-width: 138px;
+=======
+                max-width: 152px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             }
             .action-buttons,
             .action-buttons * {
                 user-select: none;
                 -webkit-user-select: none;
                 -ms-user-select: none;
+<<<<<<< HEAD
+=======
+            }
+            .file-list-container {
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background-color: var(--panel);
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             }
             .file-list-container {
                 border: 1px solid var(--border);
@@ -2729,6 +2889,7 @@ async def handle_index(request):
                 margin-top: 8px;
                 text-align: right;
             }
+<<<<<<< HEAD
             .upload-path-current {
                 font-size: var(--type-body-medium-size);
                 color: var(--muted);
@@ -2762,12 +2923,52 @@ async def handle_index(request):
                 gap: var(--space-3);
                 justify-content: flex-end;
                 margin-top: var(--space-4);
+=======
+            .upload-path-current {
+                font-size: 12px;
+                color: var(--muted);
+                margin-bottom: 10px;
+                word-break: break-all;
+            }
+            .upload-path-list {
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: var(--panel);
+                max-height: 260px;
+                overflow-y: auto;
+                padding: 6px;
+                text-align: left;
+            }
+            .upload-path-item {
+                padding: 8px 10px;
+                border-radius: 8px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: var(--text);
+                transition: background-color 0.15s ease;
+            }
+            .upload-path-item:hover {
+                background: rgba(77, 182, 172, 0.12);
+            }
+            .upload-path-actions {
+                display: flex;
+                gap: 10px;
+                justify-content: flex-end;
+                margin-top: 14px;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 flex-wrap: wrap;
             }
             .media-toolbar {
                 display: flex;
+<<<<<<< HEAD
                 gap: var(--space-2);
                 margin: var(--space-3) 0 var(--space-2) 0;
+=======
+                gap: 8px;
+                margin: 10px 0 8px 0;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 flex-wrap: wrap;
                 justify-content: center;
             }
@@ -2779,6 +2980,7 @@ async def handle_index(request):
                 box-shadow: none;
             }
             #media-download-btn {
+<<<<<<< HEAD
                 background: var(--accent);
                 color: var(--on-accent);
                 border: 1px solid transparent;
@@ -2789,11 +2991,27 @@ async def handle_index(request):
                 font-size: var(--type-body-medium-size);
                 color: var(--muted);
                 margin: 0 0 var(--space-3) 0;
+=======
+                background: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
+                color: #0c1416;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                box-shadow: 0 8px 18px rgba(47, 166, 154, 0.25);
+            }
+            .media-summary {
+                text-align: left;
+                font-size: 12px;
+                color: var(--muted);
+                margin: 0 0 10px 0;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             }
             .media-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+<<<<<<< HEAD
                 gap: var(--space-3);
+=======
+                gap: 10px;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 text-align: left;
                 max-height: min(62vh, 520px);
                 overflow-y: auto;
@@ -2803,18 +3021,31 @@ async def handle_index(request):
             .media-card {
                 background: var(--panel);
                 border: 1px solid var(--border);
+<<<<<<< HEAD
                 border-radius: var(--shape-medium);
+=======
+                border-radius: 10px;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 overflow: hidden;
                 cursor: pointer;
                 transition: border-color 0.15s ease, box-shadow 0.15s ease;
             }
             .media-card:hover {
+<<<<<<< HEAD
                 border-color: rgba(143, 216, 204, 0.6);
                 box-shadow: 0 0 0 1px rgba(143, 216, 204, 0.28);
             }
             .media-card.selected {
                 border-color: var(--accent);
                 box-shadow: 0 0 0 1px rgba(143, 216, 204, 0.35), inset 0 0 0 1px rgba(143, 216, 204, 0.25);
+=======
+                border-color: rgba(77, 182, 172, 0.6);
+                box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.25);
+            }
+            .media-card.selected {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 1px rgba(77, 182, 172, 0.35), inset 0 0 0 1px rgba(77, 182, 172, 0.25);
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             }
             .media-card.queued {
                 border-color: rgba(124, 197, 255, 0.8);
@@ -2899,6 +3130,10 @@ async def handle_index(request):
             @media (max-width: 640px) {
                 body {
                     max-width: 100%;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                     padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px 10px;
                 }
                 .subtitle {
@@ -2913,6 +3148,23 @@ async def handle_index(request):
                 .tab-button {
                     padding: 7px 11px;
                     font-size: 12px;
+<<<<<<< HEAD
+=======
+=======
+                    padding: 16px;
+                }
+                .subtitle {
+                    display: none;
+                }
+                .tab-buttons {
+                    flex-wrap: wrap;
+                    border-radius: 18px;
+                }
+                .tab-button {
+                    padding: 8px 12px;
+                    font-size: 13px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 }
                 .media-grid {
                     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2941,6 +3193,7 @@ async def handle_index(request):
                     gap: 8px;
                 }
                 .action-buttons {
+<<<<<<< HEAD
                     gap: 5px;
                     margin: 5px 0;
                     padding: 3px;
@@ -2949,11 +3202,33 @@ async def handle_index(request):
                     padding: 0 8px;
                     font-size: 11px;
                     min-height: 30px;
+=======
+<<<<<<< HEAD
+                    gap: 6px;
+                    margin: 6px 0;
+                    padding: 4px;
+                }
+                .action-buttons button {
+                    padding: 0 9px;
+                    font-size: 11px;
+                    min-height: 30px;
+=======
+                    gap: 5px;
+                    margin: 8px 0;
+                    padding: 2px 2px 6px 2px;
+                }
+                .action-buttons button {
+                    padding: 6px 10px;
+                    font-size: 11px;
+                    min-height: 32px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 }
                 .action-inline-control {
                     width: auto;
                     justify-content: flex-start;
                     font-size: 10px;
+<<<<<<< HEAD
                     min-height: 30px;
                     gap: 5px;
                     padding: 0 7px;
@@ -2962,6 +3237,23 @@ async def handle_index(request):
                     max-width: 104px;
                     font-size: 10px;
                     padding: 1px 4px;
+=======
+<<<<<<< HEAD
+                    min-height: 30px;
+                    gap: 6px;
+                    padding: 0 8px;
+                }
+                .action-inline-control select {
+                    max-width: 110px;
+=======
+                    min-height: 32px;
+                }
+                .action-inline-control select {
+                    max-width: 130px;
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
+                    font-size: 10px;
+                    padding: 2px 5px;
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 }
             }
         </style>
@@ -3191,8 +3483,13 @@ async def handle_index(request):
             const I18N = {
                 'zh-CN': {
                     title: {
+<<<<<<< HEAD
                         fileManager: 'Friendeck 文件管理器',
                         upload: 'Friendeck 文件上传'
+=======
+                        fileManager: 'decky-send 文件管理器',
+                        upload: 'decky-send 文件上传'
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                     },
                     subtitle: '将文件或文本上传到 Steam Deck',
                     tabs: {
@@ -3295,8 +3592,13 @@ async def handle_index(request):
                 },
                 'en-US': {
                     title: {
+<<<<<<< HEAD
                         fileManager: 'Friendeck File Manager',
                         upload: 'Friendeck File Transfer'
+=======
+                        fileManager: 'decky-send File Manager',
+                        upload: 'decky-send File Transfer'
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                     },
                     subtitle: 'Upload files or text to Steam Deck',
                     tabs: {
@@ -3598,7 +3900,14 @@ async def handle_index(request):
                             ensureMediaLoaded();
                         }
                     }
+<<<<<<< HEAD
                     updateTopRailModes();
+=======
+<<<<<<< HEAD
+                    updateTopRailModes();
+=======
+>>>>>>> e69c626ae51e58cf11fdabde00d6e48388db3e5c
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
                 };
                 
                 tabButtons.forEach(button => {
@@ -3688,6 +3997,7 @@ async def handle_index(request):
             let mediaObserver = null;
             let uploadPromptEnabled = false;
             let defaultUploadDir = '';
+<<<<<<< HEAD
             const uploadPathModal = document.getElementById('upload-path-modal');
             const uploadPathCurrent = document.getElementById('upload-path-current');
             const uploadPathList = document.getElementById('upload-path-list');
@@ -3696,6 +4006,16 @@ async def handle_index(request):
             const uploadPathCancel = document.getElementById('upload-path-cancel');
             let uploadPathResolve = null;
             let uploadPathCurrentValue = '';
+=======
+            const uploadPathModal = document.getElementById('upload-path-modal');
+            const uploadPathCurrent = document.getElementById('upload-path-current');
+            const uploadPathList = document.getElementById('upload-path-list');
+            const uploadPathUp = document.getElementById('upload-path-up');
+            const uploadPathOk = document.getElementById('upload-path-ok');
+            const uploadPathCancel = document.getElementById('upload-path-cancel');
+            let uploadPathResolve = null;
+            let uploadPathCurrentValue = '';
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
 
             async function refreshUploadOptions() {
                 try {
@@ -4782,7 +5102,11 @@ const textInput = document.getElementById('text-input');
             const refreshBtn = document.getElementById('refresh-btn');
             const pasteBtn = document.getElementById('paste-btn');
             const newFileBtn = document.getElementById('new-file-btn');
+<<<<<<< HEAD
             const newDirBtn = document.getElementById('new-dir-btn');
+=======
+            const newDirBtn = document.getElementById('new-dir-btn');
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
             const newBtn = document.getElementById('new-btn');
             const deleteBtn = document.getElementById('delete-btn');
             const sdcardBtn = document.getElementById('sdcard-btn');

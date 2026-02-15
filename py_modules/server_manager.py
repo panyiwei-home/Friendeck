@@ -842,8 +842,11 @@ def setup_main_server_routes(app, plugin):
     app.router.add_post('/api/files/unpack', file_operations.unpack_archive)
     app.router.add_post('/api/files/add-to-steam', file_operations.add_file_to_steam)
     app.router.add_get('/api/system/sdcard', file_operations.get_sdcard_info)
+<<<<<<< HEAD
     app.router.add_get('/api/system/overview', lambda request: html_templates.handle_system_overview(request, plugin))
     app.router.add_post('/api/system/control', lambda request: html_templates.handle_system_control(request, plugin))
+=======
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
     app.router.add_get('/api/media/list', file_operations.get_media_list)
     app.router.add_get('/api/media/preview', file_operations.get_media_preview)
     app.router.add_get('/api/settings/language', lambda request: html_templates.handle_language_settings(request, plugin))
