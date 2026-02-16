@@ -722,6 +722,7 @@ async def load_settings(plugin):
             config.logger.error(f"Failed to create downloads directory: {e}")
         
         config.logger.info(
+<<<<<<< HEAD
             "Loaded settings: running=%s, port=%s, downloads_dir=%s, auto_copy_text=%s, prompt_upload_path=%s, prevent_sleep_during_transfer=%s, language=%s",
             plugin.server_running,
             plugin.server_port,
@@ -729,6 +730,14 @@ async def load_settings(plugin):
             plugin.auto_copy_text_enabled,
             plugin.prompt_upload_path_enabled,
             plugin.prevent_sleep_during_transfer_enabled,
+=======
+            "Loaded settings: running=%s, port=%s, downloads_dir=%s, auto_copy_text=%s, prompt_upload_path=%s, language=%s",
+            plugin.server_running,
+            plugin.server_port,
+            plugin.downloads_dir,
+            plugin.auto_copy_text_enabled,
+            plugin.prompt_upload_path_enabled,
+>>>>>>> a644f870110fc23700a2b5ac7bc22c0ea9171992
             plugin.language_preference,
         )
         
@@ -748,9 +757,12 @@ async def save_settings(plugin):
         plugin.SETTING_DOWNLOAD_DIR: plugin.downloads_dir,
         plugin.SETTING_AUTO_COPY_TEXT: bool(plugin.auto_copy_text_enabled),
         plugin.SETTING_PROMPT_UPLOAD_PATH: bool(plugin.prompt_upload_path_enabled),
+<<<<<<< HEAD
         plugin.SETTING_PREVENT_SLEEP_DURING_TRANSFER: bool(
             plugin.prevent_sleep_during_transfer_enabled
         ),
+=======
+>>>>>>> a644f870110fc23700a2b5ac7bc22c0ea9171992
         plugin.SETTING_LANGUAGE: getattr(plugin, "language_preference", "auto"),
     }
 
@@ -849,6 +861,7 @@ def setup_main_server_routes(app, plugin):
     app.router.add_post('/api/files/unpack', file_operations.unpack_archive)
     app.router.add_post('/api/files/add-to-steam', file_operations.add_file_to_steam)
     app.router.add_get('/api/system/sdcard', file_operations.get_sdcard_info)
+<<<<<<< HEAD
     app.router.add_get('/api/system/overview', lambda request: html_templates.handle_system_overview(request, plugin))
     app.router.add_post('/api/system/control', lambda request: html_templates.handle_system_control(request, plugin))
     app.router.add_post('/api/system/exec', lambda request: html_templates.handle_terminal_exec(request, plugin))
@@ -856,6 +869,13 @@ def setup_main_server_routes(app, plugin):
     app.router.add_post('/api/system/terminal/poll', lambda request: html_templates.handle_terminal_poll(request, plugin))
     app.router.add_post('/api/system/terminal/input', lambda request: html_templates.handle_terminal_input(request, plugin))
     app.router.add_post('/api/system/terminal/stop', lambda request: html_templates.handle_terminal_stop(request, plugin))
+=======
+<<<<<<< HEAD
+    app.router.add_get('/api/system/overview', lambda request: html_templates.handle_system_overview(request, plugin))
+    app.router.add_post('/api/system/control', lambda request: html_templates.handle_system_control(request, plugin))
+=======
+>>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
+>>>>>>> a644f870110fc23700a2b5ac7bc22c0ea9171992
     app.router.add_get('/api/media/list', file_operations.get_media_list)
     app.router.add_get('/api/media/preview', file_operations.get_media_preview)
     app.router.add_get('/api/settings/language', lambda request: html_templates.handle_language_settings(request, plugin))
