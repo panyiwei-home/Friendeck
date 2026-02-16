@@ -87,7 +87,8 @@ THREAD_SHUTDOWN_TIMEOUT = 5.0
 PORT_RELEASE_TIMEOUT = 5.0
 
 # Watchdog health check interval (seconds)
-WATCHDOG_CHECK_INTERVAL = 3.0
+# Use a longer interval to reduce background wakeups and power use.
+WATCHDOG_CHECK_INTERVAL = 10.0
 
 # Port check retry configuration
 PORT_CHECK_RETRIES = 5
@@ -106,4 +107,5 @@ SETTING_PORT = "port"
 SETTING_DOWNLOAD_DIR = "download_dir"
 SETTING_AUTO_COPY_TEXT = "auto_copy_text"
 SETTING_PROMPT_UPLOAD_PATH = "prompt_upload_path"
+SETTING_PREVENT_SLEEP_DURING_TRANSFER = "prevent_sleep_during_transfer"
 SETTING_LANGUAGE = "language"

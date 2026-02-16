@@ -21,6 +21,10 @@ import config
 # Network Utilities
 # =============================================================================
 
+_IP_CACHE_TTL_SECONDS = 30.0
+_cached_ip_address: str | None = None
+_cached_ip_timestamp = 0.0
+
 def _is_vpn_interface(name: str) -> bool:
     if not name:
         return True
@@ -85,24 +89,40 @@ def _get_ip_from_ip_cmd() -> str | None:
     return candidates[0][1]
 
 
-def get_ip_address():
+def get_ip_address(force_refresh: bool = False):
     """Get the local LAN IP address of the device (prefers non-VPN interfaces).
     
     Returns:
         str: Local IP address, or "127.0.0.1" if detection fails
     """
+    global _cached_ip_address, _cached_ip_timestamp
+
+    now = time.monotonic()
+    if (
+        not force_refresh
+        and _cached_ip_address
+        and (now - _cached_ip_timestamp) < _IP_CACHE_TTL_SECONDS
+    ):
+        return _cached_ip_address
+
     try:
         ip_address = _get_ip_from_ip_cmd()
         if ip_address:
+            _cached_ip_address = ip_address
+            _cached_ip_timestamp = now
             return ip_address
 
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         ip_address = s.getsockname()[0]
         s.close()
+        _cached_ip_address = ip_address
+        _cached_ip_timestamp = now
         return ip_address
     except Exception as e:
         config.logger.error(f"Failed to get IP address: {e}")
+        if _cached_ip_address:
+            return _cached_ip_address
         return "127.0.0.1"
 
 
@@ -257,7 +277,7 @@ def send_system_notification(title: str, body: str, duration: float = 5.0) -> bo
         timeout_ms = str(int(max(duration, 0) * 1000))
         cmd = [
             notify_bin,
-            "--app-name", "Decky-send",
+            "--app-name", "Friendeck",
             "--expire-time", timeout_ms,
             title,
             body,

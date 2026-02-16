@@ -1,4 +1,4 @@
-# decky-send - Steam Deck Local Network File Transfer Assistant
+# Friendeck - Steam Deck Local Network File Transfer Assistant
 
 [Chinese](README.md) | [English](README-English.md)
 
@@ -9,7 +9,7 @@ A powerful Decky Loader plugin designed to solve the file transfer and managemen
 
 ## Table of Contents
 
-- [decky-send - Steam Deck Local Network File Transfer Assistant](#decky-send---steam-deck-local-network-file-transfer-assistant)
+- [Friendeck - Steam Deck Local Network File Transfer Assistant](#friendeck---steam-deck-local-network-file-transfer-assistant)
   - [Table of Contents](#table-of-contents)
   - [Screenshots](#screenshots)
   - [Features](#features)
@@ -34,6 +34,7 @@ A powerful Decky Loader plugin designed to solve the file transfer and managemen
 - **Local Network Wireless Transfer** - Easily upload files from mobile or PC to Steam Deck's downloads folder using a browser interface.
 - **Text Clipboard Sync** - Solves the inconvenience of typing long text in Steam Deck game mode by sending text directly from phone to Deck clipboard.
 - **Web File Manager** - Built-in lightweight file manager to manage Deck files directly in the browser without switching to desktop mode.
+- **Media Management** - Added a dedicated media tab to browse Steam Deck screenshots and videos, with multi-select and batch download to local device.
 - **Scan to Connect** - The plugin automatically generates a QR code, scan with your phone to connect, saying goodbye to tedious IP entry.
 - **No Extra Client Needed** - The receiver only needs a modern browser, no app installation required.
 
@@ -54,7 +55,7 @@ A powerful Decky Loader plugin designed to solve the file transfer and managemen
 
 ## Quick Start
 
-1. Open the Quick Access Menu and find **decky-send**.
+1. Open the Quick Access Menu and find **Friendeck**.
 2. Click to enable the **"File Transfer Service"** toggle.
 3. The plugin interface will display a QR code and URL address.
 4. Scan the QR code with your phone, or enter the displayed address in your computer browser.

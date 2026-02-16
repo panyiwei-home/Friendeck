@@ -75,6 +75,7 @@ class Plugin:
     switch_file_path = config.SWITCH_FILE_PATH
     auto_copy_text_enabled = False
     prompt_upload_path_enabled = False
+    prevent_sleep_during_transfer_enabled = False
     language_preference = "auto"
     
     # ==========================================================================
@@ -87,6 +88,7 @@ class Plugin:
     SETTING_DOWNLOAD_DIR = config.SETTING_DOWNLOAD_DIR
     SETTING_AUTO_COPY_TEXT = config.SETTING_AUTO_COPY_TEXT
     SETTING_PROMPT_UPLOAD_PATH = config.SETTING_PROMPT_UPLOAD_PATH
+    SETTING_PREVENT_SLEEP_DURING_TRANSFER = config.SETTING_PREVENT_SLEEP_DURING_TRANSFER
     SETTING_LANGUAGE = config.SETTING_LANGUAGE
     
     # ==========================================================================
@@ -172,7 +174,7 @@ class Plugin:
         # This pattern is used by ToMoon and other stable Decky plugins.
         decky.logger.info("decky-send plugin entering keep-alive loop")
         while True:
-            await asyncio.sleep(1)
+            await asyncio.sleep(60)
     
     async def _unload(self):
         """Plugin unload handler with complete resource cleanup"""
@@ -264,6 +266,28 @@ class Plugin:
             self.prompt_upload_path_enabled = bool(enabled)
             await server_manager.save_settings(self)
             return {"status": "success", "enabled": self.prompt_upload_path_enabled}
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
+
+    async def get_prevent_sleep_during_transfer(self) -> dict:
+        """Get transfer sleep prevention setting."""
+        try:
+            return {
+                "status": "success",
+                "enabled": bool(self.prevent_sleep_during_transfer_enabled),
+            }
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
+
+    async def set_prevent_sleep_during_transfer(self, enabled: bool) -> dict:
+        """Set transfer sleep prevention setting."""
+        try:
+            self.prevent_sleep_during_transfer_enabled = bool(enabled)
+            await server_manager.save_settings(self)
+            return {
+                "status": "success",
+                "enabled": self.prevent_sleep_during_transfer_enabled,
+            }
         except Exception as e:
             return {"status": "error", "message": str(e)}
 

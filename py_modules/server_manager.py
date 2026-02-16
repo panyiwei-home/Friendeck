@@ -8,6 +8,7 @@
 # - Settings persistence
 
 import os
+import json
 import threading
 import asyncio
 import time
@@ -35,6 +36,7 @@ def _monitor_switch_file(plugin):
     
     def monitor_thread_func():
         config.logger.info("Switch file monitor thread started")
+        stop_event = plugin.monitor_stop_event
         last_modified = os.path.getmtime(plugin.switch_file_path) if os.path.exists(plugin.switch_file_path) else 0
         
         # Create a single event loop for this thread and reuse it
@@ -42,13 +44,14 @@ def _monitor_switch_file(plugin):
         asyncio.set_event_loop(monitor_loop)
         
         try:
-            while not plugin.monitor_stop_event.is_set():
+            while not stop_event.is_set():
                 try:
                     if os.path.exists(plugin.switch_file_path):
                         current_modified = os.path.getmtime(plugin.switch_file_path)
                         if current_modified != last_modified:
                             # Add debounce: wait a bit to avoid reacting to our own writes
-                            time.sleep(0.5)
+                            if stop_event.wait(0.5):
+                                break
                             
                             # Re-check if file was modified again (debounce)
                             new_modified = os.path.getmtime(plugin.switch_file_path)
@@ -93,11 +96,9 @@ def _monitor_switch_file(plugin):
                 except Exception as e:
                     config.logger.error(f"Error in switch file monitor: {e}")
                 
-                # Sleep for 1 second before checking again, but check stop event more frequently
-                for _ in range(10):  # Check every 100ms
-                    if plugin.monitor_stop_event.is_set():
-                        break
-                    time.sleep(0.1)
+                # Wait until next cycle or exit immediately when stop is requested.
+                if stop_event.wait(1.0):
+                    break
         finally:
             # Clean up the event loop properly
             try:
@@ -136,12 +137,13 @@ def _watchdog_monitor(plugin):
     
     def watchdog_thread_func():
         config.logger.info("Watchdog health monitor thread started")
+        stop_event = plugin.watchdog_stop_event
         
         # Track last correction time to avoid too frequent corrections
         last_main_correction_time = 0
         correction_cooldown = 60  # seconds between corrections for same issue
         
-        while not plugin.watchdog_stop_event.is_set():
+        while not stop_event.is_set():
             try:
                 current_time = time.time()
                 
@@ -189,11 +191,9 @@ def _watchdog_monitor(plugin):
             except Exception as e:
                 config.logger.error(f"Watchdog: Error during health check: {e}")
             
-            # Sleep for the configured interval, checking stop event periodically
-            for _ in range(int(config.WATCHDOG_CHECK_INTERVAL * 10)):
-                if plugin.watchdog_stop_event.is_set():
-                    break
-                time.sleep(0.1)
+            # Wait until next check or exit immediately when stop is requested.
+            if stop_event.wait(config.WATCHDOG_CHECK_INTERVAL):
+                break
         
         config.logger.info("Watchdog health monitor thread stopped cleanly")
     
@@ -282,6 +282,11 @@ async def start_server_async(plugin):
             plugin.site = None
 
 
+async def _wait_for_stop_event(stop_event):
+    """Block without polling until a stop event is set."""
+    await asyncio.to_thread(stop_event.wait)
+
+
 def start_server_thread(plugin):
     """Start the server in a separate thread with graceful shutdown support
     
@@ -299,10 +304,9 @@ def start_server_thread(plugin):
     try:
         loop.run_until_complete(start_server_async(plugin))
         
-        # Run until stop event is set, checking periodically
-        # Use local reference to avoid NoneType error if plugin.server_stop_event is set to None
-        while stop_event and not stop_event.is_set():
-            loop.run_until_complete(asyncio.sleep(0.5))
+        # Block until stop is requested without wakeups from periodic sleep loops.
+        if stop_event and not stop_event.is_set():
+            loop.run_until_complete(_wait_for_stop_event(stop_event))
     except Exception as e:
         config.logger.error(f"Server thread error: {e}")
     finally:
@@ -559,24 +563,43 @@ async def get_server_status(plugin):
     Returns:
         dict: Server status including running state, port, host, IP address
     """
-    # Check if server is actually running by verifying runner exists or port is in use
+    # Reconcile runtime status from actual resources so external control actions
+    # (e.g. web/Flutter stop) stay consistent with the Decky UI toggle.
     port_in_use = utils.is_port_in_use(plugin.server_port)
-    
-    # Only update status if server is actually running but we think it's not
-    # This prevents automatic switch toggling off when server is manually stopped
-    if port_in_use and not plugin.server_running:
-        plugin.server_running = True
-        # Save updated status and update switch file
+    thread_alive = bool(plugin.server_thread and plugin.server_thread.is_alive())
+    runner_alive = bool(plugin.runner is not None)
+    service_healthy = bool(
+        port_in_use and utils.is_service_healthy(plugin.server_port, endpoint='/', timeout=0.8)
+    )
+    # Treat "running" as a healthy HTTP service (or a short transitional state
+    # where the server thread is still alive and owns the port).
+    actual_running = bool(service_healthy or (thread_alive and port_in_use))
+
+    # Clear obviously stale runtime handles that can keep UI toggles "stuck on".
+    if not actual_running:
+        if not thread_alive:
+            plugin.server_thread = None
+            plugin.server_stop_event = None
+        if runner_alive and not service_healthy:
+            plugin.runner = None
+            plugin.site = None
+            plugin.app = None
+
+    if plugin.server_running != actual_running:
+        plugin.server_running = actual_running
         await save_settings(plugin)
         try:
             with open(plugin.switch_file_path, 'w') as f:
-                f.write('1')
-            config.logger.info("Updated switch file to 1 from get_server_status")
+                f.write('1' if actual_running else '0')
+            config.logger.info(
+                "Updated switch file to %s from get_server_status",
+                '1' if actual_running else '0'
+            )
         except Exception as e:
             config.logger.error(f"Failed to update switch file: {e}")
     
     return {
-        "running": plugin.server_running,
+        "running": actual_running,
         "port": plugin.server_port,
         "host": plugin.server_host,
         "ip_address": utils.get_ip_address()
@@ -587,21 +610,95 @@ async def get_server_status(plugin):
 # Settings Management
 # =============================================================================
 
+def _get_settings_store(plugin):
+    """Resolve the preferred settings store exposed by Decky."""
+    plugin_store = getattr(plugin, "settings", None)
+    if plugin_store and hasattr(plugin_store, "getSetting") and hasattr(plugin_store, "setSetting"):
+        return plugin_store, "plugin.settings"
+
+    decky_store = getattr(decky, "settings", None)
+    if decky_store and hasattr(decky_store, "getSetting") and hasattr(decky_store, "setSetting"):
+        return decky_store, "decky.settings"
+
+    return None, "none"
+
+
+def _get_settings_backup_path(plugin):
+    settings_dir = getattr(decky, "DECKY_PLUGIN_SETTINGS_DIR", None)
+    if not settings_dir:
+        settings_dir = getattr(plugin, "decky_send_dir", config.DECKY_SEND_DIR)
+    return os.path.join(settings_dir, "settings.json")
+
+
+def _load_settings_backup(plugin):
+    path = _get_settings_backup_path(plugin)
+    if not os.path.exists(path):
+        return {}
+
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if isinstance(data, dict):
+        return data
+
+    config.logger.warning(f"Ignoring invalid backup settings format at {path}")
+    return {}
+
+
+def _save_settings_backup(plugin, settings):
+    path = _get_settings_backup_path(plugin)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    temp_path = f"{path}.tmp"
+    with open(temp_path, "w", encoding="utf-8") as f:
+        json.dump(settings, f, ensure_ascii=False, indent=2)
+    os.replace(temp_path, path)
+    return path
+
 async def load_settings(plugin):
-    """Load server settings from decky settings
+    """Load server settings from Decky settings, with file backup fallback.
     
     Args:
         plugin: Plugin instance containing server state
     """
     try:
-        # Get all settings
-        settings = decky.settings.getSetting(plugin.SETTINGS_KEY, {})
+        settings = {}
+        store, store_name = _get_settings_store(plugin)
+
+        if store:
+            try:
+                value = store.getSetting(plugin.SETTINGS_KEY, {})
+                if isinstance(value, dict):
+                    settings = value
+                elif value is not None:
+                    config.logger.warning(f"Unexpected settings value type from {store_name}: {type(value)}")
+            except Exception as e:
+                config.logger.error(f"Failed to read settings from {store_name}: {e}")
+        else:
+            config.logger.warning("No Decky settings store available, trying backup file only")
+
+        if not settings:
+            try:
+                settings = _load_settings_backup(plugin)
+                if settings:
+                    config.logger.info("Loaded settings from backup file")
+                    if store:
+                        try:
+                            store.setSetting(plugin.SETTINGS_KEY, settings)
+                            config.logger.info(f"Restored backup settings into {store_name}")
+                        except Exception as restore_error:
+                            config.logger.error(f"Failed to restore backup into {store_name}: {restore_error}")
+            except Exception as backup_error:
+                config.logger.error(f"Failed to load backup settings: {backup_error}")
+                settings = {}
         
         # Load server running state
-        plugin.server_running = settings.get(plugin.SETTING_RUNNING, False)
+        plugin.server_running = bool(settings.get(plugin.SETTING_RUNNING, False))
         
         # Load server port
-        plugin.server_port = settings.get(plugin.SETTING_PORT, config.DEFAULT_SERVER_PORT)
+        try:
+            plugin.server_port = int(settings.get(plugin.SETTING_PORT, config.DEFAULT_SERVER_PORT))
+        except Exception:
+            plugin.server_port = config.DEFAULT_SERVER_PORT
 
         # Load download directory
         downloads_dir = settings.get(plugin.SETTING_DOWNLOAD_DIR, config.DOWNLOADS_DIR)
@@ -613,6 +710,9 @@ async def load_settings(plugin):
         # Load auto copy text setting
         plugin.auto_copy_text_enabled = bool(settings.get(plugin.SETTING_AUTO_COPY_TEXT, False))
         plugin.prompt_upload_path_enabled = bool(settings.get(plugin.SETTING_PROMPT_UPLOAD_PATH, False))
+        plugin.prevent_sleep_during_transfer_enabled = bool(
+            settings.get(plugin.SETTING_PREVENT_SLEEP_DURING_TRANSFER, False)
+        )
         plugin.language_preference = settings.get(plugin.SETTING_LANGUAGE, "auto")
 
         # Ensure downloads directory exists
@@ -622,12 +722,13 @@ async def load_settings(plugin):
             config.logger.error(f"Failed to create downloads directory: {e}")
         
         config.logger.info(
-            "Loaded settings: running=%s, port=%s, downloads_dir=%s, auto_copy_text=%s, prompt_upload_path=%s, language=%s",
+            "Loaded settings: running=%s, port=%s, downloads_dir=%s, auto_copy_text=%s, prompt_upload_path=%s, prevent_sleep_during_transfer=%s, language=%s",
             plugin.server_running,
             plugin.server_port,
             plugin.downloads_dir,
             plugin.auto_copy_text_enabled,
             plugin.prompt_upload_path_enabled,
+            plugin.prevent_sleep_during_transfer_enabled,
             plugin.language_preference,
         )
         
@@ -636,29 +737,56 @@ async def load_settings(plugin):
 
 
 async def save_settings(plugin):
-    """Save server settings to decky settings
+    """Save server settings to Decky settings and backup file.
     
     Args:
         plugin: Plugin instance containing server state
     """
+    settings = {
+        plugin.SETTING_RUNNING: bool(plugin.server_running),
+        plugin.SETTING_PORT: int(plugin.server_port),
+        plugin.SETTING_DOWNLOAD_DIR: plugin.downloads_dir,
+        plugin.SETTING_AUTO_COPY_TEXT: bool(plugin.auto_copy_text_enabled),
+        plugin.SETTING_PROMPT_UPLOAD_PATH: bool(plugin.prompt_upload_path_enabled),
+        plugin.SETTING_PREVENT_SLEEP_DURING_TRANSFER: bool(
+            plugin.prevent_sleep_during_transfer_enabled
+        ),
+        plugin.SETTING_LANGUAGE: getattr(plugin, "language_preference", "auto"),
+    }
+
+    persisted = False
+    store_error = None
+    store, store_name = _get_settings_store(plugin)
+    if store:
+        try:
+            store.setSetting(plugin.SETTINGS_KEY, settings)
+            persisted = True
+        except Exception as e:
+            store_error = f"{store_name} save failed: {e}"
+    else:
+        store_error = "Decky settings store unavailable"
+
+    backup_path = None
+    backup_error = None
     try:
-        # Create settings dictionary
-        settings = {
-            plugin.SETTING_RUNNING: plugin.server_running,
-            plugin.SETTING_PORT: plugin.server_port,
-            plugin.SETTING_DOWNLOAD_DIR: plugin.downloads_dir,
-            plugin.SETTING_AUTO_COPY_TEXT: bool(plugin.auto_copy_text_enabled),
-            plugin.SETTING_PROMPT_UPLOAD_PATH: bool(plugin.prompt_upload_path_enabled),
-            plugin.SETTING_LANGUAGE: getattr(plugin, "language_preference", "auto"),
-        }
-        
-        # Save settings
-        decky.settings.setSetting(plugin.SETTINGS_KEY, settings)
-        
-        config.logger.info(f"Saved settings: {settings}")
-        
+        backup_path = _save_settings_backup(plugin, settings)
+        persisted = True
     except Exception as e:
-        config.logger.error(f"Failed to save settings: {e}")
+        backup_error = f"backup save failed: {e}"
+
+    if not persisted:
+        message = "; ".join([msg for msg in (store_error, backup_error) if msg]) or "unknown settings save failure"
+        config.logger.error(f"Failed to save settings: {message}")
+        raise RuntimeError(message)
+
+    if store_error:
+        config.logger.warning(store_error)
+    if backup_error:
+        config.logger.warning(backup_error)
+
+    config.logger.info(
+        f"Saved settings via {store_name} and backup file {backup_path}: {settings}"
+    )
 
 
 # =============================================================================
@@ -721,6 +849,15 @@ def setup_main_server_routes(app, plugin):
     app.router.add_post('/api/files/unpack', file_operations.unpack_archive)
     app.router.add_post('/api/files/add-to-steam', file_operations.add_file_to_steam)
     app.router.add_get('/api/system/sdcard', file_operations.get_sdcard_info)
+    app.router.add_get('/api/system/overview', lambda request: html_templates.handle_system_overview(request, plugin))
+    app.router.add_post('/api/system/control', lambda request: html_templates.handle_system_control(request, plugin))
+    app.router.add_post('/api/system/exec', lambda request: html_templates.handle_terminal_exec(request, plugin))
+    app.router.add_post('/api/system/terminal/start', lambda request: html_templates.handle_terminal_start(request, plugin))
+    app.router.add_post('/api/system/terminal/poll', lambda request: html_templates.handle_terminal_poll(request, plugin))
+    app.router.add_post('/api/system/terminal/input', lambda request: html_templates.handle_terminal_input(request, plugin))
+    app.router.add_post('/api/system/terminal/stop', lambda request: html_templates.handle_terminal_stop(request, plugin))
+    app.router.add_get('/api/media/list', file_operations.get_media_list)
+    app.router.add_get('/api/media/preview', file_operations.get_media_preview)
     app.router.add_get('/api/settings/language', lambda request: html_templates.handle_language_settings(request, plugin))
     
     # Add OPTIONS handler for CORS preflight
