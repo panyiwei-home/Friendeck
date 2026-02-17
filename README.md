@@ -23,7 +23,7 @@
 
 ## 截图预览
 
-<img width="1024" height="70%" alt="拉伸黑色界面" src="https://github.com/user-attachments/assets/8ba29128-50e4-4217-8e8a-81410c7758de" />
+<img width="1024" height="50%" alt="拉伸黑色界面" src="https://github.com/user-attachments/assets/8ba29128-50e4-4217-8e8a-81410c7758de" />
 
 
 
