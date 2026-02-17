@@ -23,11 +23,9 @@
 
 ## 截图预览
 
-| 插件界面 | 文件传输 |
-| :---: | :---: |
-| ![插件界面](assets/pluginUI.png) | ![文件上传](assets/file.png) |
-| **文本传输** | **文件管理** |
-| ![文本传输](assets/text.png) | ![文件管理](assets/file-manager.png) |
+<img width="1024" height="70%" alt="拉伸黑色界面" src="https://github.com/user-attachments/assets/8ba29128-50e4-4217-8e8a-81410c7758de" />
+
+
 
 <table width="100%" cellspacing="0" cellpadding="0">
   <tr>
