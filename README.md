@@ -27,25 +27,6 @@
 
 
 
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="50%" valign="top">
-        <img src="https://github.com/user-attachments/assets/d95d294b-e74b-40b1-afba-3c803604d983" width="100%" />
-    </td>
-    <td width="50%" valign="top">
-      <p>
-        <img src="https://github.com/user-attachments/assets/5d301cdc-b542-4f50-8d19-bbd827eadf51" width="45%" />
-        <img src="https://github.com/user-attachments/assets/7137b6e3-0790-4974-aa4c-f4ec24f3e6a9" width="45%" />
-      </p>
-      <p>
-        <img src="https://github.com/user-attachments/assets/4babf078-a514-4fe3-9c5d-3424fb5d5783" width="45%" />
-        <img src="https://github.com/user-attachments/assets/193be68e-70ad-47ca-b8ac-0495ebe63154" width="45%" />
-      </p>
-    </td>
-  </tr>
-</table>
-
-
 ## 功能特点
 
 - **局域网无线传输** - 利用浏览器界面轻松将文件从手机或电脑上传到 Steam Deck 的下载文件夹。
