@@ -23,11 +23,7 @@ A powerful Decky Loader plugin designed to solve the file transfer and managemen
 
 ## Screenshots
 
-| Plugin Interface | File Transfer |
-| :---: | :---: |
-| ![Plugin Interface](assets/pluginUIENG.png) | ![File Upload](assets/fileENG.png) |
-| **Text Transfer** | **File Manager** |
-| ![Text Transfer](assets/textENG.png) | ![File Manager](assets/file-managerENG.png) |
+<img width="70%" height="70%" alt="拉伸黑色界面" src="https://github.com/user-attachments/assets/8ba29128-50e4-4217-8e8a-81410c7758de" />
 
 ## Features
 
