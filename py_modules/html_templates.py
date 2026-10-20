@@ -16,7 +16,6 @@ import subprocess
 import shutil
 import glob
 import re
-import pty
 import uuid
 import signal
 import select
@@ -8036,7 +8035,7 @@ def _start_terminal_session(command):
     slave_fd = None
 
     try:
-        master_fd, slave_fd = pty.openpty()
+        master_fd, slave_fd = os.openpty()
         os.set_blocking(master_fd, False)
 
         process = subprocess.Popen(
