@@ -12,6 +12,7 @@ import json
 import threading
 import asyncio
 import time
+import ipaddress
 from aiohttp import web
 import decky
 
@@ -20,6 +21,203 @@ import config
 import utils
 import file_operations
 import html_templates
+
+# =============================================================================
+# Runtime Power Mode Helpers
+# =============================================================================
+
+_POWER_MODE_NORMAL = "normal"
+_POWER_MODE_DEEP_IDLE = "deep_idle"
+_LOOPBACK_HOSTS = {"localhost", "ip6-localhost", "127.0.0.1", "::1"}
+
+
+def _normalize_power_mode(mode):
+    raw = str(mode or "").strip().lower()
+    if raw == _POWER_MODE_DEEP_IDLE:
+        return _POWER_MODE_DEEP_IDLE
+    return _POWER_MODE_NORMAL
+
+
+def _ensure_power_state(plugin):
+    now = time.time()
+
+    plugin.server_power_mode = _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL))
+
+    try:
+        last_activity = float(getattr(plugin, "last_external_activity_ts", 0.0) or 0.0)
+    except Exception:
+        last_activity = 0.0
+    if last_activity <= 0 and bool(getattr(plugin, "server_running", False)):
+        last_activity = now
+    plugin.last_external_activity_ts = last_activity
+
+    try:
+        last_mode_change = float(getattr(plugin, "last_power_mode_change_ts", 0.0) or 0.0)
+    except Exception:
+        last_mode_change = 0.0
+    if last_mode_change <= 0 and bool(getattr(plugin, "server_running", False)):
+        last_mode_change = now
+    plugin.last_power_mode_change_ts = last_mode_change
+
+
+def _set_power_mode(plugin, mode, reason=""):
+    _ensure_power_state(plugin)
+    target_mode = _normalize_power_mode(mode)
+    current_mode = _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL))
+    if target_mode == current_mode:
+        return False
+
+    plugin.server_power_mode = target_mode
+    plugin.last_power_mode_change_ts = time.time()
+    config.logger.info(
+        "Power mode changed: %s -> %s (reason=%s)",
+        current_mode,
+        target_mode,
+        reason or "unspecified",
+    )
+    return True
+
+
+def _is_loopback_remote(remote):
+    candidate = str(remote or "").strip().lower()
+    if not candidate:
+        return True
+    if candidate in _LOOPBACK_HOSTS:
+        return True
+
+    if candidate.startswith("[") and "]" in candidate:
+        candidate = candidate[1:candidate.find("]")]
+    if "%" in candidate:
+        candidate = candidate.split("%", 1)[0]
+
+    if candidate.startswith("::ffff:"):
+        mapped = candidate.split("::ffff:", 1)[1]
+        try:
+            return ipaddress.ip_address(mapped).is_loopback
+        except Exception:
+            pass
+
+    try:
+        return ipaddress.ip_address(candidate).is_loopback
+    except Exception:
+        return candidate.startswith("127.")
+
+
+def _get_request_remote_address(request):
+    remote = ""
+    try:
+        remote = str(request.remote or "").strip()
+    except Exception:
+        remote = ""
+    if remote:
+        return remote
+
+    try:
+        peername = request.transport.get_extra_info("peername")
+        if isinstance(peername, (tuple, list)) and peername:
+            return str(peername[0]).strip()
+        if isinstance(peername, str):
+            return peername.strip()
+    except Exception:
+        return ""
+    return ""
+
+
+def _has_active_critical_sessions(plugin, now=None):
+    checker = getattr(html_templates, "has_active_transfer_or_terminal_sessions", None)
+    if not callable(checker):
+        return False, ""
+
+    try:
+        result = checker(plugin, now=now)
+    except Exception as check_error:
+        config.logger.warning(f"Failed to inspect active transfer/terminal sessions: {check_error}")
+        return False, ""
+
+    if isinstance(result, tuple):
+        active = bool(result[0])
+        reason = str(result[1]) if len(result) > 1 and result[1] is not None else ""
+        return active, reason
+    return bool(result), ""
+
+
+def _evaluate_power_mode(plugin, source="periodic"):
+    _ensure_power_state(plugin)
+
+    if not bool(getattr(plugin, "server_running", False)):
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, f"{source}:server_not_running")
+        plugin.last_external_activity_ts = 0.0
+        return _POWER_MODE_NORMAL
+
+    now = time.time()
+    active_sessions, active_reason = _has_active_critical_sessions(plugin, now=now)
+    if active_sessions:
+        if _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL)) == _POWER_MODE_DEEP_IDLE:
+            _set_power_mode(plugin, _POWER_MODE_NORMAL, f"{source}:active_session:{active_reason or 'unknown'}")
+        return _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL))
+
+    try:
+        threshold_seconds = float(getattr(config, "DEEP_IDLE_IDLE_SECONDS", 300.0))
+    except Exception:
+        threshold_seconds = 300.0
+    threshold_seconds = max(1.0, threshold_seconds)
+
+    last_external = float(getattr(plugin, "last_external_activity_ts", 0.0) or 0.0)
+    if last_external <= 0:
+        plugin.last_external_activity_ts = now
+        return _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL))
+
+    idle_seconds = max(0.0, now - last_external)
+    mode = _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL))
+    if idle_seconds >= threshold_seconds and mode != _POWER_MODE_DEEP_IDLE:
+        _set_power_mode(plugin, _POWER_MODE_DEEP_IDLE, f"{source}:idle_{int(idle_seconds)}s")
+        return _POWER_MODE_DEEP_IDLE
+    if idle_seconds < threshold_seconds and mode == _POWER_MODE_DEEP_IDLE:
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, f"{source}:activity_timer_reset")
+        return _POWER_MODE_NORMAL
+    return mode
+
+
+def _get_switch_monitor_interval(plugin):
+    _ensure_power_state(plugin)
+    mode = _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL))
+    if mode == _POWER_MODE_DEEP_IDLE:
+        return max(0.2, float(getattr(config, "SWITCH_MONITOR_CHECK_INTERVAL_DEEP_IDLE", 5.0)))
+    return max(0.2, float(getattr(config, "SWITCH_MONITOR_CHECK_INTERVAL", 1.0)))
+
+
+def _get_watchdog_interval(plugin):
+    _ensure_power_state(plugin)
+    mode = _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL))
+    if mode == _POWER_MODE_DEEP_IDLE:
+        return max(0.5, float(getattr(config, "WATCHDOG_CHECK_INTERVAL_DEEP_IDLE", 30.0)))
+    return max(0.5, float(getattr(config, "WATCHDOG_CHECK_INTERVAL", 10.0)))
+
+
+def record_request_activity(plugin, request):
+    if plugin is None or request is None:
+        return False
+    _ensure_power_state(plugin)
+    if not bool(getattr(plugin, "server_running", False)):
+        return False
+
+    remote = _get_request_remote_address(request)
+    if _is_loopback_remote(remote):
+        return False
+
+    now = time.time()
+    plugin.last_external_activity_ts = now
+    plugin.last_external_activity_remote = remote
+    plugin.last_external_activity_path = str(getattr(request, "path", "") or "")
+    plugin.last_external_activity_method = str(getattr(request, "method", "") or "")
+    if _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL)) == _POWER_MODE_DEEP_IDLE:
+        _set_power_mode(
+            plugin,
+            _POWER_MODE_NORMAL,
+            f"external_request:{plugin.last_external_activity_method} {plugin.last_external_activity_path}",
+        )
+    return True
+
 
 # =============================================================================
 # Switch File Monitoring
@@ -38,6 +236,7 @@ def _monitor_switch_file(plugin):
         config.logger.info("Switch file monitor thread started")
         stop_event = plugin.monitor_stop_event
         last_modified = os.path.getmtime(plugin.switch_file_path) if os.path.exists(plugin.switch_file_path) else 0
+        _ensure_power_state(plugin)
         
         # Create a single event loop for this thread and reuse it
         monitor_loop = asyncio.new_event_loop()
@@ -76,10 +275,14 @@ def _monitor_switch_file(plugin):
                                 if port_in_use and plugin.server_running:
                                     # Server is already running correctly, no action needed
                                     config.logger.info("Switch is 1, server already running - no action needed")
+                                    plugin.last_external_activity_ts = time.time()
+                                    _set_power_mode(plugin, _POWER_MODE_NORMAL, "switch_monitor:explicit_start")
                                 elif port_in_use and not plugin.server_running:
                                     # Port in use but we don't know about it - just update state
                                     config.logger.info("Switch is 1, port in use - updating state only")
                                     plugin.server_running = True
+                                    plugin.last_external_activity_ts = time.time()
+                                    _set_power_mode(plugin, _POWER_MODE_NORMAL, "switch_monitor:explicit_start")
                                 elif not port_in_use:
                                     # Server is not running, start it
                                     config.logger.info("Switch is 1, server not running - starting server")
@@ -95,9 +298,14 @@ def _monitor_switch_file(plugin):
                             
                 except Exception as e:
                     config.logger.error(f"Error in switch file monitor: {e}")
-                
+
+                try:
+                    _evaluate_power_mode(plugin, source="switch_monitor")
+                except Exception as power_error:
+                    config.logger.warning(f"Switch monitor power-mode evaluation failed: {power_error}")
+
                 # Wait until next cycle or exit immediately when stop is requested.
-                if stop_event.wait(1.0):
+                if stop_event.wait(_get_switch_monitor_interval(plugin)):
                     break
         finally:
             # Clean up the event loop properly
@@ -138,6 +346,7 @@ def _watchdog_monitor(plugin):
     def watchdog_thread_func():
         config.logger.info("Watchdog health monitor thread started")
         stop_event = plugin.watchdog_stop_event
+        _ensure_power_state(plugin)
         
         # Track last correction time to avoid too frequent corrections
         last_main_correction_time = 0
@@ -190,9 +399,14 @@ def _watchdog_monitor(plugin):
                 
             except Exception as e:
                 config.logger.error(f"Watchdog: Error during health check: {e}")
+
+            try:
+                _evaluate_power_mode(plugin, source="watchdog")
+            except Exception as power_error:
+                config.logger.warning(f"Watchdog power-mode evaluation failed: {power_error}")
             
             # Wait until next check or exit immediately when stop is requested.
-            if stop_event.wait(config.WATCHDOG_CHECK_INTERVAL):
+            if stop_event.wait(_get_watchdog_interval(plugin)):
                 break
         
         config.logger.info("Watchdog health monitor thread stopped cleanly")
@@ -256,6 +470,8 @@ async def start_server_async(plugin):
             middlewares=[cors_middleware],
             client_max_size=1024 ** 4  # 1 TB limit for large file transfers
         )
+        plugin.app["plugin_state"] = plugin
+        _ensure_power_state(plugin)
         
         # Setup main server routes
         setup_main_server_routes(plugin.app, plugin)
@@ -268,10 +484,14 @@ async def start_server_async(plugin):
         
         config.logger.info(f"HTTP server started on {plugin.server_host}:{plugin.server_port}")
         plugin.server_running = True
+        plugin.last_external_activity_ts = time.time()
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, "start_server_async")
         
     except Exception as e:
         config.logger.error(f"Failed to start server: {e}")
         plugin.server_running = False
+        plugin.last_external_activity_ts = 0.0
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, "start_server_async_failed")
         # Clean up resources if startup failed
         if plugin.runner:
             try:
@@ -341,6 +561,8 @@ async def start_server(plugin, port=config.DEFAULT_SERVER_PORT):
         config.logger.info(f"Server is already running on port {port}")
         plugin.server_running = True
         plugin.server_port = port
+        plugin.last_external_activity_ts = time.time()
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, "start_server:already_running")
         
         # Update switch file
         try:
@@ -372,6 +594,8 @@ async def start_server(plugin, port=config.DEFAULT_SERVER_PORT):
         plugin.app = None
         plugin.server_thread = None
         plugin.server_running = False
+        plugin.last_external_activity_ts = 0.0
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, "start_server:init")
         
         # Start server in a new thread
         config.logger.info(f"Starting server thread on port {port}")
@@ -399,6 +623,8 @@ async def start_server(plugin, port=config.DEFAULT_SERVER_PORT):
         if utils.is_port_in_use(port):
             # Server is running, update status
             plugin.server_running = True
+            plugin.last_external_activity_ts = time.time()
+            _set_power_mode(plugin, _POWER_MODE_NORMAL, "start_server:started")
             
             # Get IP address
             ip_address = utils.get_ip_address()
@@ -428,6 +654,8 @@ async def start_server(plugin, port=config.DEFAULT_SERVER_PORT):
             config.logger.error(f"Server start failed: port {port} is not open after {max_wait_time} seconds")
             plugin.server_thread = None
             plugin.server_running = False
+            plugin.last_external_activity_ts = 0.0
+            _set_power_mode(plugin, _POWER_MODE_NORMAL, "start_server:failed")
             plugin.site = None
             plugin.runner = None
             plugin.app = None
@@ -446,6 +674,8 @@ async def start_server(plugin, port=config.DEFAULT_SERVER_PORT):
         # Ensure all resources are cleaned up if exception occurs
         plugin.server_thread = None
         plugin.server_running = False
+        plugin.last_external_activity_ts = 0.0
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, "start_server:exception")
         plugin.site = None
         plugin.runner = None
         plugin.app = None
@@ -472,6 +702,8 @@ async def stop_server(plugin):
     # Check if server is actually running by verifying runner exists or server_running is True
     if not plugin.server_running and not plugin.runner and not plugin.server_thread:
         config.logger.info("Server is already stopped")
+        plugin.last_external_activity_ts = 0.0
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, "stop_server:already_stopped")
         return {"status": "success", "message": "服务器已停止"}
     
     try:
@@ -506,6 +738,8 @@ async def stop_server(plugin):
         
         # Update server running status
         plugin.server_running = False
+        plugin.last_external_activity_ts = 0.0
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, "stop_server:completed")
         
         # Wait for port to be released
         await utils.wait_for_port_release(plugin.server_port, timeout=config.PORT_RELEASE_TIMEOUT)
@@ -532,6 +766,8 @@ async def stop_server(plugin):
         config.logger.error(f"Failed to stop server: {e}")
         # Ensure all resources are cleaned up even if there's an error
         plugin.server_running = False
+        plugin.last_external_activity_ts = 0.0
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, "stop_server:error_cleanup")
         plugin.server_thread = None
         plugin.server_stop_event = None
         plugin.site = None
@@ -563,6 +799,8 @@ async def get_server_status(plugin):
     Returns:
         dict: Server status including running state, port, host, IP address
     """
+    _ensure_power_state(plugin)
+
     # Reconcile runtime status from actual resources so external control actions
     # (e.g. web/Flutter stop) stay consistent with the Decky UI toggle.
     port_in_use = utils.is_port_in_use(plugin.server_port)
@@ -597,12 +835,28 @@ async def get_server_status(plugin):
             )
         except Exception as e:
             config.logger.error(f"Failed to update switch file: {e}")
+
+    if actual_running:
+        _evaluate_power_mode(plugin, source="status")
+    else:
+        plugin.last_external_activity_ts = 0.0
+        _set_power_mode(plugin, _POWER_MODE_NORMAL, "status:service_not_running")
+
+    last_external_activity_ts = float(getattr(plugin, "last_external_activity_ts", 0.0) or 0.0)
+    if last_external_activity_ts > 0:
+        external_idle_seconds = max(0, int(time.time() - last_external_activity_ts))
+    else:
+        external_idle_seconds = 0
     
     return {
         "running": actual_running,
         "port": plugin.server_port,
         "host": plugin.server_host,
-        "ip_address": utils.get_ip_address()
+        "ip_address": utils.get_ip_address(),
+        "power_mode": _normalize_power_mode(getattr(plugin, "server_power_mode", _POWER_MODE_NORMAL)),
+        "external_idle_seconds": external_idle_seconds,
+        "last_external_activity_ts": last_external_activity_ts,
+        "deep_idle_threshold_seconds": int(float(getattr(config, "DEEP_IDLE_IDLE_SECONDS", 300.0))),
     }
 
 
@@ -722,7 +976,6 @@ async def load_settings(plugin):
             config.logger.error(f"Failed to create downloads directory: {e}")
         
         config.logger.info(
-<<<<<<< HEAD
             "Loaded settings: running=%s, port=%s, downloads_dir=%s, auto_copy_text=%s, prompt_upload_path=%s, prevent_sleep_during_transfer=%s, language=%s",
             plugin.server_running,
             plugin.server_port,
@@ -730,16 +983,9 @@ async def load_settings(plugin):
             plugin.auto_copy_text_enabled,
             plugin.prompt_upload_path_enabled,
             plugin.prevent_sleep_during_transfer_enabled,
-=======
-            "Loaded settings: running=%s, port=%s, downloads_dir=%s, auto_copy_text=%s, prompt_upload_path=%s, language=%s",
-            plugin.server_running,
-            plugin.server_port,
-            plugin.downloads_dir,
-            plugin.auto_copy_text_enabled,
-            plugin.prompt_upload_path_enabled,
->>>>>>> a644f870110fc23700a2b5ac7bc22c0ea9171992
             plugin.language_preference,
         )
+        _ensure_power_state(plugin)
         
     except Exception as e:
         config.logger.error(f"Failed to load settings: {e}")
@@ -757,12 +1003,9 @@ async def save_settings(plugin):
         plugin.SETTING_DOWNLOAD_DIR: plugin.downloads_dir,
         plugin.SETTING_AUTO_COPY_TEXT: bool(plugin.auto_copy_text_enabled),
         plugin.SETTING_PROMPT_UPLOAD_PATH: bool(plugin.prompt_upload_path_enabled),
-<<<<<<< HEAD
         plugin.SETTING_PREVENT_SLEEP_DURING_TRANSFER: bool(
             plugin.prevent_sleep_during_transfer_enabled
         ),
-=======
->>>>>>> a644f870110fc23700a2b5ac7bc22c0ea9171992
         plugin.SETTING_LANGUAGE: getattr(plugin, "language_preference", "auto"),
     }
 
@@ -808,6 +1051,13 @@ async def save_settings(plugin):
 @web.middleware
 async def cors_middleware(request, handler):
     """Add CORS headers to allow requests from local HTML files (file:// protocol)"""
+    plugin = request.app.get("plugin_state") if request.app is not None else None
+    if plugin is not None:
+        try:
+            record_request_activity(plugin, request)
+        except Exception as activity_error:
+            config.logger.warning(f"Request activity tracking failed: {activity_error}")
+
     # Handle preflight OPTIONS requests
     if request.method == 'OPTIONS':
         response = web.Response()
@@ -837,9 +1087,9 @@ def setup_main_server_routes(app, plugin):
         app: aiohttp web.Application instance
         plugin: Plugin instance for accessing handlers
     """
-    # Main page (doesn't need plugin)
-    app.router.add_get('/', html_templates.handle_index)
-    app.router.add_get('/file-manager', html_templates.handle_file_manager_index)
+    # Main page / remote UI (served from packaged Flutter web bundle)
+    app.router.add_get('/', lambda request: html_templates.handle_remote_web_index(request, plugin))
+    app.router.add_get('/file-manager', lambda request: html_templates.handle_remote_web_file_manager_index(request, plugin))
     
     # Upload endpoints (need plugin for paths)
     app.router.add_post('/upload', lambda request: html_templates.handle_upload(request, plugin))
@@ -847,6 +1097,8 @@ def setup_main_server_routes(app, plugin):
     app.router.add_post('/upload-status', lambda request: html_templates.handle_upload_status(request, plugin))
     app.router.add_post('/upload-text', lambda request: html_templates.handle_text_upload(request, plugin))
     app.router.add_get('/api/settings/upload-options', lambda request: html_templates.handle_upload_options(request, plugin))
+    app.router.add_post('/api/debug/ingest-log', lambda request: html_templates.handle_debug_ingest_log(request, plugin))
+    app.router.add_get('/api/debug/ingest-log', lambda request: html_templates.handle_debug_ingest_log(request, plugin))
     
     # File management routes
     app.router.add_post('/api/files/list', file_operations.get_file_list)
@@ -861,24 +1113,20 @@ def setup_main_server_routes(app, plugin):
     app.router.add_post('/api/files/unpack', file_operations.unpack_archive)
     app.router.add_post('/api/files/add-to-steam', file_operations.add_file_to_steam)
     app.router.add_get('/api/system/sdcard', file_operations.get_sdcard_info)
-<<<<<<< HEAD
     app.router.add_get('/api/system/overview', lambda request: html_templates.handle_system_overview(request, plugin))
+    app.router.add_get('/api/system/game-art', lambda request: html_templates.handle_system_game_art(request, plugin))
     app.router.add_post('/api/system/control', lambda request: html_templates.handle_system_control(request, plugin))
     app.router.add_post('/api/system/exec', lambda request: html_templates.handle_terminal_exec(request, plugin))
     app.router.add_post('/api/system/terminal/start', lambda request: html_templates.handle_terminal_start(request, plugin))
     app.router.add_post('/api/system/terminal/poll', lambda request: html_templates.handle_terminal_poll(request, plugin))
     app.router.add_post('/api/system/terminal/input', lambda request: html_templates.handle_terminal_input(request, plugin))
     app.router.add_post('/api/system/terminal/stop', lambda request: html_templates.handle_terminal_stop(request, plugin))
-=======
-<<<<<<< HEAD
-    app.router.add_get('/api/system/overview', lambda request: html_templates.handle_system_overview(request, plugin))
-    app.router.add_post('/api/system/control', lambda request: html_templates.handle_system_control(request, plugin))
-=======
->>>>>>> 1cd76c3b78047290c21b4583356660f20db1365f
->>>>>>> a644f870110fc23700a2b5ac7bc22c0ea9171992
     app.router.add_get('/api/media/list', file_operations.get_media_list)
     app.router.add_get('/api/media/preview', file_operations.get_media_preview)
     app.router.add_get('/api/settings/language', lambda request: html_templates.handle_language_settings(request, plugin))
+
+    # Flutter Web static assets + SPA fallback for non-API paths.
+    app.router.add_get('/{path:.*}', lambda request: html_templates.handle_remote_web_static(request, plugin))
     
     # Add OPTIONS handler for CORS preflight
     app.router.add_route('OPTIONS', '/{path:.*}', lambda r: web.Response())

@@ -49,6 +49,9 @@ class Plugin:
     app = None
     runner = None
     site = None
+    server_power_mode = "normal"       # normal | deep_idle
+    last_external_activity_ts = 0.0    # Unix timestamp for non-loopback request activity
+    last_power_mode_change_ts = 0.0    # Unix timestamp when power mode last changed
     
     # ==========================================================================
     # Thread Control Variables (for graceful shutdown)

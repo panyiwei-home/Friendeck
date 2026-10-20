@@ -12,6 +12,7 @@ import os
 import shutil
 import subprocess
 import mimetypes
+import hashlib
 from pathlib import Path
 from aiohttp import web
 # NOTE: Direct import - Decky adds py_modules/ to sys.path
@@ -79,6 +80,17 @@ def _find_sdcard_mount():
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif"}
 VIDEO_EXTENSIONS = {".mp4", ".webm", ".mkv", ".mov", ".m4v", ".avi"}
 MEDIA_EXTENSIONS = IMAGE_EXTENSIONS | VIDEO_EXTENSIONS
+MEDIA_HASH_SAMPLE_BYTES = 64 * 1024
+MEDIA_EXCLUDED_DIR_NAMES = {
+    "thumbnail",
+    "thumbnails",
+    "thumb",
+    "thumbs",
+    ".thumbnail",
+    ".thumbnails",
+    ".thumb",
+    ".thumbs",
+}
 
 
 def _get_steam_userdata_roots():
@@ -158,6 +170,37 @@ def _path_in_allowed_dirs(path, allowed_dirs):
         except Exception:
             continue
     return False
+
+
+def _build_media_dedupe_key(real_path, ext, stat, media_type):
+    """Build a stable dedupe key for media files across different paths."""
+    size = int(stat.st_size)
+    if size > 0:
+        try:
+            hasher = hashlib.blake2b(digest_size=16)
+            with open(real_path, "rb") as f:
+                head = f.read(MEDIA_HASH_SAMPLE_BYTES)
+                hasher.update(head)
+                if size > MEDIA_HASH_SAMPLE_BYTES:
+                    f.seek(max(0, size - MEDIA_HASH_SAMPLE_BYTES))
+                    hasher.update(f.read(MEDIA_HASH_SAMPLE_BYTES))
+            return ("content", media_type, ext, size, hasher.hexdigest())
+        except Exception as e:
+            config.logger.debug(f"Failed to hash media sample {real_path}: {e}")
+
+    return (
+        "meta",
+        media_type,
+        ext,
+        size,
+        int(stat.st_mtime),
+        os.path.basename(real_path).lower(),
+    )
+
+
+def _is_ignored_media_path(path):
+    parts = [segment.lower() for segment in os.path.normpath(path).split(os.sep) if segment]
+    return any(segment in MEDIA_EXCLUDED_DIR_NAMES for segment in parts)
 
 # =============================================================================
 # HTTP API Handlers (for aiohttp routes)
@@ -709,32 +752,43 @@ async def get_media_list(request):
 
         scan_dirs = _get_media_scan_dirs()
         media_items = []
-        seen = set()
+        seen_paths = set()
+        seen_media = set()
 
         for media_dir in scan_dirs:
             try:
-                for root, _, names in os.walk(media_dir):
+                for root, dirs, names in os.walk(media_dir):
+                    dirs[:] = [d for d in dirs if d.lower() not in MEDIA_EXCLUDED_DIR_NAMES]
+                    if _is_ignored_media_path(root):
+                        continue
                     for name in names:
                         file_path = os.path.join(root, name)
                         try:
+                            if _is_ignored_media_path(file_path):
+                                continue
                             if not os.path.isfile(file_path):
                                 continue
                             ext = os.path.splitext(name)[1].lower()
                             if ext not in MEDIA_EXTENSIONS:
                                 continue
                             real_path = os.path.realpath(file_path)
-                            if real_path in seen:
+                            if real_path in seen_paths:
                                 continue
-                            seen.add(real_path)
+                            seen_paths.add(real_path)
 
                             stat = os.stat(real_path)
-                            is_video = ext in VIDEO_EXTENSIONS
+                            media_type = "video" if ext in VIDEO_EXTENSIONS else "image"
+                            dedupe_key = _build_media_dedupe_key(real_path, ext, stat, media_type)
+                            if dedupe_key in seen_media:
+                                continue
+                            seen_media.add(dedupe_key)
+
                             media_items.append({
                                 "name": os.path.basename(real_path),
                                 "path": real_path,
                                 "size": stat.st_size,
                                 "mtime": stat.st_mtime,
-                                "media_type": "video" if is_video else "image",
+                                "media_type": media_type,
                                 "ext": ext,
                             })
                         except Exception as e:

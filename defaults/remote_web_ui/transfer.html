@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friendeck File Transfer</title>
+  <style>
+    :root {
+      --md-sys-color-surface: #0d1116;
+      --md-sys-color-surface-container: #111b28;
+      --md-sys-color-surface-container-high: #172231;
+      --md-sys-color-outline: #2f3b4b;
+      --md-sys-color-outline-variant: #4d5a6d;
+      --md-sys-color-on-surface: #e8eef7;
+      --md-sys-color-on-surface-variant: #9cabbd;
+      --md-sys-color-primary-container: #485364;
+      --md-sys-color-on-primary-container: #f0f4fa;
+      --md-sys-color-error-container: #7d2d2b;
+      --md-sys-color-on-error-container: #f2b0ae;
+      --md-shape-large: 24px;
+      --md-shape-medium: 16px;
+      --md-shape-small: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--md-sys-color-on-surface);
+      background: var(--md-sys-color-surface);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    body {
+      padding: 0;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+      white-space: nowrap;
+    }
+
+    .tab-button-hidden {
+      display: none !important;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100%;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel {
+      flex: 1;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .upload-area {
+      position: relative;
+      flex: 1;
+      min-height: 300px;
+      border-radius: var(--md-shape-large);
+      border: 1px solid var(--md-sys-color-outline);
+      background: var(--md-sys-color-surface);
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+      overflow: hidden;
+    }
+
+    .upload-area.dragover {
+      border-color: var(--md-sys-color-outline-variant);
+      background: #121a24;
+    }
+
+    #file-input {
+      display: none;
+    }
+
+    .file-list {
+      position: absolute;
+      inset: 0;
+      padding: 14px;
+      overflow: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #465467 transparent;
+    }
+
+    .file-list::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .file-list::-webkit-scrollbar-thumb {
+      background: #465467;
+      border-radius: 999px;
+    }
+
+    .empty-state {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+      text-align: center;
+      padding: 24px;
+      pointer-events: none;
+    }
+
+    .upload-area.is-empty .empty-state {
+      display: flex;
+    }
+
+    .upload-area.is-empty .file-list {
+      display: none;
+    }
+
+    .empty-icon {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      border: 2px solid #4b596b;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #97a8bc;
+      background: #111a25;
+    }
+
+    .empty-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.26;
+      font-weight: 600;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .empty-subtitle {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .file-item {
+      background: var(--md-sys-color-surface-container-high);
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: var(--md-shape-small);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .file-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .file-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .file-item-info {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .file-item-progress {
+      margin-top: 8px;
+      display: none;
+    }
+
+    .file-item-progress.active {
+      display: block;
+    }
+
+    .file-progress-bar {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #2a3443;
+    }
+
+    .file-progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: #5f8ac8;
+      transition: width 0.2s ease;
+    }
+
+    .file-progress-text {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .file-progress-text .speed {
+      color: #8db1e5;
+    }
+
+    .cancel-btn {
+      border: 1px solid #b56e6a;
+      color: var(--md-sys-color-on-error-container);
+      background: var(--md-sys-color-error-container);
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 600;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: background-color 0.18s ease, border-color 0.18s ease;
+      flex-shrink: 0;
+      box-shadow: none;
+    }
+
+    .cancel-btn:hover:not(:disabled) {
+      background: #8a3633;
+      border-color: #cd817d;
+    }
+
+    .dock {
+      width: min(640px, 100%);
+      margin: 0 auto;
+      border-radius: 24px;
+      border: 1px solid var(--md-sys-color-outline);
+      background: var(--md-sys-color-surface-container);
+      padding: 16px;
+      box-shadow: none;
+    }
+
+    .dock-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1;
+      min-height: 44px;
+      padding: 0 18px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+      color: var(--md-sys-color-on-primary-container);
+      background: var(--md-sys-color-primary-container);
+      box-shadow: none;
+    }
+
+    button:hover:not(:disabled) {
+      background: #556275;
+      border-color: #667488;
+    }
+
+    button:active:not(:disabled) {
+      background: #414d5e;
+      border-color: #59667a;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.46;
+    }
+
+    .pick-btn {
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+    }
+
+    #clear-btn {
+      background: #404b5d;
+      border-color: #5a677a;
+      color: var(--md-sys-color-on-primary-container);
+    }
+
+    #upload-btn {
+      width: 100%;
+      min-height: 48px;
+      border-radius: var(--md-shape-medium);
+      background: var(--md-sys-color-primary-container);
+      border-color: var(--md-sys-color-outline-variant);
+      color: var(--md-sys-color-on-primary-container);
+    }
+
+    #upload-btn:not(:disabled) {
+      background: var(--md-sys-color-primary-container);
+      border-color: #667488;
+      color: var(--md-sys-color-on-primary-container);
+      box-shadow: none;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(7, 10, 14, 0.8);
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      width: min(560px, 100%);
+      max-height: 76vh;
+      overflow: auto;
+      border-radius: var(--md-shape-medium);
+      border: 1px solid var(--md-sys-color-outline);
+      background: var(--md-sys-color-surface-container);
+      padding: 18px;
+    }
+
+    #upload-path-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .upload-path-current {
+      margin: 10px 0 12px;
+      font-size: 13px;
+      color: var(--md-sys-color-on-surface-variant);
+      word-break: break-all;
+    }
+
+    .upload-path-list {
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: var(--md-shape-small);
+      background: var(--md-sys-color-surface);
+      min-height: 160px;
+      max-height: 320px;
+      overflow: auto;
+      padding: 8px;
+    }
+
+    .upload-path-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: var(--md-sys-color-on-surface);
+      cursor: pointer;
+      transition: background-color 0.18s ease;
+    }
+
+    .upload-path-item:hover {
+      background: #1a2534;
+    }
+
+    .upload-path-actions {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .upload-path-actions button {
+      min-height: 38px;
+      border-radius: 10px;
+      font-size: 14px;
+      padding: 0 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1 class="sr-only">Friendeck 文件传输</h1>
+    <p id="subtitle" class="sr-only">将文件或文本上传到 Steam Deck</p>
+    <button class="tab-button-hidden" id="tab-file" aria-hidden="true" tabindex="-1">文件上传</button>
+
+    <section class="panel" aria-label="文件传输面板">
+      <div class="upload-area is-empty" id="upload-area">
+        <input type="file" id="file-input" multiple accept="*/*" webkitdirectory>
+        <div class="file-list" id="file-list"></div>
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h4.293c.397 0 .779.158 1.06.44l1.414 1.413c.281.282.663.44 1.06.44H17.5A2.5 2.5 0 0 1 20 9.793V16.5A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-9Z" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M12 10.25v5.5M9.5 13.25H14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="empty-title">还没有已选文件</p>
+          <p class="empty-subtitle" id="upload-hint">点击下方“选择文件”或拖拽文件到此处</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="dock">
+      <div class="dock-actions">
+        <button id="pick-btn" class="pick-btn" type="button">选择文件</button>
+        <button id="clear-btn" type="button">清空</button>
+      </div>
+      <button id="upload-btn" type="button" disabled>开始上传</button>
+    </div>
+  </div>
+
+  <div id="upload-path-modal" class="modal">
+    <div class="modal-content">
+      <h3 id="upload-path-title">选择传输路径</h3>
+      <p id="upload-path-current" class="upload-path-current"></p>
+      <div id="upload-path-list" class="upload-path-list"></div>
+      <div class="upload-path-actions">
+        <button id="upload-path-up">上一级</button>
+        <button id="upload-path-cancel">取消</button>
+        <button id="upload-path-ok">选择当前目录</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="transfer.js"></script>
+</body>
+</html>

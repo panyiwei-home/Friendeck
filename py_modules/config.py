@@ -90,6 +90,16 @@ PORT_RELEASE_TIMEOUT = 5.0
 # Use a longer interval to reduce background wakeups and power use.
 WATCHDOG_CHECK_INTERVAL = 10.0
 
+# Switch file monitor check interval (seconds)
+SWITCH_MONITOR_CHECK_INTERVAL = 1.0
+
+# Deep idle mode threshold (seconds without external non-loopback requests)
+DEEP_IDLE_IDLE_SECONDS = 300.0
+
+# Deep idle mode low-frequency check intervals (seconds)
+WATCHDOG_CHECK_INTERVAL_DEEP_IDLE = 30.0
+SWITCH_MONITOR_CHECK_INTERVAL_DEEP_IDLE = 5.0
+
 # Port check retry configuration
 PORT_CHECK_RETRIES = 5
 PORT_CHECK_RETRY_DELAY = 0.5
