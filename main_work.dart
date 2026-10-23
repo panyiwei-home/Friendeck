@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -637,11 +638,19 @@ class _TransferTabState extends State<TransferTab>
   void dispose() => super.dispose();
 
   Future<void> _pickFiles() async {
-    final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      withData: false,
+      withReadStream: true,
+    );
     if (result == null) return;
     setState(() {
       _picked = result.files
-          .where((f) => f.path != null && f.path!.isNotEmpty)
+          .where(
+            (f) =>
+                (f.path != null && f.path!.isNotEmpty) ||
+                f.readStream != null,
+          )
           .toList();
     });
   }
@@ -696,13 +705,11 @@ class _TransferTabState extends State<TransferTab>
     try {
       for (var i = 0; i < _picked.length; i++) {
         final item = _picked[i];
-        final path = item.path;
-        if (path == null || path.isEmpty) continue;
         setState(() {
           _uploadingName = item.name;
           _uploadedCount = i;
         });
-        await widget.client.uploadFile(filePath: path, destPath: chosenPath);
+        await widget.client.uploadFile(file: item, destPath: chosenPath);
       }
       if (!mounted) return;
       setState(() {
@@ -3897,6 +3904,10 @@ class DeckyApiClient {
   DeckyApiClient(this.endpoint, {http.Client? client})
     : _client = client ?? http.Client();
 
+  static const int _chunkThreshold = 512 * 1024 * 1024;
+  static const int _chunkSize = 8 * 1024 * 1024;
+  static const int _chunkMaxRetries = 5;
+
   final DeckyEndpoint endpoint;
   final http.Client _client;
 
@@ -4026,27 +4037,160 @@ class DeckyApiClient {
 
   Uri previewUri(String path) => _uri('/api/media/preview', {'path': path});
 
-  Future<void> uploadFile({required String filePath, String? destPath}) async {
-    final file = File(filePath);
-    if (!await file.exists()) {
-      throw const ApiException('Local file not found');
+  Future<void> uploadFile({
+    required PlatformFile file,
+    String? destPath,
+  }) async {
+    final source = await _openPickedFile(file);
+    if (file.size >= _chunkThreshold) {
+      await _uploadFileChunked(
+        file: file,
+        source: source,
+        destPath: destPath,
+      );
+      return;
     }
 
     final request = http.MultipartRequest('POST', _uri('/upload'));
     if (destPath != null && destPath.trim().isNotEmpty) {
       request.fields['dest_path'] = destPath.trim();
     }
+    request.fields['file_size'] = '${file.size}';
     request.files.add(
-      await http.MultipartFile.fromPath(
+      http.MultipartFile(
         'file',
-        file.path,
-        filename: basename(file.path),
+        http.ByteStream(source),
+        file.size,
+        filename: file.name,
       ),
     );
 
     final streamed = await _client.send(request);
     final response = await http.Response.fromStream(streamed);
     await _json(response);
+  }
+
+  Future<Stream<List<int>>> _openPickedFile(PlatformFile file) async {
+    final readStream = file.readStream;
+    if (readStream != null) return readStream;
+
+    final path = file.path;
+    if (path == null || path.isEmpty) {
+      throw const ApiException('Unable to read selected file');
+    }
+
+    final localFile = File(path);
+    if (!await localFile.exists()) {
+      throw const ApiException('Local file not found');
+    }
+    return localFile.openRead();
+  }
+
+  Stream<Uint8List> _splitIntoChunks(Stream<List<int>> source) async* {
+    final buffer = BytesBuilder(copy: false);
+
+    await for (final part in source) {
+      var offset = 0;
+      while (offset < part.length) {
+        final remaining = _chunkSize - buffer.length;
+        final take = min(remaining, part.length - offset);
+        buffer.add(part.sublist(offset, offset + take));
+        offset += take;
+
+        if (buffer.length == _chunkSize) {
+          yield buffer.takeBytes();
+        }
+      }
+    }
+
+    if (buffer.isNotEmpty) {
+      yield buffer.takeBytes();
+    }
+  }
+
+  Future<void> _uploadFileChunked({
+    required PlatformFile file,
+    required Stream<List<int>> source,
+    String? destPath,
+  }) async {
+    final totalChunks = (file.size + _chunkSize - 1) ~/ _chunkSize;
+    final uploadId =
+        'up_${DateTime.now().microsecondsSinceEpoch}_${file.name.hashCode}';
+    var chunkIndex = 0;
+    var uploadedBytes = 0;
+
+    await for (final chunk in _splitIntoChunks(source)) {
+      if (chunkIndex >= totalChunks) {
+        throw const ApiException('Selected file is larger than reported');
+      }
+
+      await _uploadChunkWithRetry(
+        file: file,
+        uploadId: uploadId,
+        chunkIndex: chunkIndex,
+        totalChunks: totalChunks,
+        chunkOffset: uploadedBytes,
+        chunk: chunk,
+        destPath: destPath,
+      );
+      uploadedBytes += chunk.length;
+      chunkIndex += 1;
+    }
+
+    if (uploadedBytes != file.size || chunkIndex != totalChunks) {
+      throw const ApiException('Selected file size changed while uploading');
+    }
+  }
+
+  Future<void> _uploadChunkWithRetry({
+    required PlatformFile file,
+    required String uploadId,
+    required int chunkIndex,
+    required int totalChunks,
+    required int chunkOffset,
+    required Uint8List chunk,
+    String? destPath,
+  }) async {
+    Object? lastError;
+
+    for (var attempt = 0; attempt <= _chunkMaxRetries; attempt++) {
+      try {
+        final request = http.MultipartRequest('POST', _uri('/upload-chunk'));
+        request.fields.addAll({
+          'upload_id': uploadId,
+          'chunk_index': '$chunkIndex',
+          'total_chunks': '$totalChunks',
+          'total_size': '${file.size}',
+          'chunk_size': '$_chunkSize',
+          'chunk_offset': '$chunkOffset',
+          'filename': file.name,
+        });
+        if (destPath != null && destPath.trim().isNotEmpty) {
+          request.fields['dest_path'] = destPath.trim();
+        }
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            'chunk',
+            chunk,
+            filename: file.name,
+          ),
+        );
+
+        final streamed = await _client.send(request);
+        final response = await http.Response.fromStream(streamed);
+        await _json(response);
+        return;
+      } catch (error) {
+        lastError = error;
+        if (attempt >= _chunkMaxRetries) break;
+        await Future<void>.delayed(
+          Duration(milliseconds: 500 * (1 << attempt)),
+        );
+      }
+    }
+
+    if (lastError is ApiException) throw lastError;
+    throw const ApiException('Chunk upload failed');
   }
 
   Future<void> deletePath(String path) async {
